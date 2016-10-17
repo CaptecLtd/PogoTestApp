@@ -1,13 +1,13 @@
 import time
 import random
 
-from pogolib.suite import TestSuite
+from pogolib.suite import TestSuite, TestState
 
 
 class Test(object):
     """Base test class"""
 
-    state = "Not Run"
+    state = TestState
 
     suite = TestSuite
 
@@ -15,10 +15,10 @@ class Test(object):
         pass
 
     def set_passed(self):
-        self.state = "Passed"
+        self.state = TestState.passed
 
     def set_failed(self):
-        self.state = "FAILED"
+        self.state = TestState.failed
 
 class MeasurePowerOnDelay(Test):
     """Pogo power on delay"""
