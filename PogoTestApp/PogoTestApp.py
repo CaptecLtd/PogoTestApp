@@ -18,7 +18,7 @@ test_suite.add_test(tests.PogoPowerInput())
 test_suite.add_test(tests.ChargeBatteryStep1())
 test_suite.add_test(tests.ChargeBatteryStep2())
 test_suite.add_test(tests.TabletCharged())
-test_suite.add_test(tests.FailTest())
+# test_suite.add_test(tests.FailTest())
 
 main_frm.disable_test_buttons()
 

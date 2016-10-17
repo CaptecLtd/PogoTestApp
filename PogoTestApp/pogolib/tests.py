@@ -7,7 +7,7 @@ from pogolib.suite import TestSuite, TestState
 class Test(object):
     """Base test class"""
 
-    state = TestState
+    state = TestState.not_run
 
     suite = TestSuite
 
@@ -19,6 +19,9 @@ class Test(object):
 
     def set_failed(self):
         self.state = TestState.failed
+
+    def reset(self):
+        self.state = TestState.not_run
 
 class MeasurePowerOnDelay(Test):
     """Pogo power on delay"""

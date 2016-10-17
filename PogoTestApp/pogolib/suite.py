@@ -26,8 +26,14 @@ class TestSuite(object):
         self.summary()
 
     def reset(self):
+        self.form.info_label["bg"] = "darkblue"
+        self.reset_test_results()
         self.current_test = 0
         self.execute()
+
+    def reset_test_results(self):
+        for test in self.tests:
+            test.reset()
 
     def advance_test(self):
 
@@ -52,6 +58,12 @@ class TestSuite(object):
                 passes += 1
 
         results += "\n\nTests: {}, Passes: {}, Failures: {}".format(tests, passes, failures)
+
+        if failures >= 0:
+            self.form.info_label["bg"] = "darkred"
+
+        if failures == 0:
+            self.form.info_label["bg"] = "darkgreen"
 
         self.set_text(results)
         self.form.disable_test_buttons()

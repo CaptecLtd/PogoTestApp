@@ -29,6 +29,10 @@ class MainForm(tk.Frame):
         self.info_label["text"] = "Ready. Press RESET to begin tests."
         #self.info_label["width"] = 85
         #self.info_label["height"] = 21
+        self.info_label["bg"] = "darkblue"
+        self.info_label["fg"] = "white"
+        self.info_label["bd"] = 1
+        self.info_label["relief"] = "groove"
         self.info_label["anchor"] = tkc.NW
         self.info_label["wraplength"] = 740
         self.info_label["justify"] = tkc.LEFT
