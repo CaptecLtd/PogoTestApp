@@ -7,9 +7,12 @@ from pogolib.suite import TestSuite, TestState
 class Test(object):
     """Base test class"""
 
+    # When set to true, failing the test will abort the suite.
+    aborts = False
+
     state = TestState.not_run
 
-    suite = TestSuite
+    #suite = TestSuite
 
     def run(self):
         pass
@@ -49,6 +52,8 @@ class MeasurePowerOnDelay(Test):
 
 class PogoPowerInput(Test):
     """Pogo power input"""
+
+    aborts = True
 
     def run(self):
         text = "Check D1 LED on the LED PCB"

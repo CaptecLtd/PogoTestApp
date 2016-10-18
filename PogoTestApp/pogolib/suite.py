@@ -23,7 +23,10 @@ class TestSuite(object):
 
     def fail_test(self):
         self.tests[self.current_test].set_failed()
-        self.summary()
+        if self.tests[self.current_test].aborts:
+            self.summary()
+        else:
+            self.advance_test()
 
     def reset(self):
         self.form.info_label["bg"] = "darkblue"
