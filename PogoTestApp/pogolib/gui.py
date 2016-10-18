@@ -13,6 +13,15 @@ class MainForm(tk.Frame):
         self.pack()
         self.create_widgets()
 
+    def center(self, master):
+        master.withdraw()
+        master.update_idletasks()
+        x = (master.winfo_screenwidth() - master.winfo_reqwidth()) / 2
+        y = (master.winfo_screenheight() - master.winfo_reqheight()) / 2
+
+        master.geometry("+%d+%d" % (x, y))
+        master.deiconify()
+
     def set_text(self, text):
         self.info_label["text"] = text
 

@@ -22,4 +22,5 @@ test_suite.add_test(tests.TabletCharged())
 
 main_frm.disable_test_buttons()
 
+main_frm.center(root)
 root.mainloop()
