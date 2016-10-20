@@ -1,10 +1,12 @@
 from enum import Enum
+from adc import Channel
+from gui import MainForm
 
 class TestSuite(object):
-    """Suite of tests for the user to complete. Contains instances of Test"""
+    "Suite of tests for the user to complete. Contains instances of Test"
     tests = []
     current_test = 0
-    form = object
+    form = MainForm
 
     def execute(self):
         self.form.enable_test_buttons()
@@ -16,6 +18,9 @@ class TestSuite(object):
 
     def set_text(self, text):
         self.form.info_label["text"] = text
+
+    def append_text(self, text):
+        self.form.info_label["text"] += "\n" + text
 
     def pass_test(self):
         self.tests[self.current_test].set_passed()
@@ -55,17 +60,16 @@ class TestSuite(object):
 
         for test in self.tests:
             results += "{0}: {1}\n".format(test.__doc__, self.format_state(test.state))
-            if test.state == TestState.failed:
+            if test.state == "failed":
                 failures += 1
-            if test.state == TestState.passed:
+            if test.state == "passed":
                 passes += 1
 
         results += "\n\nTests: {}, Passes: {}, Failures: {}".format(tests, passes, failures)
 
-        if failures >= 0:
+        if failures > 0:
             self.form.info_label["bg"] = "darkred"
-
-        if failures == 0:
+        elif failures == 0 and passes > 0:
             self.form.info_label["bg"] = "darkgreen"
 
         self.set_text(results)
@@ -73,12 +77,7 @@ class TestSuite(object):
 
     def format_state(self, state):
         return {
-            TestState.passed: "Passed",
-            TestState.failed: "FAILED",
-            TestState.not_run: "Not Run"
+            "passed": "Passed",
+            "failed": "FAILED",
+            "not_run": "Not Run"
         }.get(state, "Unknown")
-
-class TestState(Enum):
-    not_run = 1
-    passed = 2
-    failed = 3
