@@ -1,3 +1,11 @@
+from ABE_ADCPi import ADCPi
+from ABE_helpers import ABEHelpers
+
+# Define a "singleton" for accessing the ADC Pi board
+_i2c_helper = ABEHelpers()
+_bus = _i2c_helper.get_smbus()
+adc = ADCPi(bus, 0x68, 0x69, 18)
+
 class Channel(object):
     "Represents an analogue channel on an analogue to digital converter"
 
@@ -7,7 +15,10 @@ class Channel(object):
     index = 1 # the number of the channel this instance reads from
 
     def read_voltage(self):
-        return 999.0 # replace this with actual voltage reading code...
+        try:
+            return adc.read_voltage(self.index) # replace this with actual voltage reading code...
+        except:
+            return -1
 
     def zero_voltage(self):
         "Returns True if zero voltage is read from the channel, or False for any other value"
