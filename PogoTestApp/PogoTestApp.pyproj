@@ -6,8 +6,7 @@
     <ProjectGuid>d71f04d6-a899-4774-8a91-d23ae11b76c8</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>PogoTestApp.py</StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <SearchPath>pogolib\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>PogoTestApp</Name>
@@ -22,7 +21,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ADCPi\ABE_ADCPi.py" />
+    <Compile Include="ADCPi\ABE_helpers.py" />
+    <Compile Include="FunctionTests.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="pogolib\gui.py" />
+    <Compile Include="pogolib\adc.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="pogolib\tests.py">
       <SubType>Code</SubType>
     </Compile>
@@ -35,9 +42,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="ADCPi\" />
     <Folder Include="pogolib\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ADCPi\LICENSE" />
+    <Content Include="ADCPi\README.md" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <PropertyGroup>
