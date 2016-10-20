@@ -1,4 +1,6 @@
 from pogolib import gui, tests, suite
+import sys
+from getopt import getopt, GetoptError
 import tkinter as tk
 
 root = tk.Tk()
@@ -19,5 +21,9 @@ test_suite.add_test(tests.TabletCharged())
 
 main_frm.disable_test_buttons()
 
-main_frm.center(root)
+opts, args = getopt(sys.argv, "f")
+
+if args.count("-f") != 0:
+    main_frm.fullscreen(root, True)
+
 root.mainloop()

@@ -13,6 +13,9 @@ class MainForm(tk.Frame):
         self.pack()
         self.create_widgets()
 
+    def fullscreen(self, master, enable):
+        master.attributes("-fullscreen", enable)
+
     def center(self, master):
         master.withdraw()
         master.update_idletasks()
