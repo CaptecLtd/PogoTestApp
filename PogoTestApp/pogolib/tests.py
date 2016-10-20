@@ -1,8 +1,8 @@
 import time
 import random
 
-from suite import TestSuite
-from adc import Channel
+from pogolib.suite import TestSuite
+from pogolib.adc import Channel
 
 class TestProcedure(object):
     "Base test class. All other tests should descend from this class."
@@ -24,6 +24,13 @@ class TestProcedure(object):
 
     def reset(self):
         self.state = "not_run"
+
+    def format_state(self, state):
+        return {
+            "passed": "Passed",
+            "failed": "FAILED",
+            "not_run": "Not Run"
+        }.get(state, "Unknown")
 
 class MeasurePowerOnDelay(TestProcedure):
     """Pogo power on delay"""

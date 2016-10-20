@@ -1,4 +1,4 @@
-from pogolib import gui, suite, tests
+from pogolib import gui, tests, suite
 import tkinter as tk
 
 root = tk.Tk()

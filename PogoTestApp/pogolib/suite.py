@@ -1,6 +1,6 @@
 from enum import Enum
-from adc import Channel
-from gui import MainForm
+from pogolib.adc import Channel
+from pogolib.gui import MainForm
 
 class TestSuite(object):
     "Suite of tests for the user to complete. Contains instances of Test"
@@ -59,7 +59,7 @@ class TestSuite(object):
         passes = 0
 
         for test in self.tests:
-            results += "{0}: {1}\n".format(test.__doc__, self.format_state(test.state))
+            results += "{0}: {1}\n".format(test.__doc__, test.format_state(test.state))
             if test.state == "failed":
                 failures += 1
             if test.state == "passed":
@@ -74,10 +74,3 @@ class TestSuite(object):
 
         self.set_text(results)
         self.form.disable_test_buttons()
-
-    def format_state(self, state):
-        return {
-            "passed": "Passed",
-            "failed": "FAILED",
-            "not_run": "Not Run"
-        }.get(state, "Unknown")

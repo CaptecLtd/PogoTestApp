@@ -6,7 +6,8 @@
     <ProjectGuid>d71f04d6-a899-4774-8a91-d23ae11b76c8</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>PogoTestApp.py</StartupFile>
-    <SearchPath>pogolib\</SearchPath>
+    <SearchPath>
+    </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>PogoTestApp</Name>
