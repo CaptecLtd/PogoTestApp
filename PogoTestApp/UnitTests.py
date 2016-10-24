@@ -18,6 +18,7 @@ class TestVoltageMethods(unittest.TestCase):
     def setUp(self):
         # Set voltage inside each test case, initialises to 0.0
         self.channel = Channel(1)
+        # Force the channel to simulation mode so we're not attempting to read actual voltages from the ADC.
         self.channel.set_simulation_mode(True)
 
     def tearDown(self):

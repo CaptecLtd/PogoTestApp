@@ -14,7 +14,7 @@ if not simulation_mode:
     # Define a "singleton" for accessing the ADC Pi board
     _i2c_helper = ABEHelpers()
     _bus = _i2c_helper.get_smbus()
-    adc = ADCPi(bus, 0x68, 0x69, 18)
+    adc = ADCPi(_bus, 0x68, 0x69, 18)
 
 class Channel(object):
     "Represents an analogue channel on an analogue to digital converter"
