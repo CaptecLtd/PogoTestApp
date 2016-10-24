@@ -29,7 +29,7 @@ class TestSuite(object):
 
     def fail_test(self):
         self.tests[self.current_test].set_failed()
-        if self.tests[self.current_test].abort:s
+        if self.tests[self.current_test].abort:
             self.summary()
         else:
             self.advance_test()
