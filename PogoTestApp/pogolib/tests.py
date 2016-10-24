@@ -25,12 +25,12 @@ class TestProcedure(object):
     def reset(self):
         self.state = "not_run"
 
-    def format_state(self, state):
+    def format_state(self):
         return {
             "passed": "Passed",
             "failed": "FAILED",
             "not_run": "Not Run"
-        }.get(state, "Unknown")
+        }.get(self.state, "Unknown")
 
 class MeasurePowerOnDelay(TestProcedure):
     """Pogo power on delay"""
@@ -43,6 +43,7 @@ class MeasurePowerOnDelay(TestProcedure):
         ch2 = Channel(2)
 
         # Wait for channel 1 voltage
+
         while ch1.zero_voltage():
             time.sleep(0.1)
             self.suite.form.update()
@@ -51,6 +52,7 @@ class MeasurePowerOnDelay(TestProcedure):
         
         # wait for channel 2 voltage
         delay = 0
+
         while ch2.zero_voltage():
             time.sleep(0.001)
             self.suite.form.update()

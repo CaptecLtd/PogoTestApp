@@ -27,7 +27,7 @@
   <ItemGroup>
     <Compile Include="ADCPi\ABE_ADCPi.py" />
     <Compile Include="ADCPi\ABE_helpers.py" />
-    <Compile Include="FunctionTests.py">
+    <Compile Include="UnitTests.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="pogolib\gui.py" />

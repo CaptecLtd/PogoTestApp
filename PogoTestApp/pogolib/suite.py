@@ -3,10 +3,10 @@ from pogolib.adc import Channel
 from pogolib.gui import MainForm
 
 class TestSuite(object):
-    "Suite of tests for the user to complete. Contains instances of Test"
+    "Suite of tests for the user to complete. Contains instances of TestProcedure"
     tests = []
     current_test = 0
-    form = MainForm
+    form = None
 
     def execute(self):
         self.form.enable_test_buttons()
@@ -59,7 +59,7 @@ class TestSuite(object):
         passes = 0
 
         for test in self.tests:
-            results += "{0}: {1}\n".format(test.__doc__, test.format_state(test.state))
+            results += "{0}: {1}\n".format(test.__doc__, test.format_state())
             if test.state == "failed":
                 failures += 1
             if test.state == "passed":
