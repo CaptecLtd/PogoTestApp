@@ -9,8 +9,9 @@ class TestSuite(object):
     form = None
 
     def execute(self):
-        self.form.enable_test_buttons()
+        self.tests[self.current_test].setUp()
         self.tests[self.current_test].run()
+        self.tests[self.current_test].tearDown()
 
     def add_test(self, test):
         test.suite = self
@@ -28,7 +29,7 @@ class TestSuite(object):
 
     def fail_test(self):
         self.tests[self.current_test].set_failed()
-        if self.tests[self.current_test].aborts:
+        if self.tests[self.current_test].abort:s
             self.summary()
         else:
             self.advance_test()

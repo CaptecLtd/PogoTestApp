@@ -13,7 +13,16 @@ class TestProcedure(object):
     suite = TestSuite()
     state = "not_run"
 
+    def setUp(self):
+        "This method is called before run(). Tasks to be completed before the test itself begins should go here."
+        pass
+
     def run(self):
+        "The method which runs the actual test procedure"
+        pass
+
+    def tearDown(self):
+        "This method is called after run() completes. Tasks to be completed after the test has finished should go here."
         pass
 
     def set_passed(self):
@@ -31,6 +40,11 @@ class TestProcedure(object):
             "failed": "FAILED",
             "not_run": "Not Run"
         }.get(self.state, "Unknown")
+
+
+"""
+The classes below are "live" tests run as part of the ATE itself. They are not unit tested.
+"""
 
 class MeasurePowerOnDelay(TestProcedure):
     """Pogo power on delay"""
