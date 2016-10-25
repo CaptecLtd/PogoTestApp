@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.constants as tkc
 from tkinter import messagebox
+from tkinter.messagebox import WARNING, ABORTRETRYIGNORE
 #import tkmessagebox
 
 class MainForm(tk.Frame):
@@ -93,3 +94,7 @@ class MainForm(tk.Frame):
 
     def msgbox(self, title, text):
         messagebox.showinfo(title, text)
+
+    def resetdialogue(self):
+        "Asks the user if they want to reset the current test (True), all tests (False) or cancel (None)"
+        return messagebox.askretrycancel("RESET", "Do you want to re-run the current test, or cancel the current session and start fresh?\n\nChoose Retry to re-run the current.\nChoose Cancel to abort testing and start again.", icon = WARNING)

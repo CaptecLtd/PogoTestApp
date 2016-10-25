@@ -1,5 +1,6 @@
 import time
 import random
+from datetime import datetime, timedelta
 
 from pogolib.suite import TestSuite
 from pogolib.adc import Channel
@@ -9,6 +10,9 @@ class TestProcedure(object):
 
     # When set to true, failing the test will abort the suite.
     aborts = False
+
+    # When a test is passed, failed or reset, this variable becomes true. Use this to break out of infinite loops.
+    breakout = False
 
     suite = TestSuite()
     state = "not_run"
@@ -26,12 +30,15 @@ class TestProcedure(object):
         pass
 
     def set_passed(self):
+        self.breakout = True
         self.state = "passed"
 
     def set_failed(self):
+        self.breakout = True
         self.state = "failed"
 
     def reset(self):
+        self.breakout = True
         self.state = "not_run"
 
     def format_state(self):
@@ -46,12 +53,21 @@ class TestProcedure(object):
 The classes below are "live" tests run as part of the ATE itself. They are not unit tested.
 """
 
+class InstallHardware(TestProcedure):
+    "Hardware installed to tester"
+
+    aborts = True
+
+    def run(self):
+        self.suite.form.enable_test_buttons()
+        self.suite.set_text("Turn off all loads before starting.\n\nPlease install all hardware according to instructions and press PASS when ready to begin.")
+
 class MeasurePowerOnDelay(TestProcedure):
     """Pogo power on delay"""
 
     def run(self):
         self.suite.form.disable_test_buttons()
-        self.suite.set_text("Please turn on LOAD 1. (this sample just simulates the switch being flipped)")
+        self.suite.set_text("Please apply power to Pogo PCB J2.")
 
         ch1 = Channel(1)
         ch2 = Channel(2)
@@ -62,18 +78,37 @@ class MeasurePowerOnDelay(TestProcedure):
             time.sleep(0.1)
             self.suite.form.update()
 
+            if self.breakout:
+                return
+
         self.suite.set_text("Got channel 1 load, measuring tablet power delay")
         
         # wait for channel 2 voltage
-        delay = 0
+        before = datetime.now()
+
+        # timeout after 10 seconds and fail the test
+        timeout = 10000
+        loops = 0
 
         while ch2.zero_voltage():
-            time.sleep(0.001)
+            time.sleep(0.1)
             self.suite.form.update()
-            delay +=1
+            loops += 1
+
+            if self.breakout:
+                return
+          
+        after = datetime.now()
+        delay_ms = (after - before) / 1000
         
-        self.suite.append_text("Detected delay of %ims" % delay)
+        self.suite.append_text("Detected delay of %ims" % delay_ms)
         self.suite.append_text("Channel 2 voltage is %d" % ch2.read_voltage())
+        self.suite.append_text("")
+
+        if delay_ms >= 400 and delay_ms <= 600:
+            self.suite.append_text("Delay is between 400ms and 600ms, PASS.")
+        else:
+            self.suite.append_text("WARNING: Delay is out of bounds (between 400ms and 600ms)")
 
         self.suite.form.enable_test_buttons()
 
@@ -83,10 +118,18 @@ class PogoPowerInput(TestProcedure):
     aborts = True
 
     def run(self):
-        text = "Check D1 LED on the LED PCB"
-        text += "\n\nPASS = LED lit RED"
-        text += "\nFAIL = LED is not lit"
-        self.suite.set_text(text)
+
+        self.suite.set_text("Enable LOAD 1 (1.8A). Test will fail if not enabled in 30 seconds.")
+        self.suite.form.update()
+
+        ch4 = Channel(4)
+        if not ch4.await_voltage(5.0, 0.001, 30):
+            self.suite.fail_test()
+
+        self.suite.set_text("LOAD 1 received. Observe LED PCB ""D1"" is red")
+
+        
+        
         
 class ChargeBatteryStep1(TestProcedure):
     """Pogo power to battery board"""
@@ -100,7 +143,7 @@ class ChargeBatteryStep1(TestProcedure):
         text = "Detected +{}V on battery board."
         text += "\n\nConfirm LED D5 is illuminated RED"
         text += "\nConfirm LEDs D2 and D4 are OFF completely"
-        text += "\n\nIf D2 or D4 are illuminated at all, fail the test"
+        text += "\n\nIf D2 or D4 have illuminated at all, fail the test"
 
         self.suite.set_text(text.format(voltage))
         
@@ -108,8 +151,37 @@ class ChargeBatteryStep2(TestProcedure):
     """Measure pogo power voltage divider"""
 
     def run(self):
-        # Conditional to measure TP1 and TP13 is below 4.5V
-        self.suite.set_text("Measured 2.0V on voltage divider (TP1 and TP13\nMeasured 3.04V on battery PCB")
+        self.suite.set_text("Reading voltage on channel 2")
+        ch2 = Channel(2)
+
+        if ch2.read_voltage() < 4.5:
+            self.suite.append_text("Voltage is less than 4.5v")
+
+            if ch2.voltage_between(2.0, 3.0, 0.01):
+                self.suite.append_text("Voltage is between 2.0v and 3.0v")
+
+                ch3 = Channel(3)
+
+                self.suite.append_text("Checking if channel 3 voltage is between 3.0v and 4.07v")
+
+                if ch3.voltage_between(3.0, 4.07, 0.01):
+                    v = ch3.read_voltage()
+
+                    if v > 3.9:
+                        self.suite.append_text("Voltage is above 3.9v, please change battery")
+                    else:
+                        self.suite.append_text("Battery PCB voltage is %20f, test passed." % ch3.read_voltage())
+
+                else:
+                    self.suite.append_text("Battery PCB voltage is %20f, test FAILED." % ch3.read_voltage())
+                    self.suite.form.disable_pass_button()
+
+        else:
+            self.suite.append_text("Voltage is greater than 4.5v, test failed")
+            self.suite.form.disable_pass_button()
+
+    def tearDown(self):
+        self.suite.form.enable_test_buttons()
 
 class TabletCharged(TestProcedure):
     """Check tablet charged"""

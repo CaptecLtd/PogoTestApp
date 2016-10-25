@@ -5,10 +5,11 @@ from pogolib.gui import MainForm
 class TestSuite(object):
     "Suite of tests for the user to complete. Contains instances of TestProcedure"
     tests = []
-    current_test = 0
+    current_test = -1
     form = None
 
     def execute(self):
+        self.tests[self.current_test].breakout = False
         self.tests[self.current_test].setUp()
         self.tests[self.current_test].run()
         self.tests[self.current_test].tearDown()
@@ -29,16 +30,26 @@ class TestSuite(object):
 
     def fail_test(self):
         self.tests[self.current_test].set_failed()
-        if self.tests[self.current_test].abort:
+        if self.tests[self.current_test].aborts:
             self.summary()
         else:
             self.advance_test()
 
     def reset(self):
-        self.form.info_label["bg"] = "darkblue"
-        self.reset_test_results()
-        self.current_test = 0
-        self.execute()
+        # If we've just loaded up, go ahead and start from the beginning
+        if self.current_test == -1:
+            self.current_test = 0
+            self.execute()
+            return
+
+        answer = self.form.resetdialogue()
+        if answer == True:
+            self.execute()
+        elif answer == False:
+            self.form.info_label["bg"] = "darkblue"
+            self.reset_test_results()
+            self.current_test = 0
+            self.execute()
 
     def reset_test_results(self):
         for test in self.tests:
@@ -54,6 +65,7 @@ class TestSuite(object):
             self.execute()
 
     def summary(self):
+        self.current_test = -1
         results = "Test suite completed. Results:\n\n"
         tests = len(self.tests)
         failures = 0
