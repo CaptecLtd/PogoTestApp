@@ -2,8 +2,8 @@ import time
 import random
 from datetime import datetime, timedelta
 
-from pogolib.suite import TestSuite
-from pogolib.adc import Channel
+from ATE.suite import TestSuite
+from ATE.adc import Channel
 
 class TestProcedure(object):
     "Base test class. All other tests should descend from this class."
@@ -99,7 +99,7 @@ class MeasurePowerOnDelay(TestProcedure):
                 return
           
         after = datetime.now()
-        delay_ms = (after - before) / 1000
+        delay_ms = (after - before)
         
         self.suite.append_text("Detected delay of %ims" % delay_ms)
         self.suite.append_text("Channel 2 voltage is %d" % ch2.read_voltage())

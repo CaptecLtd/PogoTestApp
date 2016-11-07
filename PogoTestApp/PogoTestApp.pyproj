@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>d71f04d6-a899-4774-8a91-d23ae11b76c8</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>PogoTestApp.py</StartupFile>
+    <StartupFile>UnitTests.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -34,24 +34,24 @@
     <Compile Include="UnitTests.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="pogolib\gui.py" />
-    <Compile Include="pogolib\adc.py">
+    <Compile Include="ATE\gui.py" />
+    <Compile Include="ATE\adc.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="pogolib\tests.py">
+    <Compile Include="ATE\tests.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PogoTestApp.py" />
-    <Compile Include="pogolib\suite.py">
+    <Compile Include="ATE\suite.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="pogolib\__init__.py">
+    <Compile Include="ATE\__init__.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ADCPi\" />
-    <Folder Include="pogolib\" />
+    <Folder Include="ATE\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ADCPi\LICENSE" />

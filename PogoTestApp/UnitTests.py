@@ -9,9 +9,9 @@ import unittest
 import time
 from math import ceil
 
-from pogolib.tests import TestProcedure
-from pogolib.suite import TestSuite
-from pogolib.adc import Channel
+from ATE.tests import TestProcedure
+from ATE.suite import TestSuite
+from ATE.adc import Channel
 
 class TestVoltageMethods(unittest.TestCase):
 
@@ -63,7 +63,13 @@ class TestVoltageMethods(unittest.TestCase):
         time_before = time.time()
         self.assertFalse(self.channel.await_voltage(1.0, 0.0, 1))
 
-        self.assertEqual(ceil(time.time()), ceil(time_before + 1))
+        self.assertGreaterEqual(ceil(time.time()), ceil(time_before + 1))
+
+    def test_read_voltage_range(self):
+        self.channel.set_simulation_voltage(5.0)
+
+        voltage, valid, readings = self.channel.read_voltage_range(5)
+        self.assertTrue(valid)
 
 
 class TestFunctionTests(unittest.TestCase):
@@ -97,6 +103,8 @@ class TestSuitePassOperation(unittest.TestCase):
         suite = TestSuite()
         suite.add_test(TestProcedure())
         suite.add_test(TestProcedure())
+
+        suite.reset()
 
         suite.pass_test()
 

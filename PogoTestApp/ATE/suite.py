@@ -1,9 +1,9 @@
 from enum import Enum
-from pogolib.adc import Channel
-from pogolib.gui import MainForm
+from ATE.adc import Channel
+from ATE.gui import MainForm
 
 class TestSuite(object):
-    "Suite of tests for the user to complete. Contains instances of TestProcedure"
+    "Suite of tests for the user to complete. Controls the running and state of tests. Call TestSuite.reset() before interacting with any tests. "
     tests = []
     current_test = -1
     form = None
@@ -57,15 +57,19 @@ class TestSuite(object):
 
     def advance_test(self):
 
-        # Check to see if we've got more groups to run
+        # Check to see if we've got more groups to run. If we don't, show the summary.
         if self.current_test >= len(self.tests) -1:
-            self.summary()
+            # If our form is declared, run the summary method. If not, we're likely running from unit tests so ignore.
+            if self.form:
+                self.summary()
         else:
+            # If we do have more tests, advance the current test variable and execute the test.
             self.current_test += 1
             self.execute()
 
     def summary(self):
         self.current_test = -1
+
         results = "Test suite completed. Results:\n\n"
         tests = len(self.tests)
         failures = 0

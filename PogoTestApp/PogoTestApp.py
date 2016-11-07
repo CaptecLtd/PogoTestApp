@@ -1,4 +1,4 @@
-from pogolib import gui, tests, suite
+from ATE import gui, tests, suite
 import sys
 from getopt import getopt, GetoptError
 import tkinter as tk
