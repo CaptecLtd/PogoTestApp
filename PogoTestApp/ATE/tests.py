@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from ATE.suite import TestSuite
 from ATE.adc import Channel
+from ATE.const import *
 
 class TestProcedure(object):
     "Base test class. All other tests should descend from this class."
@@ -69,8 +70,8 @@ class MeasurePowerOnDelay(TestProcedure):
         self.suite.form.disable_test_buttons()
         self.suite.set_text("Please apply power to Pogo PCB J2.")
 
-        ch1 = Channel(1)
-        ch2 = Channel(2)
+        ch1 = Channel(AD1_Pogo_Input_Volts)
+        ch2 = Channel(AD2_Tablet_USB_Volts)
 
         # Wait for channel 1 voltage
 

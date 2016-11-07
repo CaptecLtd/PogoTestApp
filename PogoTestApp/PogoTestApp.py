@@ -1,4 +1,4 @@
-from ATE import gui, tests, suite
+from ATE import gui, tests, suite, const, version
 import sys
 from getopt import getopt, GetoptError
 import tkinter as tk
@@ -26,5 +26,7 @@ opts, args = getopt(sys.argv, "f")
 
 if args.count("-f") != 0:
     main_frm.fullscreen(root, True)
+
+main_frm.set_text(const.INTRO_TEXT.format(hwrevision = version.HARDWARE_REVISION, swrevision = version.SOFTWARE_REVISION, swdate = version.SOFTWARE_RELEASE_DATE))
 
 root.mainloop()

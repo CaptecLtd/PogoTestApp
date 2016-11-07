@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>d71f04d6-a899-4774-8a91-d23ae11b76c8</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>UnitTests.py</StartupFile>
+    <StartupFile>PogoTestApp.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -29,6 +29,15 @@
     <Compile Include="ADCPi\ABE_ADCPi.py" />
     <Compile Include="ADCPi\ABE_helpers.py" />
     <Compile Include="ADCPi\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ATE\const.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ATE\digio.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ATE\version.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTests.py">

@@ -49,12 +49,11 @@ class MainForm(tk.Frame):
         self.info_label["anchor"] = tkc.NW
         self.info_label["wraplength"] = 740
         self.info_label["justify"] = tkc.LEFT
-        self.info_label["font"] = ("Arial", 12)
+        self.info_label["font"] = ("System", 11)
         self.info_label.grid(padx = padding, pady = padding, columnspan = 3, column = 0, row = 0, sticky = tkc.W + tkc.E + tkc.N + tkc.S)
         #self.info_label.grid()
         #self.info_label.columnconfigure(0, minsize = 500)
 
-        
         self.pass_btn = tk.Button(self)
         self.pass_btn["text"] = "PASS"
         self.pass_btn["fg"] = "green"
