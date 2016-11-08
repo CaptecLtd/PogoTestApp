@@ -13,7 +13,6 @@ test_suite.form.pass_btn["command"] = test_suite.pass_test
 test_suite.form.fail_btn["command"] = test_suite.fail_test
 test_suite.form.reset_btn["command"] = test_suite.reset
 
-test_suite.add_test(tests.InstallHardware())
 test_suite.add_test(tests.MeasurePowerOnDelay())
 test_suite.add_test(tests.PogoPowerInput())
 test_suite.add_test(tests.ChargeBatteryStep1())

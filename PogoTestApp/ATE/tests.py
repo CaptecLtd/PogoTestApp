@@ -54,21 +54,13 @@ class TestProcedure(object):
 The classes below are "live" tests run as part of the ATE itself. They are not unit tested.
 """
 
-class InstallHardware(TestProcedure):
-    "Hardware installed to tester"
-
-    aborts = True
-
-    def run(self):
-        self.suite.form.enable_test_buttons()
-        self.suite.set_text("Turn off all loads before starting.\n\nPlease install all hardware according to instructions and press PASS when ready to begin.")
 
 class MeasurePowerOnDelay(TestProcedure):
     """Pogo power on delay"""
 
     def run(self):
         self.suite.form.disable_test_buttons()
-        self.suite.set_text("Please apply power to Pogo PCB J2.")
+        self.suite.set_text("Install PCBA assembly and apply PCBA power when ready.")
 
         ch1 = Channel(AD1_Pogo_Input_Volts)
         ch2 = Channel(AD2_Tablet_USB_Volts)
@@ -83,6 +75,7 @@ class MeasurePowerOnDelay(TestProcedure):
                 return
 
         self.suite.set_text("Got channel 1 load, measuring tablet power delay")
+        self.suite.form.set_reading_value("AD1", ch1.read_voltage_range(10, sleep = 0.0))
         
         # wait for channel 2 voltage
         before = datetime.now()
@@ -107,7 +100,7 @@ class MeasurePowerOnDelay(TestProcedure):
         self.suite.append_text("")
 
         if delay_ms >= 400 and delay_ms <= 600:
-            self.suite.append_text("Delay is between 400ms and 600ms, PASS.")
+            self.suite.pass_test()
         else:
             self.suite.append_text("WARNING: Delay is out of bounds (between 400ms and 600ms)")
 
