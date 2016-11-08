@@ -16,20 +16,21 @@ except:
 if not simulation_mode:
     _i2c_helper = ABEHelpers()
     _bus = _i2c_helper.get_smbus()
-    adc = ADCPi(_bus, 0x68, 0x69, 18)
-
+    adc = ADCPi(_bus, 0x68, 0x69, 12)
 
 def read_all_voltages():
     "Reads the voltages from all defined analogue channels"
+    def read(channel):
+        return round(Channel(channel).read_voltage(), 2)
 
     return {
-        "AD1": Channel(const.AD1_Pogo_Input_Volts).read_voltage(),
-        "AD2": Channel(const.AD2_Tablet_USB_Volts).read_voltage(),
-        "AD3": Channel(const.AD3_Batt_Board_Power_In_Volts).read_voltage(),
-        "AD4": Channel(const.AD4_Batt_Board_Temp_Sense_Cutoff).read_voltage(),
-        "AD5": Channel(const.AD5_Batt_Board_Battery_Volts).read_voltage(),
-        "AD6": Channel(const.AD6_External_USB_Volts).read_voltage(),
-        "AD7": Channel(const.AD7_Pogo_Battery_Output).read_voltage()
+        "AD1": read(const.AD1_Pogo_Input_Volts),
+        "AD2": read(const.AD2_Tablet_USB_Volts),
+        "AD3": read(const.AD3_Batt_Board_Power_In_Volts),
+        "AD4": read(const.AD4_Batt_Board_Temp_Sense_Cutoff),
+        "AD5": read(const.AD5_Batt_Board_Battery_Volts),
+        "AD6": read(const.AD6_External_USB_Volts),
+        "AD7": read(const.AD7_Pogo_Battery_Output)
     }
 
 class Channel(object):

@@ -7,6 +7,7 @@ Copyright (c) 2016 Captec Ltd
 # Import our modules
 from ATE import gui, tests, suite, const, version, adc, digio
 import sys
+from threading import Thread
 from getopt import getopt, GetoptError
 import tkinter as tk
 from time import sleep
@@ -71,7 +72,8 @@ def readings_display_test():
 readings_display_test()
 
 # Kick off the reading updates.
-update_readings()
+update_readings_thread = Thread(target = update_readings)
+update_readings_thread.start()
 
 # Set startup text on the display.
 main_frm.set_text(const.INTRO_TEXT.format(hwrevision = version.HARDWARE_REVISION, swrevision = version.SOFTWARE_REVISION, swdate = version.SOFTWARE_RELEASE_DATE))
