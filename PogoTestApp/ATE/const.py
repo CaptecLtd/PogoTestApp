@@ -30,7 +30,7 @@ DIP4_Dminus_Tablet_USB_Sense = 7
 # These correspond to the GPIO pins (BCM naming convention)
 DOP1_Tablet_Full_Load_Switch = 17
 DOP2_Tablet_Charged_Load_Switch = 18
-DOP3_OTG_Mode_Trigger = 13
+DOP3_OTG_Mode_Trigger = 27
 DOP4_Dplus_Ext_USB = 19
 DOP5_Dminus_Ext_USB = 26
 DOP6_Tablet_OTG_Vout_Activate = 20

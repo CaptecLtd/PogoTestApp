@@ -47,7 +47,6 @@ class TestSuite(object):
         if answer == True:
             self.execute()
         elif answer == False:
-            self.form.info_label["bg"] = "darkblue"
             self.reset_test_results()
             self.current_test = 0
             self.execute()

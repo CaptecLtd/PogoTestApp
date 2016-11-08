@@ -79,13 +79,11 @@ class ConnectHardwareAndAwaitPowerOn(TestProcedure):
 
         got_5v = ch1.await_voltage(5.0, 0.01)
 
-        self.suite.form.set_reading_value("AD1", ch1.read_voltage_range(10, sleep = 0.0))
-
         # We have a voltage and it's 5v(ish)
         if got_5v:
             self.suite.pass_test()
         else:
-            self.suite.form.set_text("Pogo input volts was outside of expected parameter (5.0v)")
+            self.suite.form.set_text("Pogo input volts ({}) was outside of expected parameter (5.0v)".format(ch1.read_voltage()))
             self.suite.fail_test()
 
 class MeasurePowerOnDelay(TestProcedure):
@@ -216,3 +214,165 @@ class BatteryBoardPowersTablet(TestProcedure):
         self.suite.form.set_text("Turn off Pogo Power (SW1) and turn on battery isolation switch (BATT-SW)")
 
 
+class PogoPinsIsolatedFromBatteryPower(TestProcedure):
+
+    description = "2b. Pogo Pins isolated from Battery Power"
+
+    def run(self):
+        self.suite.form.set_text("Reading voltage from AD1, expecting 0V")
+
+        ch = Channel(AD1_Pogo_Input_Volts)
+
+        if ch.zero_voltage():
+            self.suite.pass_test()
+        else:
+            self.suite.form.append_text_line("Got {}v from AD1, test failed".format(ch.read_voltage()))
+            self.suite.fail_test()
+
+class LEDStatusNotInChargeState(TestProcedure):
+    
+    description = "2c. LED status (not in charge state)"
+
+    def run(self):
+        self.suite.form.enable_test_buttons()
+
+        self.suite.form.set_text("Observe LED PCB (D1) is off. No illumination = PASS. Green or red illumination = FAIL")
+
+    def tearDown(self):
+        self.suite.form.disable_test_buttons()
+
+class BattBoardPowerInputViaPogoDisconnected(TestProcedure):
+
+    description = "2d. Battery Board power input via PoGo disconnected"
+
+    def run(self):
+        ch = Channel(AD2_Tablet_USB_Volts)
+
+        if ch.zero_voltage():
+            self.suite.pass_test()
+        else:
+            self.suite.form.set_text("Voltage detected on AD2, test failed.")
+            self.suite.fail_test()
+
+class ActivationOfOTGPower(TestProcedure):
+
+    description = "3a. Activation of On The Go power"
+
+    def run(self):
+        digio.set_low(DOP3_OTG_Mode_Trigger)
+
+        otg_triggered = digio.await_low(DIP2_Tablet_OTG_Sense)
+
+        if otg_triggered:
+            self.suite.pass_test()
+        else:
+            self.suite.form.set_text("OTG power was not detected on DIP2, test failed")
+            self.suite.fail_test()
+
+class PogoPinsIsolatedFromOTGModePower(TestProcedure):
+
+    description = "3b. Pogo pins isolated from tablet OTG mode power"
+
+    def run(self):
+        ch = Channel(AD1_Pogo_Input_Volts)
+
+        if ch.zero_voltage():
+            self.suite.pass_test()
+        else:
+            self.suite.form.set_text("Voltage detected ({}v) on AD1, OTG mode enabled so no pogo voltage (AD1) is expected".format(ch.read_voltage()))
+            self.suite.fail_test()
+
+class LEDStatusNotInChargeState(TestProcedure):
+
+    description = "3c. LED status (not in charge state)"
+
+    def run(self):
+        self.suite.form.enable_test_buttons()
+        self.suite.form.set_text("Observe LED PCB (D1) is off. No illumination = PASS. Green or red illumination = FAIL")
+
+    def tearDown(self):
+        self.suite.form.disable_test_buttons()
+
+class BattBoardPowerInputViaPogoDisconnected(TestProcedure):
+
+    description = "3d. Battery board power input via PoGo disconnected"
+
+    def run(self):
+        ch = Channel(AD3_Batt_Board_Power_In_Volts)
+
+        if ch.zero_voltage():
+            self.suite.pass_test()
+        else:
+            self.suite.form.set_text("Voltage detected ({}v) on AD3. Battery board power input should be disconnected. Test failed.")
+            self.suite.fail_test()
+
+class NoExternalBattVoltageToTabletPart1(TestProcedure):
+
+    description = "3e. No external battery voltage presented to tablet +VE (part 1)"
+
+    def run(self):
+        ch = Channel(AD7_Pogo_Battery_Output)
+
+        voltage = ch.read_voltage()
+        self.suite.form.set_text("Detected voltage: {}v on AD7".format(voltage))
+
+        if ch.voltage_between(4.84, 4.88, 0.01):
+            self.suite.form.append_text_line("Voltage within bounds of 4.84v to 4.88v, passed.")
+            self.suite.form.append_text_line("Toggle switch BATT-SW to isolate battery. PASS when completed.")
+            self.suite.pass_test()
+        else:
+            self.suite.form.append_text_line("Voltage was NOT within bounds of 4.84v to 4.88v, failed")
+            self.suite.fail_test()
+
+class NoExternalBattVoltageToTabletPart2(TestProcedure):
+
+    description = "3e. No external battery voltage presented to tablet +VE (part 2)"
+
+    def run(self):
+        ch = Channel(AD7_Pogo_Battery_Output)
+
+        self.suite.form.enable_test_buttons()
+
+        if ch.zero_voltage():
+            self.suite.form.append_text_line("Zero voltage detected on AD7, test passed")
+        else:
+            self.suite.form.disable_pass_button()
+            self.suite.form.append_text_line("Voltage detected ({}v) on AD7, test failed. Check BATT-SW is toggled and reset.")
+            self.suite.form.append_text_line("If BATT-SW is toggled, FAIL the test.")
+
+class USBCableContinuityTest(TestProcedure):
+
+    description = "3f. USB cable continuity for data transfer"
+
+    def run(self):
+        
+        self.suite.form.set_text("Measuring continuity on USB data lines")
+        got_Dplus = False
+        got_Dminus = False
+
+        digio.set_high(DOP4_Dplus_Ext_USB)
+        if digio.await_high(DIP3_Dplus_Tablet_USB_Sense):
+            digio.set_low(DOP4_Dplus_Ext_USB)
+            if not digio.read(DIP3_Dplus_Tablet_USB_Sense):
+                self.suite.form.append_text_line("D+ continuity OK")
+                got_Dplus = True
+            else:
+                self.suite.form.append_text_line("D+ continuity did not return to low")
+        else:
+            self.suite.form.append_text_line("D+ no signal")
+
+        digio.set_high(DOP5_Dminus_Ext_USB)
+        if digio.await_high(DIP4_Dminus_Tablet_USB_Sense):
+            digio.set_low(DOP5_Dminus_Ext_USB)
+            if not digio.read(DIP4_Dminus_Tablet_USB_Sense):
+                self.suite.form.append_text_line("D- continuity OK")
+                got_Dminus = True
+            else:
+                self.suite.form.append_text_line("D- continuity did not return to low")
+        else:
+            self.suite.form.append_text_line("D- no signal")
+
+        if got_Dminus and got_Dplus:
+            self.suite.form.append_text_line("Continuity for D+ and D- OK, test passed")
+        else:
+            self.suite.form.append_text_line("Continuity error(s). Check data lines on USB")
