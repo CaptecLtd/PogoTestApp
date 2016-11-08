@@ -1,8 +1,11 @@
+# Import our required modules and methods
 from time import sleep
+from ATE import const
 
 # Try loading the ADC modules. If not, enable simulation mode.
+# Simulation mode doesn't read any values from the ADC, instead it just returns the value of whatever is set by Channel.set_simulation_voltage()
+# This is principally used for development on Windows (where there is no GPIO or ADC) and for running unit tests on these functions.
 simulation_mode = False
-
 try:
     from ADCPi.ABE_ADCPi import ADCPi
     from ADCPi.ABE_helpers import ABEHelpers
@@ -11,10 +14,23 @@ except:
     simulation_mode = True
 
 if not simulation_mode:
-    # Define a "singleton" for accessing the ADC Pi board
     _i2c_helper = ABEHelpers()
     _bus = _i2c_helper.get_smbus()
     adc = ADCPi(_bus, 0x68, 0x69, 18)
+
+
+def read_all_voltages():
+    "Reads the voltages from all defined analogue channels"
+
+    return {
+        "AD1": Channel(const.AD1_Pogo_Input_Volts).read_voltage(),
+        "AD2": Channel(const.AD2_Tablet_USB_Volts).read_voltage(),
+        "AD3": Channel(const.AD3_Batt_Board_Power_In_Volts).read_voltage(),
+        "AD4": Channel(const.AD4_Batt_Board_Temp_Sense_Cutoff).read_voltage(),
+        "AD5": Channel(const.AD5_Batt_Board_Battery_Volts).read_voltage(),
+        "AD6": Channel(const.AD6_External_USB_Volts).read_voltage(),
+        "AD7": Channel(const.AD7_Pogo_Battery_Output).read_voltage()
+    }
 
 class Channel(object):
     "Represents an analogue channel on an analogue to digital converter"
@@ -42,6 +58,10 @@ class Channel(object):
     def set_simulation_voltage(self, value):
         "Sets the voltage which will be returned by read_voltage() if the class instance is in simulation mode"
         self._simulation_voltage = value
+
+    def set_conversion_factor(self, factor):
+        "Sets the conversion factor for this channel. The factor is added to whichever readings are returned from the ADC"
+        self._conversion_factor = factor
 
     def read_voltage(self):
         "Reads a single voltage value from the A/D converter or the _simulation_voltage var if in simulation mode"
@@ -72,7 +92,7 @@ class Channel(object):
         return float(sum(readings)) / max(len(readings), 1), valid, readings
         
     def zero_voltage(self):
-        "Returns True if zero voltage is read from the channel, or False for any other value"
+        "Returns True if near-zero voltage is read from the channel, or False for any other value"
         return self.voltage_near(0.0, 0.01)
 
     def voltage_between(self, lower, upper, tolerance):

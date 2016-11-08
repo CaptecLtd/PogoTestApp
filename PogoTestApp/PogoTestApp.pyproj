@@ -40,6 +40,12 @@
     <Compile Include="ATE\version.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RPiDummy\GPIODummy.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RPiDummy\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="UnitTests.py">
       <SubType>Code</SubType>
     </Compile>
@@ -61,6 +67,7 @@
   <ItemGroup>
     <Folder Include="ADCPi\" />
     <Folder Include="ATE\" />
+    <Folder Include="RPiDummy\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ADCPi\LICENSE" />

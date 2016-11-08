@@ -10,6 +10,7 @@ class TestSuite(object):
 
     def execute(self):
         self.tests[self.current_test].breakout = False
+        self.form.update_current_test(self.tests[self.current_test])
         self.tests[self.current_test].setUp()
         self.tests[self.current_test].run()
         self.tests[self.current_test].tearDown()
