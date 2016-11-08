@@ -66,8 +66,6 @@ class ConnectHardwareAndAwaitPowerOn(TestProcedure):
         self.suite.form.disable_test_buttons()
         self.suite.set_text("Install PCBA assembly and apply PCBA power when ready.")
 
-        digio.set_high(DIP1_TP3_Q4_Startup_Delay)
-
         ch1 = Channel(AD1_Pogo_Input_Volts)
 
         # Wait for channel 1 voltage
@@ -96,6 +94,8 @@ class MeasurePowerOnDelay(TestProcedure):
     description = "1a. Power on delay from pogo power to tablet power (400-600ms)"
 
     def run(self):
+
+        digio.await_high(DIP1_TP3_Q4_Startup_Delay)
 
         before = datetime.now()
 

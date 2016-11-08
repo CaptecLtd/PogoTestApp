@@ -21,16 +21,16 @@ AD7_Pogo_Battery_Output = 7
 
 # Digital Inputs
 # These correspond to the GPIO pins (BCM naming convention)
-DIP1_TP3_Q4_Startup_Delay = 11
+DIP1_TP3_Q4_Startup_Delay = 23
 DIP2_Tablet_OTG_Sense = 25
 DIP3_Dplus_Tablet_USB_Sense = 8
 DIP4_Dminus_Tablet_USB_Sense = 7
 
 # Digital Outputs
 # These correspond to the GPIO pins (BCM naming convention)
-DOP1_Tablet_Full_Load_Switch = 6
-DOP2_Tablet_Charged_Load_Switch = 13
-DOP3_OTG_Mode_Trigger = 16
+DOP1_Tablet_Full_Load_Switch = 17
+DOP2_Tablet_Charged_Load_Switch = 18
+DOP3_OTG_Mode_Trigger = 13
 DOP4_Dplus_Ext_USB = 19
 DOP5_Dminus_Ext_USB = 26
 DOP6_Tablet_OTG_Vout_Activate = 20
