@@ -26,6 +26,9 @@ try:
     test_suite.form.pass_btn["command"] = test_suite.pass_test
     test_suite.form.fail_btn["command"] = test_suite.fail_test
     test_suite.form.reset_btn["command"] = test_suite.reset
+    test_suite.form.abort_btn["command"] = test_suite.abort
+
+    test_suite.add_test(tests.Test00_TestTest())
 
     # Define the tests we will run
     test_suite.add_test(tests.Test0a_ConnectHardwareAndAwaitPowerOn())
@@ -47,7 +50,7 @@ try:
     test_suite.add_test(tests.Test3f_USBCableContinuityTest())
 
     # Disable input buttons to start with
-    main_frm.disable_test_buttons()
+    main_frm.disable_all_buttons()
 
     # Process command args.
     # -f = expand GUI to full screen
@@ -80,6 +83,8 @@ try:
             main_frm.set_reading_value(reading[0], "OK")
             main_frm.update()
             sleep(0.1)
+
+        main_frm.enable_reset_button()
 
     # Kick off the readings display test
     readings_display_test()

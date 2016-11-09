@@ -14,7 +14,7 @@ class MainForm(tk.Frame):
 
     def __init__(self, master):
         super().__init__(master)
-        #master.resizable(0,0)
+        master.resizable(0,0) # Disallow resizing of the form
         master.geometry("800x480")
         master.title("X231 PCB Tester")
         self.pack()
@@ -42,7 +42,7 @@ class MainForm(tk.Frame):
         # Test Stage information
 
         self.test_stage = tk.Label(self)
-        self.test_stage["text"] = self._stage_template
+        self.test_stage["text"] = self._stage_template.format(description = "N/A")
         self.test_stage["font"] = "Arial 10 bold"
         self.test_stage.grid(column = 0, row = current_row, columnspan = 3, sticky = tkc.W + tkc.S, pady = 3)
 
@@ -151,10 +151,15 @@ class MainForm(tk.Frame):
         self.pass_btn["font"] = btn_font
         self.pass_btn.grid(padx = padding, pady = padding, sticky = tkc.W, column = 0, row = current_row)
 
+        self.abort_btn = tk.Button(self)
+        self.abort_btn["text"] = "ABORT"
+        self.abort_btn["font"] = btn_font
+        self.abort_btn.grid(padx = padding, pady = padding, sticky = tkc.W, column = 1, row = current_row)
+
         self.reset_btn = tk.Button(self)
         self.reset_btn["text"] = "RESET"
         self.reset_btn["font"] = btn_font
-        self.reset_btn.grid(padx = padding, pady = padding, column = 1, row= current_row)
+        self.reset_btn.grid(padx = padding, pady = padding, sticky = tkc.E, column = 1, row = current_row)
 
         self.fail_btn = tk.Button(self)
         self.fail_btn["text"] = "FAIL"
@@ -167,6 +172,15 @@ class MainForm(tk.Frame):
     # / Form creation methods
 
     # Form control methods
+
+    def set_info_pass(self):
+        self.info_label["bg"] = "lightgreen"
+
+    def set_info_fail(self):
+        self.info_label["bg"] = "pink"
+
+    def set_info_default(self):
+        self.info_label["bg"] = "white"
 
     def set_text(self, text):
         "Sets the information text to the specified string"
@@ -182,13 +196,46 @@ class MainForm(tk.Frame):
         "Updates the test stage label with the details of the current test"
         self.test_stage["text"] = self._stage_template.format(description = test.description)
 
+    def set_stage_text(self, text):
+        self.test_stage["text"] = text
+
+    def disable_all_buttons(self):
+        self.disable_test_buttons();
+        self.disable_control_buttons();
+
+    def enable_all_buttons(self):
+        self.enable_test_buttons();
+        self.enable_control_buttons();
+
     def disable_test_buttons(self):
+        "Disable pass and fail buttons"
         self.disable_pass_button();
         self.disable_fail_button();
 
     def enable_test_buttons(self):
+        "Enable pass and fail buttons"
         self.enable_pass_button();
         self.enable_fail_button();
+
+    def disable_control_buttons(self):
+        self.disable_reset_button()
+        self.disable_abort_button()
+
+    def enable_control_buttons(self):
+        self.enable_reset_button()
+        self.enable_abort_button()
+
+    def enable_reset_button(self):
+        self.reset_btn["state"] = "normal"
+
+    def disable_reset_button(self):
+        self.reset_btn["state"] = "disabled"
+
+    def enable_abort_button(self):
+        self.abort_btn["state"] = "normal"
+
+    def disable_abort_button(self):
+        self.abort_btn["state"] = "disabled"
 
     def enable_pass_button(self):
         self.pass_btn["state"] = "normal"
@@ -205,9 +252,13 @@ class MainForm(tk.Frame):
     def msgbox(self, title, text):
         messagebox.showinfo(title, text)
 
-    def resetdialogue(self):
-        "Asks the user if they want to reset the current test (True), all tests (False) or cancel (None)"
-        return messagebox.askretrycancel("RESET", "Do you want to re-run the current test, or cancel the current session and start fresh?\n\nChoose Retry to re-run the current.\nChoose Cancel to abort testing and start again.", icon = WARNING)
+    def reset_dialogue(self):
+        "Asks the user if they want to reset the current test"
+        return messagebox.askyesno("RESET", "Do you want to re-run the current test?", icon = WARNING)
+
+    def abort_dialogue(self):
+        "Asks the user if they want to abort testing and reset the ATE"
+        return messagebox.askyesno("ABORT", "Do you want to abort testing? Results so far will be shown.", icon = WARNING)
 
     def set_reading_value(self, key, value):
         self._reading_rows[key]["value"].set(value)

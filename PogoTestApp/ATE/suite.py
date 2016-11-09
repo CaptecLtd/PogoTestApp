@@ -9,6 +9,8 @@ class TestSuite(object):
     form = None
 
     def execute(self):
+        self.form.set_info_default()
+        self.form.enable_control_buttons()
         self.tests[self.current_test].breakout = False
         self.form.update_current_test(self.tests[self.current_test])
         self.tests[self.current_test].setUp()
@@ -36,19 +38,23 @@ class TestSuite(object):
         else:
             self.advance_test()
 
+    def abort(self):
+        "Asks the user if they want to abort testing and return to the beginning and processes the answer."
+        if self.form.abort_dialogue():
+            self.form.disable_test_buttons()
+            self.summary()
+            self.current_test = -1
+
     def reset(self):
-        # If we've just loaded up, go ahead and start from the beginning
+        "Asks the user if they want to start the current test again and processes the answer."
+
+        # If we've just loaded up, use the RESET button to initialise testing
         if self.current_test == -1:
             self.current_test = 0
             self.execute()
             return
 
-        answer = self.form.resetdialogue()
-        if answer == True:
-            self.execute()
-        elif answer == False:
-            self.reset_test_results()
-            self.current_test = 0
+        if self.form.reset_dialogue():
             self.execute()
 
     def reset_test_results(self):
@@ -70,24 +76,38 @@ class TestSuite(object):
     def summary(self):
         self.current_test = -1
 
-        results = "Test suite completed. Results:\n\n"
-        tests = len(self.tests)
-        failures = 0
-        passes = 0
+        self.form.set_stage_text("Testing Ended.")
+
+        results = "Test suite completed."
+        failures = []
+        passes = []
+        not_run = []
+        run_tests = []
 
         for test in self.tests:
-            results += "{0}: {1}\n".format(test.__doc__, test.format_state())
+
             if test.state == "failed":
-                failures += 1
+                failures.append(test)
+                run_tests.append(test)
             if test.state == "passed":
-                passes += 1
+                passes.append(test)
+                run_tests.append(test)
 
-        results += "\n\nTests: {}, Passes: {}, Failures: {}".format(tests, passes, failures)
+            if test.state == "not_run":
+                not_run.append(test)
 
-        if failures > 0:
-            self.form.info_label["bg"] = "darkred"
-        elif failures == 0 and passes > 0:
-            self.form.info_label["bg"] = "darkgreen"
+        results += " {}/{} tests were run, of which {} passed and {} failed.".format(len(run_tests), len(self.tests), len(passes), len(failures))
+
+        if len(failures) > 0:
+            results += "\n\nFailures:\n"
+
+        for test in failures:
+            results += test.description
+
+        if len(failures) > 0:
+            self.form.set_info_fail()
+        elif len(failures) == 0 and len(passes) > 0:
+            self.form.set_info_pass()
 
         self.set_text(results)
         self.form.disable_test_buttons()
