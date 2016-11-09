@@ -77,6 +77,7 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
 
             if self.breakout:
                 return
+
         self.suite.form.append_text_line("Voltage received, awaiting +5v")
 
         got_5v = ch1.await_voltage(5.0, 0.01)

@@ -69,10 +69,7 @@ class Channel(object):
         if self._simulation_mode:
             return self._simulation_voltage
         else:
-            try:
-                return adc.read_voltage(self.index) + self._conversion_factor
-            except:
-                return False
+            return adc.read_voltage(self.index) + self._conversion_factor
 
     def read_voltage_range(self, sample_size = 1, tolerance = 0.01, sleep = 0.1):
         "Reads voltage sample_size times with a sleep seconds delay and returns (voltage, True, readings) if all readings are within tolerance, or (voltage, False, readings) if a reading is not in tolerance"
