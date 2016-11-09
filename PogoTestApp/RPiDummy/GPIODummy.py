@@ -2,12 +2,13 @@
 
 _pins = {}
 
-BCM = 0
-BOARD = 1
-OUT = 2
-IN = 3
-HIGH = 4
-LOW = 5
+# RPi.GPIO flags
+BCM = 11
+BOARD = 10
+OUT = 0
+IN = 1
+HIGH = 1
+LOW = 0
 
 def setmode(mode):
     pass

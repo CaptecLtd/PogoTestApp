@@ -58,13 +58,14 @@ class TestProcedure(object):
 The classes below are "live" tests run as part of the ATE itself. They are not unit tested.
 """
 
-class ConnectHardwareAndAwaitPowerOn(TestProcedure):
+class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
     description = "0a. Connect PCBA & cable set to test station"
 
     def run(self):
 
         self.suite.form.disable_test_buttons()
-        self.suite.set_text("Install PCBA assembly and apply PCBA power when ready.")
+        
+        self.suite.form.set_text("Install PCBA assembly and apply PCBA power when ready.")
 
         ch1 = Channel(AD1_Pogo_Input_Volts)
 
@@ -86,8 +87,8 @@ class ConnectHardwareAndAwaitPowerOn(TestProcedure):
             self.suite.form.set_text("Pogo input volts ({}) was outside of expected parameter (5.0v)".format(ch1.read_voltage()))
             self.suite.fail_test()
 
-class MeasurePowerOnDelay(TestProcedure):
-    """Pogo power on delay"""
+class Test1a_MeasurePowerOnDelay(TestProcedure):
+    """AD1 volts applied, wait DIP1 high then count to DIP1 low"""
 
     description = "1a. Power on delay from pogo power to tablet power (400-600ms)"
 
@@ -97,35 +98,27 @@ class MeasurePowerOnDelay(TestProcedure):
 
         before = datetime.now()
 
-        # timeout after 10 seconds and fail the test
-        timeout = 10
-        loops = 0
+        got_low = digio.await_low(DIP1_TP3_Q4_Startup_Delay)
 
-        while loops <= timeout:
+        if got_low:
+            after = datetime.now()
+            span = (after - before)
+
+            delay_ms = span.total_seconds() * 1000
         
-            # Check to see if we've gone low. If we have, break out of loop.
-            if digio.await_low(DIP1_TP3_Q4_Startup_Delay):
-                break
+            self.suite.append_text("Detected delay of %ims" % delay_ms)
+            self.suite.append_text("Channel 2 voltage is %d" % ch2.read_voltage())
 
-            time.sleep(0.1)
-            self.suite.form.update()
-            loops += 1
+            if delay_ms >= 400 and delay_ms <= 600:
+                self.suite.pass_test()
+            else:
+                self.suite.append_text("WARNING: Delay of {}ms is out of bounds (between 400ms and 600ms)".format(delay_ms))
+                self.suite.form.enable_test_buttons()
 
-            if self.breakout:
-                return
-          
-        after = datetime.now()
-        delay_ms = (after - before)
-        
-        self.suite.append_text("Detected delay of %ims" % delay_ms)
-        self.suite.append_text("Channel 2 voltage is %d" % ch2.read_voltage())
-
-        if delay_ms >= 400 and delay_ms <= 600:
-            self.suite.pass_test()
         else:
-            self.suite.append_text("WARNING: Delay {} is out of bounds (between 400ms and 600ms)".format(delay_ms))
+            self.suite.form.append_text_line("Awaiting DIP1 low timed out.")
 
-class PogoPowerInput(TestProcedure):
+class Test1b_PogoPowerInput(TestProcedure):
     """Pogo power input"""
 
     description = "1b. Pogo power input"
@@ -137,10 +130,10 @@ class PogoPowerInput(TestProcedure):
         self.suite.form.enable_test_buttons()
         self.suite.form.set_text("Observe LED PCB D1 is RED")
 
-class ChargeBatteryStep1(TestProcedure):
+class Test1c_ChargeBatteryStep1(TestProcedure):
     """Pogo power to battery board"""
 
-    description = "1c. Charge Battery (Part 1)"
+    description = "1c. Charge Battery (Step 1)"
 
     def run(self):
 
@@ -154,10 +147,10 @@ class ChargeBatteryStep1(TestProcedure):
 
         self.suite.set_text(text.format(voltage))
         
-class ChargeBatteryStep2(TestProcedure):
+class Test1c_ChargeBatteryStep2(TestProcedure):
     """Measure pogo power voltage divider"""
 
-    description = "1c. Charge Battery (Part 2)"
+    description = "1c. Charge Battery (Step 2)"
 
     def run(self):
         self.suite.set_text("Reading voltage on AD4")
@@ -192,7 +185,7 @@ class ChargeBatteryStep2(TestProcedure):
     def tearDown(self):
         self.suite.form.enable_test_buttons()
 
-class TabletCharged(TestProcedure):
+class Test1d_TabletCharged(TestProcedure):
     """Check tablet charged"""
 
     description = "1d. Tablet Charged"
@@ -205,7 +198,7 @@ class TabletCharged(TestProcedure):
         self.suite.set_text("Observe LED D1 illuminated GREEN")
         
 
-class BatteryBoardPowersTablet(TestProcedure):
+class Test2a_BatteryBoardPowersTablet(TestProcedure):
     """Battery PCB and USB PCB Test"""
 
     description = "2a. Battery board powers tablet"
@@ -214,7 +207,7 @@ class BatteryBoardPowersTablet(TestProcedure):
         self.suite.form.set_text("Turn off Pogo Power (SW1) and turn on battery isolation switch (BATT-SW)")
 
 
-class PogoPinsIsolatedFromBatteryPower(TestProcedure):
+class Test2b_PogoPinsIsolatedFromBatteryPower(TestProcedure):
 
     description = "2b. Pogo Pins isolated from Battery Power"
 
@@ -229,7 +222,7 @@ class PogoPinsIsolatedFromBatteryPower(TestProcedure):
             self.suite.form.append_text_line("Got {}v from AD1, test failed".format(ch.read_voltage()))
             self.suite.fail_test()
 
-class LEDStatusNotInChargeState(TestProcedure):
+class Test2c_LEDStatusNotInChargeState(TestProcedure):
     
     description = "2c. LED status (not in charge state)"
 
@@ -241,7 +234,7 @@ class LEDStatusNotInChargeState(TestProcedure):
     def tearDown(self):
         self.suite.form.disable_test_buttons()
 
-class BattBoardPowerInputViaPogoDisconnected(TestProcedure):
+class Test2d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
 
     description = "2d. Battery Board power input via PoGo disconnected"
 
@@ -254,7 +247,7 @@ class BattBoardPowerInputViaPogoDisconnected(TestProcedure):
             self.suite.form.set_text("Voltage detected on AD2, test failed.")
             self.suite.fail_test()
 
-class ActivationOfOTGPower(TestProcedure):
+class Test3a_ActivationOfOTGPower(TestProcedure):
 
     description = "3a. Activation of On The Go power"
 
@@ -269,7 +262,7 @@ class ActivationOfOTGPower(TestProcedure):
             self.suite.form.set_text("OTG power was not detected on DIP2, test failed")
             self.suite.fail_test()
 
-class PogoPinsIsolatedFromOTGModePower(TestProcedure):
+class Test3b_PogoPinsIsolatedFromOTGModePower(TestProcedure):
 
     description = "3b. Pogo pins isolated from tablet OTG mode power"
 
@@ -282,7 +275,7 @@ class PogoPinsIsolatedFromOTGModePower(TestProcedure):
             self.suite.form.set_text("Voltage detected ({}v) on AD1, OTG mode enabled so no pogo voltage (AD1) is expected".format(ch.read_voltage()))
             self.suite.fail_test()
 
-class LEDStatusNotInChargeState(TestProcedure):
+class Test3c_LEDStatusNotInChargeState(TestProcedure):
 
     description = "3c. LED status (not in charge state)"
 
@@ -293,7 +286,7 @@ class LEDStatusNotInChargeState(TestProcedure):
     def tearDown(self):
         self.suite.form.disable_test_buttons()
 
-class BattBoardPowerInputViaPogoDisconnected(TestProcedure):
+class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
 
     description = "3d. Battery board power input via PoGo disconnected"
 
@@ -306,9 +299,9 @@ class BattBoardPowerInputViaPogoDisconnected(TestProcedure):
             self.suite.form.set_text("Voltage detected ({}v) on AD3. Battery board power input should be disconnected. Test failed.")
             self.suite.fail_test()
 
-class NoExternalBattVoltageToTabletPart1(TestProcedure):
+class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
 
-    description = "3e. No external battery voltage presented to tablet +VE (part 1)"
+    description = "3e. No external battery voltage presented to tablet +VE (Step 1)"
 
     def run(self):
         ch = Channel(AD7_Pogo_Battery_Output)
@@ -324,9 +317,9 @@ class NoExternalBattVoltageToTabletPart1(TestProcedure):
             self.suite.form.append_text_line("Voltage was NOT within bounds of 4.84v to 4.88v, failed")
             self.suite.fail_test()
 
-class NoExternalBattVoltageToTabletPart2(TestProcedure):
+class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
 
-    description = "3e. No external battery voltage presented to tablet +VE (part 2)"
+    description = "3e. No external battery voltage presented to tablet +VE (Step 2)"
 
     def run(self):
         ch = Channel(AD7_Pogo_Battery_Output)
@@ -340,7 +333,7 @@ class NoExternalBattVoltageToTabletPart2(TestProcedure):
             self.suite.form.append_text_line("Voltage detected ({}v) on AD7, test failed. Check BATT-SW is toggled and reset.")
             self.suite.form.append_text_line("If BATT-SW is toggled, FAIL the test.")
 
-class USBCableContinuityTest(TestProcedure):
+class Test3f_USBCableContinuityTest(TestProcedure):
 
     description = "3f. USB cable continuity for data transfer"
 

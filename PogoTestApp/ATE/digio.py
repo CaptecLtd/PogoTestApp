@@ -14,8 +14,10 @@ finally:
     import RPiDummy.GPIODummy as GPIO
 
 def setup():
+    "Set the GPIO pins to how we want them for the application"
     GPIO.setmode(GPIO.BCM)
         
+    # Specify which pins belong to which group
     outputs = [
         DOP1_Tablet_Full_Load_Switch,
         DOP2_Tablet_Charged_Load_Switch,
@@ -32,8 +34,13 @@ def setup():
         DIP4_Dminus_Tablet_USB_Sense
     ]
 
+    # Configure input and output pins accordingly
     GPIO.setup(outputs, GPIO.OUT)
     GPIO.setup(inputs, GPIO.IN)
+
+    # Set all the output pins low
+    for pin in outputs:
+        GPIO.output(pin, GPIO.LOW)
 
 def cleanup():
     "Clean up any of the configuation we've done to the pins"

@@ -3,9 +3,9 @@
 # Header for initial startup.
 INTRO_TEXT = """Captec X231 PCBA Rev: {hwrevision} Test System
 Copyright 2016 Captec Ltd.
-ATE Software Ver: {swrevision}  - {swdate} 
+ATE Software Ver: {swrevision} - {swdate} 
 
-Press RESET to begin."""
+Press RESET to begin testing."""
 
 
 # Pin assignments

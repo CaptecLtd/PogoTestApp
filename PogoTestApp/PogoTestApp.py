@@ -26,12 +26,23 @@ test_suite.form.fail_btn["command"] = test_suite.fail_test
 test_suite.form.reset_btn["command"] = test_suite.reset
 
 # Define the tests we will run
-test_suite.add_test(tests.ConnectHardwareAndAwaitPowerOn())
-test_suite.add_test(tests.MeasurePowerOnDelay())
-test_suite.add_test(tests.PogoPowerInput())
-test_suite.add_test(tests.ChargeBatteryStep1())
-test_suite.add_test(tests.ChargeBatteryStep2())
-test_suite.add_test(tests.TabletCharged())
+test_suite.add_test(tests.Test0a_ConnectHardwareAndAwaitPowerOn())
+test_suite.add_test(tests.Test1a_MeasurePowerOnDelay())
+test_suite.add_test(tests.Test1b_PogoPowerInput())
+test_suite.add_test(tests.Test1c_ChargeBatteryStep1())
+test_suite.add_test(tests.Test1c_ChargeBatteryStep2())
+test_suite.add_test(tests.Test1d_TabletCharged())
+test_suite.add_test(tests.Test2a_BatteryBoardPowersTablet())
+test_suite.add_test(tests.Test2b_PogoPinsIsolatedFromBatteryPower())
+test_suite.add_test(tests.Test2c_LEDStatusNotInChargeState())
+test_suite.add_test(tests.Test2d_BattBoardPowerInputViaPogoDisconnected())
+test_suite.add_test(tests.Test3a_ActivationOfOTGPower())
+test_suite.add_test(tests.Test3b_PogoPinsIsolatedFromOTGModePower())
+test_suite.add_test(tests.Test3c_LEDStatusNotInChargeState())
+test_suite.add_test(tests.Test3d_BattBoardPowerInputViaPogoDisconnected())
+test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep1())
+test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep2())
+test_suite.add_test(tests.Test3f_USBCableContinuityTest())
 
 # Disable input buttons to start with
 main_frm.disable_test_buttons()
