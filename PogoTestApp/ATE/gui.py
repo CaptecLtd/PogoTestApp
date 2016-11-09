@@ -52,10 +52,10 @@ class MainForm(tk.Frame):
 
         # Info text box container
 
-        info_container = tk.Frame(self, width = 760, height = 150)
+        info_container = tk.Frame(self, width = 760, height = 180)
         info_container.grid(column = 0, row = current_row, columnspan = 3)
         info_container.columnconfigure(0, minsize = 760)
-        info_container.rowconfigure(0, minsize = 150)
+        info_container.rowconfigure(0, minsize = 180)
 
         # Member of info container
         self.info_label = tk.Label(info_container)
