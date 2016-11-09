@@ -67,7 +67,7 @@ class MainForm(tk.Frame):
         self.info_label["anchor"] = tkc.NW
         self.info_label["wraplength"] = 740
         self.info_label["justify"] = tkc.LEFT
-        self.info_label["font"] = ("Courier", 11)
+        self.info_label["font"] = ("Courier", 9)
         self.info_label.grid( pady = padding, columnspan = 6, column = 0, row = 0, sticky = tkc.W + tkc.E + tkc.N + tkc.S)
         # End info container
 
@@ -258,7 +258,7 @@ class MainForm(tk.Frame):
 
     def abort_dialogue(self):
         "Asks the user if they want to abort testing and reset the ATE"
-        return messagebox.askyesno("ABORT", "Do you want to abort testing? Results so far will be shown.", icon = WARNING)
+        return messagebox.askyesno("ABORT", "Do you want to abort testing? This will finish the test session and show the summary.", icon = WARNING)
 
     def set_reading_value(self, key, value):
         self._reading_rows[key]["value"].set(value)
