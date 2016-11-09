@@ -64,12 +64,12 @@ class Channel(object):
         "Sets the conversion factor for this channel. The factor is added to whichever readings are returned from the ADC"
         self._conversion_factor = factor
 
-    def read_voltage(self):
+    def read_voltage(self, decimal_places = 4):
         "Reads a single voltage value from the A/D converter or the _simulation_voltage var if in simulation mode"
         if self._simulation_mode:
             return self._simulation_voltage
         else:
-            return adc.read_voltage(self.index) + self._conversion_factor
+            return round(adc.read_voltage(self.index) + self._conversion_factor, decimal_places)
 
     def read_voltage_range(self, sample_size = 1, tolerance = 0.01, sleep = 0.1):
         "Reads voltage sample_size times with a sleep seconds delay and returns (voltage, True, readings) if all readings are within tolerance, or (voltage, False, readings) if a reading is not in tolerance"
@@ -90,8 +90,8 @@ class Channel(object):
         return float(sum(readings)) / max(len(readings), 1), valid, readings
         
     def zero_voltage(self):
-        "Returns True if near-zero voltage is read from the channel, or False for any other value"
-        return self.voltage_near(0.0, 0.01)
+        "Returns True if near-zero voltage is read from the channel (< 0.01v), or False for any other value"
+        return self.voltage_near(0.0, 0.01, 0.01)
 
     def voltage_between(self, lower, upper, tolerance):
         "Reads voltage from the channel and returns bool (is between lower and upper) and voltage read"
