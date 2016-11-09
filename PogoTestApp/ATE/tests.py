@@ -65,7 +65,7 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
 
         self.suite.form.disable_test_buttons()
         
-        self.suite.form.set_text("Install PCBA assembly and apply PCBA power when ready.")
+        self.suite.form.set_text("Install PCB assemblies and apply PCBA power when ready.")
 
         ch1 = Channel(AD1_Pogo_Input_Volts)
 
@@ -77,12 +77,14 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
 
             if self.breakout:
                 return
+        self.suite.form.append_text_line("Voltage received, awaiting +5v")
 
         got_5v = ch1.await_voltage(5.0, 0.01)
 
         # We have a voltage and it's 5v(ish)
         if got_5v:
             self.suite.pass_test()
+        # Not got 5v and/or timeout reached.
         else:
             self.suite.form.enable_test_buttons()
             self.suite.form.set_text("Pogo input volts ({}) was outside of expected parameter (5.0v)".format(ch1.read_voltage()))
