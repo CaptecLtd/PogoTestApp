@@ -90,7 +90,7 @@ try:
 
     # Set startup text on the display.
     main_frm.set_text(const.INTRO_TEXT.format(hwrevision = version.HARDWARE_REVISION, swrevision = version.SOFTWARE_REVISION, swdate = version.SOFTWARE_RELEASE_DATE))
-    0/0
+
     # Process GUI events.
     root.mainloop()
 except:
