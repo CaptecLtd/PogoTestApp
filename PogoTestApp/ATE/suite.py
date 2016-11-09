@@ -54,6 +54,10 @@ class TestSuite(object):
             # Set up the digital I/O pins in case they've changed through previous tests.
             digio.setup()
 
+            # Reset any previous test results
+            self.reset_test_results()
+
+            # Kick off the first test
             self.current_test = 0
             self.execute()
             return
