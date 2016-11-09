@@ -171,10 +171,12 @@ class MainForm(tk.Frame):
     def set_text(self, text):
         "Sets the information text to the specified string"
         self.info_label["text"] = text
+        self.update()
 
     def append_text_line(self, text):
         "Appends the specified text to the existing information string"
         self.info_label["text"] += "\n" + text
+        self.update()
 
     def update_current_test(self, test):
         "Updates the test stage label with the details of the current test"

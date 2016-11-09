@@ -84,8 +84,9 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
         if got_5v:
             self.suite.pass_test()
         else:
+            self.suite.form.enable_test_buttons()
             self.suite.form.set_text("Pogo input volts ({}) was outside of expected parameter (5.0v)".format(ch1.read_voltage()))
-            self.suite.fail_test()
+
 
 class Test1a_MeasurePowerOnDelay(TestProcedure):
     """AD1 volts applied, wait DIP1 high then count to DIP1 low"""
@@ -154,7 +155,7 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
         text += "\nConfirm LEDs D2 and D4 are OFF completely"
         text += "\n\nIf D2 or D4 have illuminated at all, fail the test"
 
-        self.suite.set_text(text.format(voltage))
+        self.suite.form.set_text(text.format(voltage))
         
 class Test1c_ChargeBatteryStep2(TestProcedure):
     """Measure pogo power voltage divider"""
