@@ -98,15 +98,15 @@ class Channel(object):
         v = self.read_voltage()
         return (self.isclose(lower, v, tolerance) or v >= lower) and (self.isclose(upper, v, tolerance) or v <= upper)
 
-    def voltage_near(self, target, tolerance):
+    def voltage_near(self, target, relative_tolerance, absolute_tolerance = 0.0):
         "Reads voltage from the channel and returns true if target is within tolerance, false if not"
-        return self.isclose(target, self.read_voltage(), tolerance)
+        return self.isclose(target, self.read_voltage(), relative_tolerance, absolute_tolerance)
 
     def await_voltage(self, target, tolerance, timeout = 10):
         "Waits for the specified voltage within tolerance, returning true if matched or false if timeout seconds pass"
         time = 0
         while time <= timeout:
-            if self.voltage_near( target, tolerance):
+            if self.voltage_near(target, tolerance):
                 return True
             else:
                 sleep(0.5)
