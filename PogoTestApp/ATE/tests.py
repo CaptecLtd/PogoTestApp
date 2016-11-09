@@ -147,7 +147,7 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
     def run(self):
 
         ch3 = Channel(AD3_Batt_Board_Power_In_Volts)
-        valid, voltage = ch3.voltage_between(4.95, 5.05)
+        valid, voltage = ch3.voltage_between(4.95, 5.05, 0.01)
 
         text = "Detected +{}V on battery board."
         text += "\n\nConfirm LED D5 is illuminated RED"
