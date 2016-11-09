@@ -60,10 +60,6 @@ try:
     if args.count("-f") != 0:
         main_frm.fullscreen(root, True)
 
-    # Configure the Digital I/O pins as we want them.
-    # See ATE/const.py for pin assignments.
-    digio.setup()
-
     # Update all readings (A/D and GPIO I/O each second)
     def update_readings():
         readings = adc.read_all_voltages()

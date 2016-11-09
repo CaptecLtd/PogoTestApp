@@ -10,18 +10,19 @@ IN = 1
 HIGH = 1
 LOW = 0
 
+# Set up 40 fake GPIO pins
+for pin in range(1, 40):
+    _pins[pin] = {}
+    _pins[pin]["level"] = LOW
+    _pins[pin]["mode"] = OUT
+
 def setmode(mode):
     pass
 
 def setup(pin, mode):
 
     def set(pin):
-        if pin in _pins.items():
-            _pins[pin]["mode"] = mode
-        else:
-            _pins[pin] = {}
-            _pins[pin]["mode"] = mode
-            _pins[pin]["level"] = 0
+        _pins[pin]["mode"] = mode
 
     if type(pin).__name__ == "list":
         for p in pin:

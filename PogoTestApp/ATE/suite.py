@@ -1,6 +1,7 @@
 from enum import Enum
 from ATE.adc import Channel
 from ATE.gui import MainForm
+import ATE.digio as digio
 
 class TestSuite(object):
     "Suite of tests for the user to complete. Controls the running and state of tests. Call TestSuite.reset() before interacting with any tests. "
@@ -50,6 +51,9 @@ class TestSuite(object):
 
         # If we've just loaded up, use the RESET button to initialise testing
         if self.current_test == -1:
+            # Set up the digital I/O pins in case they've changed through previous tests.
+            digio.setup()
+
             self.current_test = 0
             self.execute()
             return
@@ -75,7 +79,7 @@ class TestSuite(object):
 
     def summary(self):
         self.current_test = -1
-
+        self.form.disable_abort_button()
         self.form.set_stage_text("Testing Ended.")
 
         results = "Test suite completed."
@@ -102,7 +106,7 @@ class TestSuite(object):
             results += "\n\nFailures:\n"
 
         for test in failures:
-            results += test.description
+            results += test.description + "\n"
 
         if len(failures) > 0:
             self.form.set_info_fail()
