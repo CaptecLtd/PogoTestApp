@@ -48,11 +48,11 @@ def cleanup():
 
 def set_high(pin):
     "Set the specified pin to high or on"
-    GPIO.output(pin, True)
+    GPIO.output(pin, GPIO.HIGH)
 
 def set_low(pin):
     "Set the specified pin to low or off"
-    GPIO.output(pin, False)
+    GPIO.output(pin, GPIO.LOW)
 
 def read(pin):
     "Returns True if the pin is high or False if the pin is low"
