@@ -9,9 +9,9 @@ try:
     # Import our modules
     from ATE import gui, tests, suite, const, version, adc, digio
     import sys
+    import tkinter as tk
     from threading import Thread
     from getopt import getopt, GetoptError
-    import tkinter as tk
     from time import sleep
 
     # Create our Tk instance for the form

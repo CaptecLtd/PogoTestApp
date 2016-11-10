@@ -1,6 +1,7 @@
 "Digital I/O abstraction module"
 
 import time as time
+import atexit
 from ATE.const import *
 
 # Attempt to load the Raspberry Pi's GPIO module.
@@ -40,6 +41,8 @@ def setup():
     # Set all the output pins low
     GPIO.output(outputs, GPIO.LOW)
 
+# Reset the state of the GPIO pins when our application exits.
+@atexit.register
 def cleanup():
     "Clean up any of the configuation we've done to the pins"
     GPIO.cleanup()
