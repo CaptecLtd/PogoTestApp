@@ -60,6 +60,9 @@ try:
     if args.count("-f") != 0:
         main_frm.fullscreen(root, True)
 
+    # Set up our digital I/O before using it.
+    digio.setup()
+
     # Update all readings (A/D and GPIO I/O each second)
     def update_readings():
         readings = adc.read_all_voltages()

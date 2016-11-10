@@ -1,4 +1,5 @@
 "Dummy module for using RPi.GPIO methods on Windows."
+print("GPIO dummy library loaded. No hardware interaction will take place.")
 
 _pins = {}
 _links = []
@@ -38,7 +39,15 @@ def cleanup():
     _pins = {}
 
 def output(pin, level):
-    _pins[pin]["level"] = level
+
+    def set(pin, level):
+        _pins[pin]["level"] = level
+
+    if type(pin).__name__ == "list":
+        for p in pin:
+            set(p, level)
+    else:
+        set(pin, level)
 
 def input(pin):
     # If the pins is an input pin, check to see if it's "shorted" to an output pin

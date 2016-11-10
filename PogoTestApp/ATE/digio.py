@@ -10,7 +10,6 @@ try:
     import RPi.GPIO as GPIO
 except ImportError:
     print("GPIO libraries could not be loaded. NO HARDWARE INTERACTION WILL TAKE PLACE.")
-finally:
     import RPiDummy.GPIODummy as GPIO
 
 def setup():
@@ -39,8 +38,7 @@ def setup():
     GPIO.setup(inputs, GPIO.IN)
 
     # Set all the output pins low
-    for pin in outputs:
-        GPIO.output(pin, GPIO.LOW)
+    GPIO.output(outputs, GPIO.LOW)
 
 def cleanup():
     "Clean up any of the configuation we've done to the pins"
