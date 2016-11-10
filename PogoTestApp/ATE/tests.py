@@ -224,14 +224,39 @@ class Test1d_TabletCharged(TestProcedure):
         self.suite.set_text("Observe LED D1 illuminated GREEN")
         
 
-class Test2a_BatteryBoardPowersTablet(TestProcedure):
+class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
     """Battery PCB and USB PCB Test"""
 
-    description = "2a. Battery board powers tablet"
+    description = "2a. Battery board powers tablet (step 1)"
 
     def run(self):
-        self.suite.form.set_text("Turn off Pogo Power (SW1) and turn on battery isolation switch (BATT-SW)")
 
+        self.suite.form.set_text("Turn off Pogo Power (SW1) and turn on battery isolation switch (BATT-SW). Press PASS when completed.")
+
+class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
+
+    description = "2a. Battery board powers tablet (step 2)"
+
+    def run(self):
+
+        self.suite.form.set_text("Testing battery and USB PCBs")
+
+        ad5 = Channel(AD5_Batt_Board_Battery_Volts)
+        valid, volts = ad5.voltage_between(4.84, 4.88, 0.01)
+        if valid:
+            self.suite.form.append_text_line("Measured {}v on AD5 between bounds 4.84v and 4.88v, applying LOAD 2")
+            digio.set_high(DOP2_Tablet_Charged_Load_Switch)
+            
+            valid, volts = ad5.voltage_between(4.65, 4.85, 0.01)
+            if valid:
+                self.suite.form.append_text_line("Measured {}v on AD5, between bounds of 4.65v and 4.85v after LOAD 2 applied, test passed")
+            else:
+                self.suite.form.append_text_line("Measured {}v on AD5, OUT OF BOUNDS between 4.65v and 4.85v. Test failed")
+                self.suite.form.disable_pass_button()
+
+        else:
+            self.suite.form.append_text_line("Measured {}v on AD5, OUT OF BOUNDS between 4.84v and 4.88v. Test failed")
+            self.suite.form.disable_pass_button()
 
 class Test2b_PogoPinsIsolatedFromBatteryPower(TestProcedure):
 
@@ -240,13 +265,14 @@ class Test2b_PogoPinsIsolatedFromBatteryPower(TestProcedure):
     def run(self):
         self.suite.form.set_text("Reading voltage from AD1, expecting 0V")
 
-        ch = Channel(AD1_Pogo_Input_Volts)
+        ad1 = Channel(AD1_Pogo_Input_Volts)
 
-        if ch.zero_voltage():
-            self.suite.pass_test()
+        if ad1.zero_voltage():
+            self.suite.form.append_text_line("Zero voltage from AD1 received. Test passed")
+            self.suite.form.disable_fail_button()
         else:
-            self.suite.form.append_text_line("Got {}v from AD1, test failed".format(ch.read_voltage()))
-            self.suite.fail_test()
+            self.suite.form.append_text_line("Got {}v from AD1, test failed".format(ad1.read_voltage()))
+            self.suite.form.disable_pass_button()
 
 class Test2c_LEDStatusNotInChargeState(TestProcedure):
     
@@ -255,7 +281,7 @@ class Test2c_LEDStatusNotInChargeState(TestProcedure):
     def run(self):
         self.suite.form.enable_test_buttons()
 
-        self.suite.form.set_text("Observe LED PCB (D1) is off. No illumination = PASS. Green or red illumination = FAIL")
+        self.suite.form.set_text("Observe LED PCB (D1) is off.\n\nNo illumination = PASS. Green or red illumination = FAIL")
 
     def tearDown(self):
         self.suite.form.disable_test_buttons()
@@ -265,26 +291,32 @@ class Test2d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
     description = "2d. Battery Board power input via PoGo disconnected"
 
     def run(self):
-        ch = Channel(AD2_Tablet_USB_Volts)
 
-        if ch.zero_voltage():
-            self.suite.pass_test()
+        self.suite.form.set_text("Checking battery board power via PoGo is disconnected")
+        ad2 = Channel(AD2_Tablet_USB_Volts)
+
+        if ad2.zero_voltage():
+            self.suite.form.append_text_line("Zero volts received on AD2. Test passed")
+            self.suite.form.enable_pass_button()
         else:
             self.suite.form.set_text("Voltage detected on AD2, test failed.")
-            self.suite.fail_test()
+            self.suite.form.enable_fail_button()
 
 class Test3a_ActivationOfOTGPower(TestProcedure):
 
     description = "3a. Activation of On The Go power"
 
     def run(self):
+
+        self.suite.form.set_text("Test activation of On The Go (OTG) power")
         self.suite.form.enable_test_buttons()
         digio.set_low(DOP3_OTG_Mode_Trigger)
 
         otg_triggered = digio.await_low(DIP2_Tablet_OTG_Sense)
 
         if otg_triggered:
-            self.suite.pass_test()
+            self.suite.form.append_text_line("On the go power was triggered, test passed.")
+            self.suite.form.disable_fail_button()
         else:
             self.suite.form.set_text("OTG power was not detected on DIP2, test failed")
             self.suite.form.disable_pass_button()
@@ -294,13 +326,15 @@ class Test3b_PogoPinsIsolatedFromOTGModePower(TestProcedure):
     description = "3b. Pogo pins isolated from tablet OTG mode power"
 
     def run(self):
+        self.suite.form.set_text("Test pogo pins isolated from tablet OTG mode power")
         self.suite.form.enable_test_buttons()
-        ch = Channel(AD1_Pogo_Input_Volts)
+        ad1 = Channel(AD1_Pogo_Input_Volts)
 
-        if ch.zero_voltage():
-            self.suite.pass_test()
+        if ad1.zero_voltage():
+            self.suite.form.append_text_line("Zero voltage received on AD1, pogo pins are isolated. Test passed.")
+            self.suite.form.disable_fail_button()
         else:
-            self.suite.form.set_text("Voltage detected ({}v) on AD1, OTG mode enabled so no pogo voltage (AD1) is expected".format(ch.read_voltage()))
+            self.suite.form.set_text("Voltage detected ({}v) on AD1, OTG mode enabled so pogo voltage is unexpected. Test failed.".format(ad1.read_voltage()))
             self.suite.form.disable_pass_button()
 
 class Test3c_LEDStatusNotInChargeState(TestProcedure):
@@ -309,7 +343,7 @@ class Test3c_LEDStatusNotInChargeState(TestProcedure):
 
     def run(self):
         self.suite.form.enable_test_buttons()
-        self.suite.form.set_text("Observe LED PCB (D1) is off. No illumination = PASS. Green or red illumination = FAIL")
+        self.suite.form.set_text("Observe LED PCB (D1) is off.\n\nNo illumination = PASS. Green or red illumination = FAIL")
 
     def tearDown(self):
         self.suite.form.disable_test_buttons()
@@ -319,9 +353,9 @@ class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
     description = "3d. Battery board power input via PoGo disconnected"
 
     def run(self):
-        ch = Channel(AD3_Batt_Board_Power_In_Volts)
+        ad3 = Channel(AD3_Batt_Board_Power_In_Volts)
 
-        if ch.zero_voltage():
+        if ad3.zero_voltage():
             self.suite.pass_test()
         else:
             self.suite.form.set_text("Voltage detected ({}v) on AD3. Battery board power input should be disconnected. Test failed.")
@@ -333,9 +367,9 @@ class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
 
     def run(self):
         self.suite.form.enable_test_buttons()
-        ch = Channel(AD7_Pogo_Battery_Output)
+        ad7 = Channel(AD7_Pogo_Battery_Output)
 
-        valid, voltage = ch.voltage_between(4.84, 4.88, 0.01)
+        valid, voltage = ad7.voltage_between(4.84, 4.88, 0.01)
         self.suite.form.set_text("Detected voltage: {}v on AD7".format(voltage))
 
         if valid:
@@ -350,11 +384,11 @@ class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
     description = "3e. No external battery voltage presented to tablet +VE (Step 2)"
 
     def run(self):
-        ch = Channel(AD7_Pogo_Battery_Output)
+        ad7 = Channel(AD7_Pogo_Battery_Output)
 
         self.suite.form.enable_test_buttons()
 
-        if ch.zero_voltage():
+        if ad7.zero_voltage():
             self.suite.form.append_text_line("Zero voltage detected on AD7, test passed")
         else:
             self.suite.form.disable_pass_button()
