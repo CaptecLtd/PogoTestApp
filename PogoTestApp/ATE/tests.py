@@ -114,6 +114,7 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
             self.suite.form.enable_fail_button()
 
         else:
+            self.suite.form.append_text_line("Got high, waiting for DIP1 to go low")
             before = datetime.now()
 
             got_low = digio.await_low(DIP1_TP3_Q4_Startup_Delay)
@@ -131,9 +132,9 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 self.suite.form.enable_test_buttons()
 
                 if delay_ms >= 400 and delay_ms <= 600:
-                    self.suite.append_text("Delay of {}ms is within bounds (400ms to 600ms)".format(delay_ms))
+                    self.suite.append_text("Delay of %ims is within bounds (400ms to 600ms)" % delay_ms)
                 else:
-                    self.suite.append_text("WARNING: Delay of {}ms is out of bounds (between 400ms and 600ms)".format(delay_ms))
+                    self.suite.append_text("WARNING: Delay of %ims is out of bounds (between 400ms and 600ms)" % delay_ms)
 
             else:
                 self.suite.form.append_text_line("Awaiting DIP1 low timed out.")
@@ -160,10 +161,10 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
         ch3 = Channel(AD3_Batt_Board_Power_In_Volts)
         valid, voltage = ch3.voltage_between(4.95, 5.05, 0.01)
 
-        text = "Detected +{}V on battery board."
+        text = "Detected +{}v on battery board."
 
         if not valid:
-            text += "WARNING: This voltage is OUTSIDE of the required bounds (>= 4.95 and <= 5.05)"
+            text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= 4.95 and <= 5.05)"
 
         text += "\n\nConfirm LED D5 is illuminated RED"
         text += "\n\nConfirm LEDs D2 and D4 are OFF completely"
