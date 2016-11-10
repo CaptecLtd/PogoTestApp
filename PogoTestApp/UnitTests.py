@@ -52,6 +52,9 @@ class TestVoltageMethods(unittest.TestCase):
 
         self.assertFalse(self.channel.voltage_between(5.1, 5.2, 0.0))
 
+        self.channel.set_simulation_voltage(0.0)
+        self.assertFalse(self.channel.voltage_between(4.95, 5.05, 0.01))
+
     def test_zero(self):
         self.channel.set_simulation_voltage(0.0)
         self.assertTrue(self.channel.zero_voltage())

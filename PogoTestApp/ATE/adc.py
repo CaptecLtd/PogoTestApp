@@ -96,7 +96,7 @@ class Channel(object):
     def voltage_between(self, lower, upper, tolerance):
         "Reads voltage from the channel and returns bool (is between lower and upper) and voltage read"
         v = self.read_voltage()
-        return (self.isclose(lower, v, tolerance) or v >= lower) and (self.isclose(upper, v, tolerance) or v <= upper)
+        return ((self.isclose(lower, v, tolerance) or v >= lower) and (self.isclose(upper, v, tolerance) or v <= upper)), v
 
     def voltage_near(self, target, relative_tolerance, absolute_tolerance = 0.0):
         "Reads voltage from the channel and returns true if target is within tolerance, false if not"
