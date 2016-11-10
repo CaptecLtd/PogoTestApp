@@ -153,6 +153,9 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 self.suite.append_text("Tablet USB voltage is %d" % (Channel(AD2_Tablet_USB_Volts).read_voltage()))
                 self.suite.append_text("External USB voltage is %d" % (Channel(AD6_External_USB_Volts).read_voltage()))
 
+                # We leave it up to the user to decide whether the test fails or not.
+                self.suite.form.enable_test_buttons()
+
                 if delay_ms >= 400 and delay_ms <= 600:
                     self.suite.append_text("Delay of %ims is within bounds (400ms to 600ms)" % delay_ms)
                 else:
