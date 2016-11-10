@@ -3,6 +3,7 @@ import tkinter.constants as tkc
 from tkinter import messagebox
 from tkinter.messagebox import WARNING, ABORTRETRYIGNORE
 from ATE.const import *
+import os
 #import tkmessagebox
 
 class MainForm(tk.Frame):
@@ -44,7 +45,7 @@ class MainForm(tk.Frame):
         self.test_stage = tk.Label(self)
         self.test_stage["text"] = self._stage_template.format(description = "N/A")
         self.test_stage["font"] = "Arial 10 bold"
-        self.test_stage.grid(column = 0, row = current_row, columnspan = 3, sticky = tkc.W + tkc.S, pady = 3)
+        self.test_stage.grid(column = 0, row = current_row, columnspan = 5, sticky = tkc.W + tkc.S, pady = 3)
 
         # / Test Stage Information
 
@@ -53,7 +54,7 @@ class MainForm(tk.Frame):
         # Info text box container
 
         info_container = tk.Frame(self, width = 760, height = 180)
-        info_container.grid(column = 0, row = current_row, columnspan = 3)
+        info_container.grid(column = 0, row = current_row, columnspan = 5)
         info_container.columnconfigure(0, minsize = 760)
         info_container.rowconfigure(0, minsize = 180)
 
@@ -76,7 +77,7 @@ class MainForm(tk.Frame):
         # Readings container
 
         readings_container = tk.Frame(self, width = 760, height = 150)
-        readings_container.grid(column = 0, row = current_row, columnspan = 3, sticky = tkc.W, pady = 5)
+        readings_container.grid(column = 0, row = current_row, columnspan = 5, sticky = tkc.W, pady = 5)
 
         # Readings headers
 
@@ -151,21 +152,27 @@ class MainForm(tk.Frame):
         self.pass_btn["font"] = btn_font
         self.pass_btn.grid(padx = padding, pady = padding, sticky = tkc.W, column = 0, row = current_row)
 
-        self.abort_btn = tk.Button(self)
-        self.abort_btn["text"] = "ABORT"
-        self.abort_btn["font"] = btn_font
-        self.abort_btn.grid(padx = padding, pady = padding, sticky = tkc.W, column = 1, row = current_row)
-
-        self.reset_btn = tk.Button(self)
-        self.reset_btn["text"] = "RESET"
-        self.reset_btn["font"] = btn_font
-        self.reset_btn.grid(padx = padding, pady = padding, sticky = tkc.E, column = 1, row = current_row)
-
         self.fail_btn = tk.Button(self)
         self.fail_btn["text"] = "FAIL"
         self.fail_btn["fg"] = "red"
         self.fail_btn["font"] = btn_font
-        self.fail_btn.grid(padx = padding, pady = padding, sticky = tkc.E, column = 2, row = current_row)
+        self.fail_btn.grid(padx = padding, pady = padding, column = 1, row = current_row)
+
+        self.reset_btn = tk.Button(self)
+        self.reset_btn["text"] = "RESET"
+        self.reset_btn["font"] = btn_font
+        self.reset_btn.grid(padx = padding, pady = padding, column = 2, row = current_row)
+
+        self.abort_btn = tk.Button(self)
+        self.abort_btn["text"] = "ABORT"
+        self.abort_btn["font"] = btn_font
+        self.abort_btn.grid(padx = padding, pady = padding, column = 3, row = current_row)
+
+        self.shutdown_btn = tk.Button(self)
+        self.shutdown_btn["text"] = "OFF"
+        self.shutdown_btn["font"] = btn_font
+        self.shutdown_btn["command"] = self.handle_shutdown
+        self.shutdown_btn.grid(padx = padding, pady = padding, sticky = tkc.E, column = 4, row = current_row)
 
         # / Control buttons
 
@@ -258,7 +265,7 @@ class MainForm(tk.Frame):
 
     def abort_dialogue(self):
         "Asks the user if they want to abort testing and reset the ATE"
-        return messagebox.askyesno("ABORT", "Do you want to abort testing?\n\nThis will finish the test session and show the summary.", icon = WARNING)
+        return messagebox.askyesno("ABORT", "Do you want to abort testing? This will finish the test session and show the summary.", icon = WARNING)
 
     def set_reading_value(self, key, value):
         self._reading_rows[key]["value"].set(value)
@@ -267,3 +274,8 @@ class MainForm(tk.Frame):
 
         for reading in voltages.items():
             self.set_reading_value(reading[0], reading[1])
+
+    def handle_shutdown(self):
+        if messagebox.askyesno("Shutdown?", "Are you sure you want to turn the ATE controller off?", icon = WARNING):
+            messagebox.showwarning("Shutdown", "Shutdown will begin when you press OK.\n\nAfter the screen goes blank, please wait 15 seconds before cutting power.")
+            os.system("/sbin/shutdown -h now")
