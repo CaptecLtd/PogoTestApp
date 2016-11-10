@@ -198,10 +198,10 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
                     if volts > 3.9:
                         self.suite.form.append_text_line("Voltage is above 3.9v, please change battery and restart test")
                     else:
-                        self.suite.form.append_text_line("Battery PCB voltage is %20f, test passed." % ch3.read_voltage())
+                        self.suite.form.append_text_line("Battery PCB voltage is %20f, test passed." % volts)
 
                 else:
-                    self.suite.form.append_text_line("Battery PCB voltage is %20f, test FAILED." % ch3.read_voltage())
+                    self.suite.form.append_text_line("Battery PCB voltage is %20f, test FAILED." % volts)
                     self.suite.form.disable_pass_button()
 
         else:
