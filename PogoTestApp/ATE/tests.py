@@ -197,7 +197,7 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
         text += "\nIf D2 or D4 have illuminated at all, fail the test"
 
         self.suite.form.set_text(text.format(voltage))
-        self.log_failure("User indicated LED D5 is NOT illuminated red and/or D2 or D4 are illuminated")
+        self.log_failure("User indicated LED D5 is NOT illuminated red and/or D2 or D4 are illuminated", False)
         
 class Test1c_ChargeBatteryStep2(TestProcedure):
     """Measure pogo power voltage divider"""
@@ -394,11 +394,13 @@ class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
     description = "3e. No external battery voltage presented to tablet +VE (Step 1)"
 
     def run(self):
-        self.suite.form.enable_test_buttons()
+
+        self.suite.form.set_text("Test battery isolation switch (SW1) and pogo PCB")
+
         ad7 = Channel(AD7_Pogo_Battery_Output)
 
         valid, voltage = ad7.voltage_between(4.84, 4.88, 0.01)
-        self.suite.form.set_text("Detected voltage: {}v on AD7".format(voltage))
+        self.suite.form.append_text_line("Detected voltage: {}v on AD7".format(voltage))
 
         if valid:
             self.suite.form.append_text_line("Voltage is within bounds of 4.84v to 4.88v, passed.")
@@ -413,9 +415,10 @@ class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
     description = "3e. No external battery voltage presented to tablet +VE (Step 2)"
 
     def run(self):
-        ad7 = Channel(AD7_Pogo_Battery_Output)
 
-        self.suite.form.enable_test_buttons()
+        self.suite.form.set_text("Checking for zero voltage on AD7")
+
+        ad7 = Channel(AD7_Pogo_Battery_Output)
 
         if ad7.zero_voltage():
             self.suite.form.append_text_line("Zero voltage detected on AD7, test passed")

@@ -258,7 +258,7 @@ class MainForm(tk.Frame):
 
     def abort_dialogue(self):
         "Asks the user if they want to abort testing and reset the ATE"
-        return messagebox.askyesno("ABORT", "Do you want to abort testing? This will finish the test session and show the summary.", icon = WARNING)
+        return messagebox.askyesno("ABORT", "Do you want to abort testing?\n\nThis will finish the test session and show the summary.", icon = WARNING)
 
     def set_reading_value(self, key, value):
         self._reading_rows[key]["value"].set(value)
