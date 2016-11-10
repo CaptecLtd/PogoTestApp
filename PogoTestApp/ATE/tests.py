@@ -367,8 +367,10 @@ class Test3f_USBCableContinuityTest(TestProcedure):
     description = "3f. USB cable continuity for data transfer"
 
     def run(self):
-        
+
+        self.suite.form.enable_test_buttons()
         self.suite.form.set_text("Measuring continuity on USB data lines")
+
         got_Dplus = False
         got_Dminus = False
 
@@ -402,3 +404,14 @@ class Test3f_USBCableContinuityTest(TestProcedure):
             self.suite.form.append_text_line("Continuity for D+ and D- OK, test passed")
         else:
             self.suite.form.append_text_line("Continuity error(s). Check data lines on USB and reset")
+            self.suite.form.disable_pass_button()
+
+class TestEnd_TestsCompleted(TestProcedure):
+    
+    description = "Testing completed"
+
+    def run(self):
+        self.suite.form.enable_pass_button()
+        self.suite.form.disable_fail_button()
+
+        self.suite.form.set_text("All tests finished. Press PASS to display the test summary")

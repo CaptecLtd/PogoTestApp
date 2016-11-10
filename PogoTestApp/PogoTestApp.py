@@ -48,6 +48,7 @@ try:
     test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep1())
     test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep2())
     test_suite.add_test(tests.Test3f_USBCableContinuityTest())
+    test_suite.add_test(tests.TestEnd_TestsCompleted())
 
     # Disable input buttons to start with
     main_frm.disable_all_buttons()
