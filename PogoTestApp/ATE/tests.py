@@ -178,33 +178,33 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
     description = "1c. Charge Battery (Step 2)"
 
     def run(self):
-        self.suite.set_text("Reading voltage on AD4")
+        self.suite.form.set_text("Reading voltage on AD4")
         ch4 = Channel(AD4_Batt_Board_Temp_Sense_Cutoff)
 
         if ch4.read_voltage() < 4.5:
-            self.suite.append_text("Voltage is less than 4.5v")
+            self.suite.form.append_text_line("Voltage is less than 4.5v")
 
             if ch4.voltage_between(2.0, 3.0, 0.01):
-                self.suite.append_text("Voltage is between 2.0v and 3.0v")
+                self.suite.form.append_text_line("Voltage is between 2.0v and 3.0v")
 
                 ch5 = Channel(AD5_Batt_Board_Battery_Volts)
 
-                self.suite.append_text("Checking if AD5 voltage is between 3.0v and 4.07v")
+                self.suite.form.append_text_line("Checking if AD5 voltage is between 3.0v and 4.07v")
 
                 if ch5.voltage_between(3.0, 4.07, 0.01):
                     v = ch5.read_voltage()
 
                     if v > 3.9:
-                        self.suite.append_text("Voltage is above 3.9v, please change battery and restart test")
+                        self.suite.form.append_text_line("Voltage is above 3.9v, please change battery and restart test")
                     else:
-                        self.suite.append_text("Battery PCB voltage is %20f, test passed." % ch3.read_voltage())
+                        self.suite.form.append_text_line("Battery PCB voltage is %20f, test passed." % ch3.read_voltage())
 
                 else:
-                    self.suite.append_text("Battery PCB voltage is %20f, test FAILED." % ch3.read_voltage())
+                    self.suite.form.append_text_line("Battery PCB voltage is %20f, test FAILED." % ch3.read_voltage())
                     self.suite.form.disable_pass_button()
 
         else:
-            self.suite.append_text("Voltage is greater than 4.5v, test failed")
+            self.suite.form.append_text_line("Voltage is greater than 4.5v, test failed")
             self.suite.form.disable_pass_button()
 
     def tearDown(self):

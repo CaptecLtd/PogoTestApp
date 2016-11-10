@@ -11,12 +11,17 @@ OUT = 0
 IN = 1
 HIGH = 1
 LOW = 0
+PUD_DOWN = 21
+PUD_UP = 22
+PUD_OFF = 20
+UNKNOWN = -1
 
 # Set up 40 fake GPIO pins
 for pin in range(1, 40):
     _pins[pin] = {}
     _pins[pin]["level"] = LOW
     _pins[pin]["mode"] = -1
+    _pins[pin]["pud"] = PUD_OFF
 
 def _short(pin1, pin2):
     _links.append((pin1, pin2))
@@ -24,10 +29,12 @@ def _short(pin1, pin2):
 def setmode(mode):
     pass
 
-def setup(pin, mode):
+def setup(pin, mode, pull_up_down = PUD_OFF, initial = UNKNOWN):
 
     def set(pin):
         _pins[pin]["mode"] = mode
+        _pins[pin]["level"] = initial
+        _pins[pin]["pud"] = pull_up_down
 
     if type(pin).__name__ == "list":
         for p in pin:

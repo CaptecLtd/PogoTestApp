@@ -36,7 +36,7 @@ def setup():
 
     # Configure input and output pins accordingly
     GPIO.setup(outputs, GPIO.OUT)
-    GPIO.setup(inputs, GPIO.IN)
+    GPIO.setup(inputs, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 
     # Set all the output pins low
     GPIO.output(outputs, GPIO.LOW)

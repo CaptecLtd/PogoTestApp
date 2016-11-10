@@ -48,12 +48,17 @@ class TestVoltageMethods(unittest.TestCase):
 
     def test_between(self):
         self.channel.set_simulation_voltage(5.0)
-        self.assertTrue(self.channel.voltage_between(4.99, 5.01, 0.0))
+        
+        valid, volts = self.channel.voltage_between(4.99, 5.01, 0.0)
+        self.assertTrue(valid)
 
-        self.assertFalse(self.channel.voltage_between(5.1, 5.2, 0.0))
+        valid, volts = self.channel.voltage_between(5.1, 5.2, 0.0)
+        self.assertFalse(valid)
 
         self.channel.set_simulation_voltage(0.0)
-        self.assertFalse(self.channel.voltage_between(4.95, 5.05, 0.01))
+
+        valid, volts = self.channel.voltage_between(4.95, 5.05, 0.01)
+        self.assertFalse(valid)
 
     def test_zero(self):
         self.channel.set_simulation_voltage(0.0)
