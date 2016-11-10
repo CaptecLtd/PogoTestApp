@@ -123,7 +123,8 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 after = datetime.now()
                 span = (after - before)
 
-                delay_ms = span.total_seconds() * 1000
+                delay_ms = (span.microseconds / 1000)
+                delay_ms = delay_ms + (span.seconds * 1000)
         
                 self.suite.append_text("Detected delay of %ims" % delay_ms)
                 self.suite.append_text("Tablet USB voltage is %d" % (Channel(AD2_Tablet_USB_Volts).read_voltage()))
