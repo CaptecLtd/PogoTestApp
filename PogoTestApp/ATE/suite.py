@@ -10,10 +10,13 @@ class TestSuite(object):
     form = None
 
     def execute(self):
-        self.form.set_info_default()
-        self.form.enable_control_buttons()
+        # Maintain compatibility with unit tests.
+        if self.form:
+            self.form.set_info_default()
+            self.form.enable_control_buttons()
+            self.form.update_current_test(self.tests[self.current_test])
+
         self.tests[self.current_test].breakout = False
-        self.form.update_current_test(self.tests[self.current_test])
         self.tests[self.current_test].setUp()
         self.tests[self.current_test].run()
         self.tests[self.current_test].tearDown()
