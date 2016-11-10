@@ -11,10 +11,12 @@ class TestSuite(object):
 
     def execute(self):
         "Processes any GUI updates and runs the current test's setUp() and run() methods"
-        # Maintain compatibility with unit tests.
+
+        # GUI isn't created when running Unit Tests so we check here before doing GUI operations.
         if self.form:
             self.form.set_info_default()
             self.form.enable_control_buttons()
+            self.form.enable_test_buttons()
             self.form.update_current_test(self.tests[self.current_test])
 
         self.tests[self.current_test].breakout = False
