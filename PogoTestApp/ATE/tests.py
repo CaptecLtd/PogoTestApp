@@ -332,6 +332,7 @@ class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
     description = "3e. No external battery voltage presented to tablet +VE (Step 1)"
 
     def run(self):
+        self.suite.form.enable_test_buttons()
         ch = Channel(AD7_Pogo_Battery_Output)
 
         valid, voltage = ch.voltage_between(4.84, 4.88, 0.01)
@@ -372,26 +373,30 @@ class Test3f_USBCableContinuityTest(TestProcedure):
         got_Dminus = False
 
         digio.set_high(DOP4_Dplus_Ext_USB)
-        if digio.await_high(DIP3_Dplus_Tablet_USB_Sense):
+        if digio.await_high(DIP3_Dplus_Tablet_USB_Sense, 3):
             digio.set_low(DOP4_Dplus_Ext_USB)
             if not digio.read(DIP3_Dplus_Tablet_USB_Sense):
                 self.suite.form.append_text_line("D+ continuity OK")
                 got_Dplus = True
             else:
-                self.suite.form.append_text_line("D+ continuity did not return to low")
+                self.suite.form.append_text_line("D+ continuity (DOP4 -> DIP3): did not read return to low on DIP3")
         else:
             self.suite.form.append_text_line("D+ no signal")
 
+        digio.set_low(DOP4_Dplus_Ext_USB)
+
         digio.set_high(DOP5_Dminus_Ext_USB)
-        if digio.await_high(DIP4_Dminus_Tablet_USB_Sense):
+        if digio.await_high(DIP4_Dminus_Tablet_USB_Sense, 3):
             digio.set_low(DOP5_Dminus_Ext_USB)
             if not digio.read(DIP4_Dminus_Tablet_USB_Sense):
                 self.suite.form.append_text_line("D- continuity OK")
                 got_Dminus = True
             else:
-                self.suite.form.append_text_line("D- continuity did not return to low")
+                self.suite.form.append_text_line("D- continuity (DOP5 -> DIP4): did not read return to low on DIP4")
         else:
             self.suite.form.append_text_line("D- no signal")
+
+        digio.set_low(DOP5_Dminus_Ext_USB)
 
         if got_Dminus and got_Dplus:
             self.suite.form.append_text_line("Continuity for D+ and D- OK, test passed")
