@@ -161,9 +161,13 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
         valid, voltage = ch3.voltage_between(4.95, 5.05, 0.01)
 
         text = "Detected +{}V on battery board."
+
+        if not valid:
+            text += "WARNING: This voltage is OUTSIDE of the required bounds (>= 4.95 and <= 5.05)"
+
         text += "\n\nConfirm LED D5 is illuminated RED"
-        text += "\nConfirm LEDs D2 and D4 are OFF completely"
-        text += "\n\nIf D2 or D4 have illuminated at all, fail the test"
+        text += "\n\nConfirm LEDs D2 and D4 are OFF completely"
+        text += "\nIf D2 or D4 have illuminated at all, fail the test"
 
         self.suite.form.set_text(text.format(voltage))
         
