@@ -19,7 +19,6 @@ class TestSuite(object):
         self.tests[self.current_test].breakout = False
         self.tests[self.current_test].setUp()
         self.tests[self.current_test].run()
-        self.tests[self.current_test].tearDown()
 
     def add_test(self, test):
         test.suite = self
@@ -80,7 +79,8 @@ class TestSuite(object):
             if self.form:
                 self.summary()
         else:
-            # If we do have more tests, advance the current test variable and execute the test.
+            # If we do have more tests, clean up the current test, advance the current test variable and execute the test.
+            self.tests[self.current_test].tearDown()
             self.current_test += 1
             self.execute()
 
