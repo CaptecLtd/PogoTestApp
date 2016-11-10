@@ -162,7 +162,7 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
         ch3 = Channel(AD3_Batt_Board_Power_In_Volts)
         valid, voltage = ch3.voltage_between(4.95, 5.05, 0.01)
 
-        text = "Detected +{}v on battery board."
+        text = "Detected +{}v on battery board (AD3)."
 
         if not valid:
             text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= 4.95 and <= 5.05)"
@@ -198,10 +198,10 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
                     if volts > 3.9:
                         self.suite.form.append_text_line("Voltage is above 3.9v, please change battery and restart test")
                     else:
-                        self.suite.form.append_text_line("Battery PCB voltage is %20f, test passed." % volts)
+                        self.suite.form.append_text_line("Battery PCB voltage is %.2f, test passed." % volts)
 
                 else:
-                    self.suite.form.append_text_line("Battery PCB voltage is %20f, test FAILED." % volts)
+                    self.suite.form.append_text_line("Battery PCB voltage is %.2f, test FAILED." % volts)
                     self.suite.form.disable_pass_button()
 
         else:
