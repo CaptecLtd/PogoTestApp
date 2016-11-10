@@ -55,10 +55,12 @@ class TestProcedure(object):
         self.failure_log = []
         self.state = "not_run"
 
-    def log_failure(self, text):
+    def log_failure(self, text, print_to_screen = True):
         "Adds the specified text to the test's failure_log list and appends text to the form info label"
         self.failure_log.append(text)
-        self.suite.form.append_text_line(text)
+        
+        if print_to_screen:
+            self.suite.form.append_text_line(text)
 
     def format_state(self):
         return {
@@ -123,6 +125,9 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
 
     def run(self):
 
+        # Disable test buttons here as we're waiting for digio input.
+        self.suite.form.disable_test_buttons()
+
         self.suite.form.set_text("Waiting for DIP1 to become high")
 
         dip1_high = digio.await_high(DIP1_TP3_Q4_Startup_Delay)
@@ -167,7 +172,7 @@ class Test1b_PogoPowerInput(TestProcedure):
 
     def run(self):
         self.suite.form.set_text("Observe LED PCB D1 is RED")
-        self.log_failure("User indicated LED PCB D1 is not illuminated")
+        self.log_failure("User indicated LED PCB D1 is not illuminated", False)
 
 class Test1c_ChargeBatteryStep1(TestProcedure):
     """Pogo power to battery board"""
@@ -238,7 +243,7 @@ class Test1d_TabletCharged(TestProcedure):
         digio.set_high(DOP2_Tablet_Charged_Load_Switch)
 
         self.suite.set_text("Observe LED D1 illuminated GREEN")
-        self.log_failure("User indicated LED D1 was not illuminated green")
+        self.log_failure("User indicated LED D1 was not illuminated green", False)
         
 
 class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
@@ -301,7 +306,7 @@ class Test2c_LEDStatusNotInChargeState(TestProcedure):
     def run(self):
 
         self.suite.form.set_text("Observe LED PCB (D1) is off.\n\nNo illumination = PASS. Green or red illumination = FAIL")
-        self.log_failure("User indicated LED PCB (D1) is illuminated, should be off")
+        self.log_failure("User indicated LED PCB (D1) is illuminated, should be off", False)
 
 
 class Test2d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
@@ -361,7 +366,7 @@ class Test3c_LEDStatusNotInChargeState(TestProcedure):
 
     def run(self):
         self.suite.form.set_text("Observe LED PCB (D1) is off.\n\nNo illumination = PASS. Green or red illumination = FAIL")
-        self.log_failure("User indicated LED PCB (D1) is illuminated, should be off")
+        self.log_failure("User indicated LED PCB (D1) is illuminated, should be off", False)
 
 
 class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
