@@ -10,6 +10,7 @@ class TestSuite(object):
     form = None
 
     def execute(self):
+        "Processes any GUI updates and runs the current test's setUp() and run() methods"
         # Maintain compatibility with unit tests.
         if self.form:
             self.form.set_info_default()
@@ -31,10 +32,12 @@ class TestSuite(object):
         self.form.info_label["text"] += "\n" + text
 
     def pass_test(self):
+        "Sets the current test as passed and advances to the next test"
         self.tests[self.current_test].set_passed()
         self.advance_test()
 
     def fail_test(self):
+        "Sets the current test as failed. If the test aborts, summary is shown. If not, advances to the next test"
         self.tests[self.current_test].set_failed()
         if self.tests[self.current_test].aborts:
             self.summary()
@@ -72,6 +75,7 @@ class TestSuite(object):
             test.reset()
 
     def advance_test(self):
+        "If tests are remaining in the queue, runs the current test's tearDown() method and advances to the next test. If no tests are remaining, shows summary"
 
         # Check to see if we've got more groups to run. If we don't, show the summary.
         if self.current_test >= len(self.tests) -1:
@@ -85,6 +89,7 @@ class TestSuite(object):
             self.execute()
 
     def summary(self):
+        "Writes a summary of the loaded tests and their results"
         self.current_test = -1
         self.form.disable_abort_button()
         self.form.set_stage_text("Testing Ended.")
@@ -114,6 +119,8 @@ class TestSuite(object):
 
         for test in failures:
             results += test.description + "\n"
+            for failure in test.failure_log:
+                results += "    " + failure + "\n"
 
         if len(failures) > 0:
             self.form.set_info_fail()

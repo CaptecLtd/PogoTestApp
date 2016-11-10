@@ -21,6 +21,7 @@ class TestProcedure(object):
 
     suite = TestSuite()
     state = "not_run"
+    failure_log = []
 
     def setUp(self):
         "This method is called before run(). Tasks to be completed before the test itself begins should go here."
@@ -37,14 +38,24 @@ class TestProcedure(object):
     def set_passed(self):
         self.breakout = True
         self.state = "passed"
+        self.suite.form.enable_pass_button()
+        self.suite.form.disable_fail_button()
 
     def set_failed(self):
         self.breakout = True
         self.state = "failed"
+        self.suite.form.disable_pass_button()
+        self.suite.form.enable_fail_button()
 
     def reset(self):
         self.breakout = True
+        self.failure_log = []
         self.state = "not_run"
+
+    def log_failure(self, text):
+        "Adds the specified text to the test's failure_log list and appends text to the form window"
+        self.failure_log.append(text)
+        self.suite.form.append_text_line(text)
 
     def format_state(self):
         return {
@@ -89,13 +100,15 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
 
         got_5v = ch1.await_voltage(5.0, 0.01)
 
-        # We have a voltage and it's 5v(ish)
+        # We have a voltage and it's 5v
         if got_5v:
+            # Skip straight to the next test.
             self.suite.pass_test()
+
         # Not got 5v and/or timeout reached.
         else:
-            self.suite.form.enable_test_buttons()
-            self.suite.form.set_text("Pogo input volts ({}) was outside of expected parameter (5.0v)".format(ch1.read_voltage()))
+            self.set_failed()
+            self.log_failure("Pogo input volts ({}) was outside of expected parameter (5.0v) or timeout reached".format(ch1.read_voltage()))
 
 
 class Test1a_MeasurePowerOnDelay(TestProcedure):
@@ -227,7 +240,7 @@ class Test1d_TabletCharged(TestProcedure):
 class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
     """Battery PCB and USB PCB Test"""
 
-    description = "2a. Battery board powers tablet (step 1)"
+    description = "2a. Battery board powers tablet (Step 1)"
 
     def run(self):
 
@@ -235,7 +248,7 @@ class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
 
 class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
 
-    description = "2a. Battery board powers tablet (step 2)"
+    description = "2a. Battery board powers tablet (Step 2)"
 
     def run(self):
 
