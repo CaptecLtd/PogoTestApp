@@ -147,8 +147,6 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 self.suite.append_text("Detected delay of %ims" % delay_ms)
                 self.suite.append_text("Tablet USB voltage is %d" % (Channel(AD2_Tablet_USB_Volts).read_voltage()))
                 self.suite.append_text("External USB voltage is %d" % (Channel(AD6_External_USB_Volts).read_voltage()))
-            
-                self.suite.form.enable_test_buttons()
 
                 if delay_ms >= 400 and delay_ms <= 600:
                     self.suite.append_text("Delay of %ims is within bounds (400ms to 600ms)" % delay_ms)
@@ -157,6 +155,7 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
 
             else:
                 self.suite.form.append_text_line("Awaiting DIP1 low timed out. Press RESET to try again.")
+                self.suite.form.disable_pass_button()
 
 class Test1b_PogoPowerInput(TestProcedure):
     """Pogo power input"""
@@ -168,6 +167,7 @@ class Test1b_PogoPowerInput(TestProcedure):
 
     def run(self):
         self.suite.form.set_text("Observe LED PCB D1 is RED")
+        self.log_failure("User indicated LED PCB D1 is not illuminated")
 
 class Test1c_ChargeBatteryStep1(TestProcedure):
     """Pogo power to battery board"""
@@ -189,6 +189,7 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
         text += "\nIf D2 or D4 have illuminated at all, fail the test"
 
         self.suite.form.set_text(text.format(voltage))
+        self.log_failure("User indicated LED D5 is NOT illuminated red and/or D2 or D4 are illuminated")
         
 class Test1c_ChargeBatteryStep2(TestProcedure):
     """Measure pogo power voltage divider"""
@@ -237,17 +238,18 @@ class Test1d_TabletCharged(TestProcedure):
         digio.set_high(DOP2_Tablet_Charged_Load_Switch)
 
         self.suite.set_text("Observe LED D1 illuminated GREEN")
+        self.log_failure("User indicated LED D1 was not illuminated green")
         
 
 class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
     """Battery PCB and USB PCB Test"""
 
     description = "2a. Battery board powers tablet (Step 1)"
-    aborts = True
 
     def run(self):
 
         self.suite.form.set_text("Turn off Pogo Power (SW1) and turn on battery isolation switch (BATT-SW).\n\nPress PASS when completed.")
+        self.suite.form.disable_fail_button()
 
 class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
 
@@ -299,6 +301,7 @@ class Test2c_LEDStatusNotInChargeState(TestProcedure):
     def run(self):
 
         self.suite.form.set_text("Observe LED PCB (D1) is off.\n\nNo illumination = PASS. Green or red illumination = FAIL")
+        self.log_failure("User indicated LED PCB (D1) is illuminated, should be off")
 
 
 class Test2d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
@@ -358,6 +361,7 @@ class Test3c_LEDStatusNotInChargeState(TestProcedure):
 
     def run(self):
         self.suite.form.set_text("Observe LED PCB (D1) is off.\n\nNo illumination = PASS. Green or red illumination = FAIL")
+        self.log_failure("User indicated LED PCB (D1) is illuminated, should be off")
 
 
 class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
@@ -409,7 +413,7 @@ class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
             self.suite.form.append_text_line("Zero voltage detected on AD7, test passed")
             self.set_passed()
         else:
-            self.suite.form.append_text_line("Voltage detected ({}v) on AD7, test failed. Check BATT-SW is toggled and reset.")
+            self.suite.form.append_text_line("Voltage detected ({}v) on AD7, test failed. Check BATT-SW is toggled and press RESET.")
             self.suite.form.append_text_line("If BATT-SW is toggled, the test has failed.")
             self.set_failed()
 
