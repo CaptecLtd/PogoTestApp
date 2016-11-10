@@ -244,18 +244,18 @@ class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
         ad5 = Channel(AD5_Batt_Board_Battery_Volts)
         valid, volts = ad5.voltage_between(4.84, 4.88, 0.01)
         if valid:
-            self.suite.form.append_text_line("Measured {}v on AD5 between bounds 4.84v and 4.88v, applying LOAD 2")
+            self.suite.form.append_text_line("Measured {}v on AD5 between bounds 4.84v and 4.88v, applying LOAD 2".format(volts))
             digio.set_high(DOP2_Tablet_Charged_Load_Switch)
             
             valid, volts = ad5.voltage_between(4.65, 4.85, 0.01)
             if valid:
-                self.suite.form.append_text_line("Measured {}v on AD5, between bounds of 4.65v and 4.85v after LOAD 2 applied, test passed")
+                self.suite.form.append_text_line("Measured {}v on AD5, between bounds of 4.65v and 4.85v after LOAD 2 applied, test passed".format(volts))
             else:
-                self.suite.form.append_text_line("Measured {}v on AD5, OUT OF BOUNDS between 4.65v and 4.85v. Test failed")
+                self.suite.form.append_text_line("Measured {}v on AD5, OUT OF BOUNDS between 4.65v and 4.85v. Test failed".format(volts))
                 self.suite.form.disable_pass_button()
 
         else:
-            self.suite.form.append_text_line("Measured {}v on AD5, OUT OF BOUNDS between 4.84v and 4.88v. Test failed")
+            self.suite.form.append_text_line("Measured {}v on AD5, OUT OF BOUNDS between 4.84v and 4.88v. Test failed".format(volts))
             self.suite.form.disable_pass_button()
 
 class Test2b_PogoPinsIsolatedFromBatteryPower(TestProcedure):
@@ -263,6 +263,7 @@ class Test2b_PogoPinsIsolatedFromBatteryPower(TestProcedure):
     description = "2b. Pogo Pins isolated from Battery Power"
 
     def run(self):
+        self.suite.form.enable_test_buttons()
         self.suite.form.set_text("Reading voltage from AD1, expecting 0V")
 
         ad1 = Channel(AD1_Pogo_Input_Volts)
