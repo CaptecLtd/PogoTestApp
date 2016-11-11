@@ -277,5 +277,6 @@ class MainForm(tk.Frame):
 
     def handle_shutdown(self):
         if messagebox.askyesno("Shutdown?", "Are you sure you want to turn the ATE controller off?", icon = WARNING):
-            messagebox.showwarning("Shutdown", "Shutdown will begin when you press OK.\n\nAfter the screen goes blank, please wait 15 seconds before cutting power.")
-            os.system("/sbin/shutdown -h now")
+            if messagebox.askokcancel("Shutdown", "Shutdown will begin when you press OK.\n\nAfter the screen goes blank, please wait 15 seconds before cutting power."):
+                if os.name == "posix":
+                    os.system("/sbin/shutdown -h now")

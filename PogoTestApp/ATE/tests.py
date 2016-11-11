@@ -69,14 +69,6 @@ class TestProcedure(object):
             "not_run": "Not Run"
         }.get(self.state, "Unknown")
 
-
-class Test00_TestTest(TestProcedure):
-    description = "00. Fake test"
-
-    def run(self):
-        self.suite.form.enable_test_buttons()
-        self.suite.form.set_text("Pass or fail this test")
-
 """
 The classes below are "live" tests run as part of the ATE itself. They are not unit tested.
 """

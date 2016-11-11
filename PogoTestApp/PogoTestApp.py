@@ -28,8 +28,6 @@ try:
     test_suite.form.reset_btn["command"] = test_suite.reset
     test_suite.form.abort_btn["command"] = test_suite.abort
 
-    test_suite.add_test(tests.Test00_TestTest())
-
     # Define the tests we will run
     test_suite.add_test(tests.Test0a_ConnectHardwareAndAwaitPowerOn())
     test_suite.add_test(tests.Test1a_MeasurePowerOnDelay())
