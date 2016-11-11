@@ -382,7 +382,7 @@ class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
             self.suite.form.append_text_line("Got zero volts, battery isolated. Test passed.")
             self.set_passed()
         else:
-            self.log_failure("Voltage detected ({}v) on AD3. Battery board power input should be disconnected. Test failed.".format(ad3.read_voltage())
+            self.log_failure("Voltage detected ({}v) on AD3. Battery board power input should be disconnected. Test failed.".format(ad3.read_voltage()))
             self.set_failed()
 
 class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
