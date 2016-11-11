@@ -10,6 +10,9 @@ class MainForm(tk.Frame):
     
     _reading_rows = None
     _stage_template = "Test Stage: {description}"
+    _counting = False
+    _count = 0
+    _duration_template = "Test Duration: {seconds} Sec"
 
     # Methods to init and create the form
 
@@ -18,6 +21,8 @@ class MainForm(tk.Frame):
         master.resizable(0,0) # Disallow resizing of the form
         master.geometry("800x480")
         master.title("X231 PCB Tester")
+
+        self.root = master
         self.pack()
         self.create_widgets()
 
@@ -38,6 +43,9 @@ class MainForm(tk.Frame):
         btn_font = ("Arial", 18, "bold")
         header_font = "Arial 10 bold"
 
+        self._duration_count = tk.StringVar()
+        self._duration_count.set("Test Duration: N/A")
+
         current_row = 0
 
         # Test Stage information
@@ -45,7 +53,12 @@ class MainForm(tk.Frame):
         self.test_stage = tk.Label(self)
         self.test_stage["text"] = self._stage_template.format(description = "N/A")
         self.test_stage["font"] = "Arial 10 bold"
-        self.test_stage.grid(column = 0, row = current_row, columnspan = 5, sticky = tkc.W + tkc.S, pady = 3)
+        self.test_stage.grid(column = 0, row = current_row, columnspan = 3, sticky = tkc.W + tkc.S, pady = 3)
+
+        self.session_duration = tk.Label(self)
+        self.session_duration["textvariable"] = self._duration_count
+        self.session_duration["font"] = "Arial 10 bold"
+        self.session_duration.grid(column = 3, row = current_row, sticky = tkc.E, columnspan = 3)
 
         # / Test Stage Information
 
@@ -280,3 +293,21 @@ class MainForm(tk.Frame):
             if messagebox.askokcancel("Shutdown", "Shutdown will begin when you press OK.\n\nAfter the screen goes blank, please wait 15 seconds before cutting power."):
                 if os.name == "posix":
                     os.system("/sbin/shutdown -h now")
+
+
+    def update_duration(self):
+
+        if self._counting:
+            self._count += 1
+            self._duration_count.set( self._duration_template.format(seconds = self._count))
+
+        self.root.after(1000, self.update_duration)
+
+    def reset_duration(self):
+        self._count = 0
+
+    def start_duration_count(self):
+        self._counting = True
+
+    def stop_duration_count(self):
+        self._counting = False

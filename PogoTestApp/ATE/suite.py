@@ -8,6 +8,7 @@ class TestSuite(object):
     tests = []
     current_test = -1
     form = None
+    timer = None
 
     def execute(self):
         "Processes any GUI updates and runs the current test's setUp() and run() methods"
@@ -50,6 +51,8 @@ class TestSuite(object):
         "Asks the user if they want to abort testing and return to the beginning and processes the answer."
         if self.form.abort_dialogue():
             self.form.disable_test_buttons()
+            self.form.stop_duration_count()
+
             self.summary()
             self.current_test = -1
 
@@ -60,6 +63,9 @@ class TestSuite(object):
         if self.current_test == -1:
             # Set up the digital I/O pins in case they've changed through previous tests.
             digio.setup()
+
+            self.form.reset_duration()
+            self.form.start_duration_count()
 
             # Reset any previous test results
             self.reset_test_results()
@@ -81,9 +87,12 @@ class TestSuite(object):
 
         # Check to see if we've got more groups to run. If we don't, show the summary.
         if self.current_test >= len(self.tests) -1:
+            
+            self.form.stop_duration_count()
             # If our form is declared, run the summary method. If not, we're likely running from unit tests so ignore.
             if self.form:
                 self.summary()
+
         else:
             # If we do have more tests, clean up the current test, advance the current test variable and execute the test.
             self.tests[self.current_test].tearDown()
@@ -96,7 +105,7 @@ class TestSuite(object):
         self.form.disable_abort_button()
         self.form.set_stage_text("Testing Ended.")
 
-        results = "Test suite completed."
+        results = "Test suite completed in {} seconds.".format(self.form._count)
         failures = []
         passes = []
         not_run = []
@@ -131,3 +140,4 @@ class TestSuite(object):
 
         self.set_text(results)
         self.form.disable_test_buttons()
+

@@ -92,6 +92,9 @@ try:
     update_readings_thread = Thread(target = update_readings)
     update_readings_thread.start()
 
+    update_duration_thread = Thread(target = test_suite.form.update_duration)
+    update_duration_thread.start()
+
     # Set startup text on the display.
     main_frm.set_text(const.INTRO_TEXT.format(hwrevision = version.HARDWARE_REVISION, swrevision = version.SOFTWARE_REVISION, swdate = version.SOFTWARE_RELEASE_DATE))
 

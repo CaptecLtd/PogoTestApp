@@ -473,5 +473,5 @@ class TestEnd_TestsCompleted(TestProcedure):
     description = "Testing completed"
 
     def run(self):
-        self.suite.form.set_text("All tests finished. Press PASS to display the test summary")
+        self.suite.form.set_text("All tests finished. Press PASS to display the test summary.")
         self.set_passed()
