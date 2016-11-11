@@ -203,11 +203,13 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
         if ad4.read_voltage() < 4.5:
             self.suite.form.append_text_line("Voltage is less than 4.5v")
 
-            if ad4.voltage_between(2.0, 3.0, 0.01):
-                self.suite.form.append_text_line("Voltage is between 2.0v and 3.0v")
+            self.suite.form.append_text_line("Checking voltage on AD4 is between 2.0v and 3.0v")
+            valid, volts = ad4.voltage_between(2.0, 3.0, 0.01)
+
+            if valid:
+                self.suite.form.append_text_line("Voltage %.2f is in bounds" % volts)
 
                 ad5 = Channel(AD5_Batt_Board_Battery_Volts)
-
                 self.suite.form.append_text_line("Checking if AD5 voltage is between 3.0v and 4.07v")
 
                 valid, volts = ad5.voltage_between(3.0, 4.07, 0.01)
@@ -222,7 +224,9 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
                 else:
                     self.log_failure("Battery PCB voltage is %.2f, test failed." % volts)
                     self.set_failed()
-
+            else:
+                self.log_failure("Voltage %.2f is OUT OF BOUNDS, test failed.")
+                self.set_failed()
         else:
             self.log_failure("Voltage is greater than 4.5v, test failed")
             self.set_failed()
