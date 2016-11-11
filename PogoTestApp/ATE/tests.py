@@ -225,7 +225,7 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
                     self.log_failure("Battery PCB voltage is %.2f, test failed." % volts)
                     self.set_failed()
             else:
-                self.log_failure("Voltage %.2f is OUT OF BOUNDS, test failed.")
+                self.log_failure("Voltage %.2f is OUT OF BOUNDS, test failed." % volts)
                 self.set_failed()
         else:
             self.log_failure("Voltage is greater than 4.5v, test failed")
@@ -382,7 +382,7 @@ class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
             self.suite.form.append_text_line("Got zero volts, battery isolated. Test passed.")
             self.set_passed()
         else:
-            self.log_failure("Voltage detected ({}v) on AD3. Battery board power input should be disconnected. Test failed.")
+            self.log_failure("Voltage detected ({}v) on AD3. Battery board power input should be disconnected. Test failed.".format(ad3.read_voltage())
             self.set_failed()
 
 class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
@@ -430,7 +430,6 @@ class Test3f_USBCableContinuityTest(TestProcedure):
 
     def run(self):
 
-        self.suite.form.enable_test_buttons()
         self.suite.form.set_text("Measuring continuity on USB data lines")
 
         got_Dplus = False
