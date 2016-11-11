@@ -100,9 +100,10 @@ try:
     # Process GUI events.
     root.mainloop()
 except:
-    import sys, traceback
+    import traceback
     from tkinter import messagebox
-    exc_info = sys.exc_info()
-    messagebox.showerror("Error", traceback.format_exc())
+    exception = traceback.format_exc()
+    print(exception)
+    messagebox.showerror("Error", exception)
 finally:
     sys.exit()
