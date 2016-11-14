@@ -22,6 +22,7 @@ class TestSuite(object):
         self.form.reset_duration()
         self.form.disable_abort_button()
         self.form.disable_test_buttons()
+        self.form.clear_duration()
 
     def execute(self):
         "Processes any GUI updates for the current test and runs the current test's setUp() and run() methods"

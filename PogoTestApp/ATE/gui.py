@@ -311,3 +311,6 @@ class MainForm(tk.Frame):
 
     def stop_duration_count(self):
         self._counting = False
+
+    def clear_duration(self):
+        self._duration_count.set("Test Duration: N/A")
