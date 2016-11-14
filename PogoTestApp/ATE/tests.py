@@ -232,7 +232,7 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
                         self.suite.form.append_text_line("Voltage is above 3.9v, please change battery and reset test")
                     else:
                         self.suite.form.append_text_line("Battery PCB voltage is %.2f, test passed." % volts)
-                        self.set_passed()
+                        self.suite.pass_test()
 
                 else:
                     self.log_failure("Battery PCB voltage is %.2f, test failed." % volts)
@@ -285,7 +285,7 @@ class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
             valid, volts = ad5.voltage_between(4.65, 4.85, 0.01)
             if valid:
                 self.suite.form.append_text_line("Measured {}v on AD5, between bounds of 4.65v and 4.85v after LOAD 2 applied, test passed".format(volts))
-                self.set_passed()
+                self.suite.pass_test()
             else:
                 self.log_failure("Measured {}v on AD5, OUT OF BOUNDS between 4.65v and 4.85v. Test failed".format(volts))
                 self.set_failed()
@@ -306,7 +306,7 @@ class Test2b_PogoPinsIsolatedFromBatteryPower(TestProcedure):
 
         if ad1.zero_voltage():
             self.suite.form.append_text_line("Zero voltage from AD1 received. Test passed")
-            self.set_passed()
+            self.suite.pass_test()
         else:
             self.log_failure("Got {}v from AD1, test failed".format(ad1.read_voltage()))
             self.set_failed()
@@ -332,7 +332,7 @@ class Test2d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
 
         if ad2.zero_voltage():
             self.suite.form.append_text_line("Zero volts received on AD2. Test passed")
-            self.set_passed()
+            self.suite.pass_test()
         else:
             self.log_failure("Voltage detected on AD2, test failed.")
             self.set_failed()
@@ -351,7 +351,7 @@ class Test3a_ActivationOfOTGPower(TestProcedure):
 
         if otg_triggered:
             self.suite.form.append_text_line("On the go power was triggered, test passed.")
-            self.set_passed()
+            self.suite.pass_test()
         else:
             self.log_failure("OTG power was not detected on DIP2, test failed")
             self.set_failed()
@@ -367,7 +367,7 @@ class Test3b_PogoPinsIsolatedFromOTGModePower(TestProcedure):
 
         if ad1.zero_voltage():
             self.suite.form.append_text_line("Zero voltage received on AD1, pogo pins are isolated. Test passed.")
-            self.set_passed()
+            self.suite.pass_test()
         else:
             self.log_failure("Voltage detected ({}v) on AD1, OTG mode enabled so pogo voltage is unexpected. Test failed.".format(ad1.read_voltage()))
             self.set_failed()
@@ -393,7 +393,7 @@ class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
 
         if ad3.zero_voltage():
             self.suite.form.append_text_line("Got zero volts, battery isolated. Test passed.")
-            self.set_passed()
+            self.suite.pass_test()
         else:
             self.log_failure("Voltage detected ({}v) on AD3. Battery board power input should be disconnected. Test failed.".format(ad3.read_voltage()))
             self.set_failed()
@@ -414,7 +414,7 @@ class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
         if valid:
             self.suite.form.append_text_line("Voltage is within bounds of 4.84v to 4.88v, passed.")
             self.suite.form.append_text_line("Toggle switch BATT-SW to isolate battery. PASS when completed.")
-            self.set_passed()
+            self.suite.pass_test()
         else:
             self.log_failure("Voltage was NOT within bounds of 4.84v to 4.88v, failed")
             self.set_failed()
@@ -431,7 +431,7 @@ class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
 
         if ad7.zero_voltage():
             self.suite.form.append_text_line("Zero voltage detected on AD7, test passed")
-            self.set_passed()
+            self.suite.pass_test()
         else:
             self.suite.form.append_text_line("Voltage detected ({}v) on AD7, test failed. Check BATT-SW is toggled and press RESET.")
             self.suite.form.append_text_line("If BATT-SW is toggled, the test has failed.")
@@ -449,7 +449,7 @@ class Test3f_USBCableContinuityTest(TestProcedure):
         got_Dminus = False
 
         digio.set_high(DOP4_Dplus_Ext_USB)
-        if digio.await_high(DIP3_Dplus_Tablet_USB_Sense, 3):
+        if digio.await_high(DIP3_Dplus_Tablet_USB_Sense, 2):
             digio.set_low(DOP4_Dplus_Ext_USB)
             if not digio.read(DIP3_Dplus_Tablet_USB_Sense):
                 self.suite.form.append_text_line("D+ continuity OK")
@@ -462,7 +462,7 @@ class Test3f_USBCableContinuityTest(TestProcedure):
         digio.set_low(DOP4_Dplus_Ext_USB)
 
         digio.set_high(DOP5_Dminus_Ext_USB)
-        if digio.await_high(DIP4_Dminus_Tablet_USB_Sense, 3):
+        if digio.await_high(DIP4_Dminus_Tablet_USB_Sense, 2):
             digio.set_low(DOP5_Dminus_Ext_USB)
             if not digio.read(DIP4_Dminus_Tablet_USB_Sense):
                 self.suite.form.append_text_line("D- continuity OK")
@@ -476,7 +476,7 @@ class Test3f_USBCableContinuityTest(TestProcedure):
 
         if got_Dminus and got_Dplus:
             self.suite.form.append_text_line("Continuity for D+ and D- OK, test passed")
-            self.set_passed()
+            self.suite.pass_test()
         else:
             self.log_failure("Continuity error(s). Check data lines on USB and reset")
             self.set_failed()
@@ -487,4 +487,4 @@ class TestEnd_TestsCompleted(TestProcedure):
 
     def run(self):
         self.suite.form.set_text("All tests finished. Press PASS to display the test summary.")
-        self.set_passed()
+        self.suite.pass_test()
