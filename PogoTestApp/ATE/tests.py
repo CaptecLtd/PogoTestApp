@@ -154,17 +154,17 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 delay_ms = (span.microseconds / 1000)
                 delay_ms = delay_ms + (span.seconds * 1000)
         
-                self.suite.append_text("Detected delay of %ims" % delay_ms)
-                self.suite.append_text("Tablet USB voltage is %d" % (Channel(AD2_Tablet_USB_Volts).read_voltage()))
-                self.suite.append_text("External USB voltage is %d" % (Channel(AD6_External_USB_Volts).read_voltage()))
+                self.suite.form.append_text_line("Detected delay of %ims" % delay_ms)
+                self.suite.form.append_text_line("Tablet USB voltage (AD2) is {}".format(Channel(AD2_Tablet_USB_Volts).read_voltage()))
+                self.suite.form.append_text_line("External USB voltage (AD6) is {}".format(Channel(AD6_External_USB_Volts).read_voltage()))
 
                 # We leave it up to the user to decide whether the test fails or not.
                 self.suite.form.enable_test_buttons()
 
                 if delay_ms >= 400 and delay_ms <= 600:
-                    self.suite.append_text("Delay of %ims is within bounds (400ms to 600ms)" % delay_ms)
+                    self.suite.form.append_text_line("Delay of %ims is within bounds (400ms to 600ms)" % delay_ms)
                 else:
-                    self.suite.append_text("WARNING: Delay of %ims is out of bounds (between 400ms and 600ms)" % delay_ms)
+                    self.suite.form.append_text_line("WARNING: Delay of %ims is out of bounds (between 400ms and 600ms)" % delay_ms)
 
             else:
                 self.suite.form.append_text_line("Awaiting DIP1 low timed out. Press RESET to try again.")
