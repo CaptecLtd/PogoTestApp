@@ -254,7 +254,7 @@ class Test1d_TabletCharged(TestProcedure):
         digio.set_low(DOP1_Tablet_Full_Load_Switch)
         digio.set_high(DOP2_Tablet_Charged_Load_Switch)
 
-        self.suite.form.set_text("Observe LED D1 illuminated GREEN")
+        self.suite.form.set_text("Observe LED D1 illuminated GREEN (tablet is charged)")
         self.log_failure("User indicated LED D1 was not illuminated green", False)
         
 
@@ -317,7 +317,7 @@ class Test2c_LEDStatusNotInChargeState(TestProcedure):
 
     def run(self):
 
-        self.suite.form.set_text("Observe LED PCB (D1) is off.\n\nNo illumination = PASS. Green or red illumination = FAIL")
+        self.suite.form.set_text("Observe LED PCB (D1) is off while not in charge state before OTG power.\n\nNo illumination = PASS. Green or red illumination = FAIL")
         self.log_failure("User indicated LED PCB (D1) is illuminated, should be off", False)
 
 
@@ -377,7 +377,7 @@ class Test3c_LEDStatusNotInChargeState(TestProcedure):
     description = "3c. LED status (not in charge state)"
 
     def run(self):
-        self.suite.form.set_text("Observe LED PCB (D1) is off.\n\nNo illumination = PASS. Green or red illumination = FAIL")
+        self.suite.form.set_text("Observe LED PCB (D1) is off while not in charge state after OTG power.\n\nNo illumination = PASS. Green or red illumination = FAIL")
         self.log_failure("User indicated LED PCB (D1) is illuminated, should be off", False)
 
 
