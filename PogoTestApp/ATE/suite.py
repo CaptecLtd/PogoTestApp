@@ -121,6 +121,9 @@ class TestSuite(object):
         self.form.disable_abort_button()
         self.form.set_stage_text("Testing Ended.")
 
+        # Reset digital I/O back to defaults
+        digio.setup()
+
         results = "Test suite completed in {} seconds.".format(self.form._count)
         failures = []
         passes = []

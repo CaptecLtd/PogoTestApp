@@ -98,7 +98,6 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
         self.suite.form.set_text("Install PCB assemblies and apply PCBA power when ready.")
 
         ad1 = Channel(AD1_Pogo_Input_Volts)
-        ad1.set_conversion_factor(1.575)
 
         # Wait for channel 1 voltage
 
@@ -111,7 +110,7 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
 
         self.suite.form.append_text_line("Voltage received, awaiting +5v")
 
-        got_5v = ad1.await_voltage(5.0, 0.01)
+        got_5v = ad1.await_voltage(5.0, 0.01, 2)
 
         # We have a voltage and it's 5v
         if got_5v:
@@ -127,7 +126,7 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
 class Test1a_MeasurePowerOnDelay(TestProcedure):
     """AD1 volts applied, wait DIP1 high then count to DIP1 low"""
 
-    description = "1a. Power on delay from pogo power to tablet power (400-600ms)"
+    description = "1a. Power on delay from pogo power to tablet power"
 
     def run(self):
 
@@ -136,7 +135,7 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
 
         self.suite.form.set_text("Waiting for DIP1 to become high")
 
-        dip1_high = digio.await_high(DIP1_TP3_Q4_Startup_Delay)
+        dip1_high = digio.await_high(DIP1_TP3_Q4_Startup_Delay, 2)
 
         if not dip1_high:
             self.log_failure("DIP1 did not become high, cannot measure power on delay. Test failed.")
