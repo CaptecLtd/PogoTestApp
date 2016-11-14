@@ -40,7 +40,7 @@ class MainForm(tk.Frame):
 
     def create_widgets(self):
         padding = 10
-        btn_font = ("Arial", 18, "bold")
+        btn_font = "Arial 18 bold"
         header_font = "Arial 10 bold"
 
         self._duration_count = tk.StringVar()
@@ -53,12 +53,12 @@ class MainForm(tk.Frame):
         self.test_stage = tk.Label(self)
         self.test_stage["text"] = self._stage_template.format(description = "N/A")
         self.test_stage["font"] = "Arial 10 bold"
-        self.test_stage.grid(column = 0, row = current_row, columnspan = 3, sticky = tkc.W + tkc.S, pady = 3)
+        self.test_stage.grid(column = 0, row = current_row, columnspan = 4, sticky = tkc.W + tkc.S, pady = 3)
 
         self.session_duration = tk.Label(self)
         self.session_duration["textvariable"] = self._duration_count
         self.session_duration["font"] = "Arial 10 bold"
-        self.session_duration.grid(column = 3, row = current_row, sticky = tkc.E, columnspan = 3)
+        self.session_duration.grid(column = 3, row = current_row, sticky = tkc.E, columnspan = 2)
 
         # / Test Stage Information
 
