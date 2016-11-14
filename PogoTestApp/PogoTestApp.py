@@ -87,10 +87,8 @@ try:
 
         main_frm.enable_reset_button()
 
-    # Set up our conversion factors on the ATE hardware
-    adc.conversion_factors = {
-        const.AD1_Pogo_Input_Volts: 1.575
-    }
+    # Channel conversion factor times the impedence conversion
+    adc.global_conversion_factor = (1.1505 * 1.575)
 
     # Kick off the readings display test
     readings_display_test()

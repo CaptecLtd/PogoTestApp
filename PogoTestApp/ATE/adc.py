@@ -37,6 +37,9 @@ def read_all_voltages():
 # If a channel is loaded matching the key, all readings will be multiplied by factor.
 conversion_factors = {}
 
+# The overall conversion factor for all channels if not defined in the conversion_factors list
+global_conversion_factor = 1.0
+
 class Channel(object):
     "Represents an analogue channel on an analogue to digital converter"
 
@@ -52,7 +55,9 @@ class Channel(object):
     def __init__(self, channel, conversion_factor = 1.0):
         self.index = channel
 
-
+        # If there is a global conversion factor set other than the default 1.0
+        if global_conversion_factor != 1.0:
+            self._conversion_factor = global_conversion_factor
 
         # If the conversion factor is left as default
         if conversion_factor == 1.0:
@@ -62,7 +67,7 @@ class Channel(object):
                 # And apply it
                 self._conversion_factor = conversion_factors[self.index]
 
-        # Otherwise if it is different from the default
+        # Otherwise if it is set on the class constructor
         else:
             # Set it as requested.
             self._conversion_factor = conversion_factor
