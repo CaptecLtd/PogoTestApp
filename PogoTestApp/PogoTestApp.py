@@ -28,8 +28,10 @@ try:
     test_suite.form.reset_btn["command"] = test_suite.reset
     test_suite.form.abort_btn["command"] = test_suite.abort
 
+    test_suite.add_test(tests.TestXX_FakeTest())
+
     # Define the tests we will run
-    test_suite.add_test(tests.Test0a_ConnectHardwareAndAwaitPowerOn())
+    """test_suite.add_test(tests.Test0a_ConnectHardwareAndAwaitPowerOn())
     test_suite.add_test(tests.Test1a_MeasurePowerOnDelay())
     test_suite.add_test(tests.Test1b_PogoPowerInput())
     test_suite.add_test(tests.Test1c_ChargeBatteryStep1())
@@ -47,7 +49,7 @@ try:
     test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep1())
     test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep2())
     test_suite.add_test(tests.Test3f_USBCableContinuityTest())
-    test_suite.add_test(tests.TestEnd_TestsCompleted())
+    test_suite.add_test(tests.TestEnd_TestsCompleted())"""
 
     # Disable input buttons to start with
     main_frm.disable_all_buttons()
@@ -95,11 +97,13 @@ try:
     update_duration_thread = Thread(target = test_suite.form.update_duration)
     update_duration_thread.start()
 
-    # Set startup text on the display.
-    main_frm.set_text(const.INTRO_TEXT.format(hwrevision = version.HARDWARE_REVISION, swrevision = version.SOFTWARE_REVISION, swdate = version.SOFTWARE_RELEASE_DATE))
+    # Make the suite ready and display the intro text.
+    test_suite.ready()
 
     # Process GUI events.
     root.mainloop()
+
+# Handle all exceptions with a print to the console and a message box
 except:
     import traceback
     from tkinter import messagebox

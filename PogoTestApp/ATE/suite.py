@@ -2,6 +2,8 @@ from enum import Enum
 from ATE.adc import Channel
 from ATE.gui import MainForm
 import ATE.digio as digio
+import ATE.const as const
+import ATE.version as version
 
 class TestSuite(object):
     "Suite of tests for the user to complete. Controls the running and state of tests. Call TestSuite.reset() before interacting with any tests. "
@@ -9,9 +11,20 @@ class TestSuite(object):
     current_test = -1
     form = None
     timer = None
+    summary_shown = False
+
+    def ready(self):
+        "Instructs the suite to show the intro text and await operator input."
+        self.form.set_info_default()
+        self.current_test = -1
+        self.form.set_text(const.INTRO_TEXT.format(hwrevision = version.HARDWARE_REVISION, swrevision = version.SOFTWARE_REVISION, swdate = version.SOFTWARE_RELEASE_DATE))
+        self.form.set_stage_text("Test Stage: N/A")
+        self.form.reset_duration()
+        self.form.disable_abort_button()
+        self.form.disable_test_buttons()
 
     def execute(self):
-        "Processes any GUI updates and runs the current test's setUp() and run() methods"
+        "Processes any GUI updates for the current test and runs the current test's setUp() and run() methods"
 
         # GUI isn't created when running Unit Tests so we check here before doing GUI operations.
         if self.form:
@@ -25,14 +38,9 @@ class TestSuite(object):
         self.tests[self.current_test].run()
 
     def add_test(self, test):
+        "Adds an instance of tests.TestProcedure to the list of tests to run"
         test.suite = self
         self.tests.append(test)
-
-    def set_text(self, text):
-        self.form.info_label["text"] = text
-
-    def append_text(self, text):
-        self.form.info_label["text"] += "\n" + text
 
     def pass_test(self):
         "Sets the current test as passed and advances to the next test"
@@ -52,14 +60,18 @@ class TestSuite(object):
         if self.form.abort_dialogue():
             self.form.disable_test_buttons()
             self.form.stop_duration_count()
-
             self.summary()
-            self.current_test = -1
 
     def reset(self):
         "Asks the user if they want to start the current test again and processes the answer."
 
-        # If we've just loaded up, use the RESET button to initialise testing
+        # If we've just finished a testing cycle (summary shown), show the intro text again.
+        if self.summary_shown:
+            self.summary_shown = False
+            self.ready()
+            return 
+
+        # If we've just loaded up after self.ready(), use the RESET button to initialise testing
         if self.current_test == -1:
             # Set up the digital I/O pins in case they've changed through previous tests.
             digio.setup()
@@ -75,10 +87,12 @@ class TestSuite(object):
             self.execute()
             return
 
+        # If we're in the middle of a test, ask the user if they want to start this test again and do so if true.
         if self.form.reset_dialogue():
             self.execute()
 
     def reset_test_results(self):
+        "Loops through all the configured tests and calls the TestProcedure class' reset() method"
         for test in self.tests:
             test.reset()
 
@@ -101,7 +115,7 @@ class TestSuite(object):
 
     def summary(self):
         "Writes a summary of the loaded tests and their results"
-        self.current_test = -1
+        #self.current_test = -1
         self.form.disable_abort_button()
         self.form.set_stage_text("Testing Ended.")
 
@@ -138,6 +152,7 @@ class TestSuite(object):
         elif len(failures) == 0 and len(passes) > 0:
             self.form.set_info_pass()
 
-        self.set_text(results)
+        self.form.set_text(results)
         self.form.disable_test_buttons()
+        self.summary_shown = True
 

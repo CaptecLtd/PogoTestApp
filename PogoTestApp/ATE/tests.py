@@ -69,6 +69,15 @@ class TestProcedure(object):
             "not_run": "Not Run"
         }.get(self.state, "Unknown")
 
+
+class TestXX_FakeTest(TestProcedure):
+
+    description = "Fake test"
+
+    def run(self):
+
+        self.suite.form.set_text("Pass or fail")
+
 """
 The classes below are "live" tests run as part of the ATE itself. They are not unit tested.
 """
@@ -241,7 +250,7 @@ class Test1d_TabletCharged(TestProcedure):
         digio.set_low(DOP1_Tablet_Full_Load_Switch)
         digio.set_high(DOP2_Tablet_Charged_Load_Switch)
 
-        self.suite.set_text("Observe LED D1 illuminated GREEN")
+        self.suite.form.set_text("Observe LED D1 illuminated GREEN")
         self.log_failure("User indicated LED D1 was not illuminated green", False)
         
 
