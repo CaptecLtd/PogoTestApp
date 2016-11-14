@@ -87,6 +87,11 @@ try:
 
         main_frm.enable_reset_button()
 
+    # Set up our conversion factors on the ATE hardware
+    adc.conversion_factors = {
+        const.AD1_Pogo_Input_Volts: 1.575
+    }
+
     # Kick off the readings display test
     readings_display_test()
 

@@ -33,11 +33,20 @@ def read_all_voltages():
         "AD7": read(const.AD7_Pogo_Battery_Output)
     }
 
+# Contains a dictionary of channel: factor values.
+# If a channel is loaded matching the key, all readings will be multiplied by factor.
+conversion_factors = {}
+
 class Channel(object):
     "Represents an analogue channel on an analogue to digital converter"
 
     def __init__(self, channel, conversion_factor = 0.0):
         self.index = channel
+
+        if self._conversion_factor == 0.0:
+            if self.index in _conversion_factors.keys():
+                self._conversion_factor = _conversion_factors[index]
+
         self._conversion_factor = conversion_factor
 
         if simulation_mode:
