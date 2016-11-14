@@ -39,15 +39,19 @@ class TestProcedure(object):
         "Sets the current test as passed, enables the PASS button and disables the FAIL button."
         self.breakout = True
         self.state = "passed"
-        self.suite.form.enable_pass_button()
-        self.suite.form.disable_fail_button()
+
+        if self.suite.form:
+            self.suite.form.enable_pass_button()
+            self.suite.form.disable_fail_button()
 
     def set_failed(self):
         "Sets the current test as failed, enables the FAIL button and disables the PASS button."
         self.breakout = True
         self.state = "failed"
-        self.suite.form.disable_pass_button()
-        self.suite.form.enable_fail_button()
+
+        if self.suite.form:
+            self.suite.form.disable_pass_button()
+            self.suite.form.enable_fail_button()
 
     def reset(self):
         "Resets the current test's status and failure log."

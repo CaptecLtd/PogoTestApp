@@ -77,8 +77,9 @@ class TestSuite(object):
             # Set up the digital I/O pins in case they've changed through previous tests.
             digio.setup()
 
-            self.form.reset_duration()
-            self.form.start_duration_count()
+            if self.form:
+                self.form.reset_duration()
+                self.form.start_duration_count()
 
             # Reset any previous test results
             self.reset_test_results()

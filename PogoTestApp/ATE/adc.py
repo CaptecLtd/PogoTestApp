@@ -43,11 +43,18 @@ class Channel(object):
     def __init__(self, channel, conversion_factor = 0.0):
         self.index = channel
 
-        if self._conversion_factor == 0.0:
-            if self.index in _conversion_factors.keys():
-                self._conversion_factor = _conversion_factors[index]
+        # If the conversion factor is left as default
+        if conversion_factor == 0.0:
+            
+            # Look it up in our global conversion factors dictionary
+            if self.index in conversion_factors.keys():
+                # And apply it
+                self._conversion_factor = conversion_factors[self.index]
 
-        self._conversion_factor = conversion_factor
+        # Otherwise if it is different from the default
+        else:
+            # Set it as requested.
+            self._conversion_factor = conversion_factor
 
         if simulation_mode:
             self.set_simulation_mode(True)
