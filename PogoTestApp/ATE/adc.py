@@ -40,11 +40,22 @@ conversion_factors = {}
 class Channel(object):
     "Represents an analogue channel on an analogue to digital converter"
 
-    def __init__(self, channel, conversion_factor = 0.0):
+    index = None # the number of the channel this instance reads from
+
+    # Simulation variables used for testing when ADC is not available.
+    _simulation_mode = False
+    _simulation_voltage = 0.0
+    
+    # Value to adjust the voltage read by on this channel.
+    _conversion_factor = 1.0
+
+    def __init__(self, channel, conversion_factor = 1.0):
         self.index = channel
 
+
+
         # If the conversion factor is left as default
-        if conversion_factor == 0.0:
+        if conversion_factor == 1.0:
             
             # Look it up in our global conversion factors dictionary
             if self.index in conversion_factors.keys():
@@ -58,15 +69,6 @@ class Channel(object):
 
         if simulation_mode:
             self.set_simulation_mode(True)
-
-    index = 1 # the number of the channel this instance reads from
-
-    # Simulation variables used for testing when ADC is not available.
-    _simulation_mode = False
-    _simulation_voltage = 0.0
-    
-    # Value to adjust the voltage read by on this channel.
-    _conversion_factor = 0.0
 
     def set_simulation_mode(self, enable):
         "Defines whether this class instance actually reads from the channel or just returns voltage provided by set_simulation_voltage()"
