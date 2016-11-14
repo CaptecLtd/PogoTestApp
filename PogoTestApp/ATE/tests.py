@@ -110,7 +110,7 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
 
         self.suite.form.append_text_line("Voltage received, awaiting +5v")
 
-        got_5v = ad1.await_voltage(5.0, 0.01, 2)
+        got_5v = ad1.await_voltage(5.0, 0.1, 2)
 
         # We have a voltage and it's 5v
         if got_5v:
