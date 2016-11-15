@@ -95,7 +95,7 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
 
         self.suite.form.disable_test_buttons()
         
-        self.suite.form.set_text("Install PCB assemblies. Turn BATTERY ON.\n\n Turn POGO POWER ON when hardware installed and battery ON.")
+        self.suite.form.set_text("Install PCB assemblies. Turn BATTERY ON.\n\nTurn POGO POWER ON when hardware installed and battery ON.")
 
         ad1 = Channel(AD1_Pogo_Input_Volts)
 
