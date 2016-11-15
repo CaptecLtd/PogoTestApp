@@ -127,13 +127,12 @@ class MainForm(tk.Frame):
             "DOP3": {"name": "DOP3 OTG Mode Trigger", "value": tk.StringVar(), "column": 2, "row": 3},
             "DOP4": {"name": "DOP4 D+ Ext USB", "value": tk.StringVar(), "column": 2, "row": 4},
             "DOP5": {"name": "DOP5 D- Ext USB", "value": tk.StringVar(), "column": 2, "row": 5},
-            "DOP6": {"name": "DOP6 Tablet OTG Vout Activate", "value": tk.StringVar(), "column": 2, "row": 6},
-
 
             "DIP1": {"name": "DIP1 TP3 Q4 Startup Delay", "value": tk.StringVar(), "column": 4, "row": 1},
             "DIP2": {"name": "DIP2 Tablet OTG Sense", "value": tk.StringVar(), "column": 4, "row": 2},
             "DIP3": {"name": "DIP3 D+ Tablet USB Sense", "value": tk.StringVar(), "column": 4, "row": 3},
-            "DIP4": {"name": "DIP4 D- Tablet USB Sense", "value": tk.StringVar(), "column": 4, "row": 4}
+            "DIP4": {"name": "DIP4 D- Tablet USB Sense", "value": tk.StringVar(), "column": 4, "row": 4},
+            "DIP5": {"name": "DIP5 Tablet OTG Vout Activate", "value": tk.StringVar(), "column": 4, "row": 5}
         }
 
         # Add all the configured rows to the form

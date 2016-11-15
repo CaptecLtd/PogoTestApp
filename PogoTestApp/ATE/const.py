@@ -27,6 +27,7 @@ DIP1_TP3_Q4_Startup_Delay = 23
 DIP2_Tablet_OTG_Sense = 25
 DIP3_Dplus_Tablet_USB_Sense = 8
 DIP4_Dminus_Tablet_USB_Sense = 7
+DIP5_Tablet_OTG_Vout_Activate = 20
 
 # Digital Outputs
 # These correspond to the GPIO pins (BCM naming convention)
@@ -35,4 +36,3 @@ DOP2_Tablet_Charged_Load_Switch = 18
 DOP3_OTG_Mode_Trigger = 27
 DOP4_Dplus_Ext_USB = 19
 DOP5_Dminus_Ext_USB = 26
-DOP6_Tablet_OTG_Vout_Activate = 20

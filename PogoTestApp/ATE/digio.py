@@ -23,15 +23,15 @@ def setup():
         DOP2_Tablet_Charged_Load_Switch,
         DOP3_OTG_Mode_Trigger,
         DOP4_Dplus_Ext_USB,
-        DOP5_Dminus_Ext_USB,
-        DOP6_Tablet_OTG_Vout_Activate
+        DOP5_Dminus_Ext_USB
     ]
 
     inputs = [
         DIP1_TP3_Q4_Startup_Delay,
         DIP2_Tablet_OTG_Sense,
         DIP3_Dplus_Tablet_USB_Sense,
-        DIP4_Dminus_Tablet_USB_Sense
+        DIP4_Dminus_Tablet_USB_Sense,
+        DIP5_Tablet_OTG_Vout_Activate
     ]
 
     # Configure input and output pins accordingly
@@ -101,7 +101,8 @@ def read_all_inputs():
         "DIP1": parse(read(DIP1_TP3_Q4_Startup_Delay)),
         "DIP2": parse(read(DIP2_Tablet_OTG_Sense)),
         "DIP3": parse(read(DIP3_Dplus_Tablet_USB_Sense)),
-        "DIP4": parse(read(DIP4_Dminus_Tablet_USB_Sense))
+        "DIP4": parse(read(DIP4_Dminus_Tablet_USB_Sense)),
+        "DIP5": parse(read(DIP5_Tablet_OTG_Vout_Activate))
     }
 
 def read_all_outputs():
@@ -118,6 +119,5 @@ def read_all_outputs():
         "DOP2": parse(read(DOP2_Tablet_Charged_Load_Switch)),
         "DOP3": parse(read(DOP3_OTG_Mode_Trigger)),
         "DOP4": parse(read(DOP4_Dplus_Ext_USB)),
-        "DOP5": parse(read(DOP5_Dminus_Ext_USB)),
-        "DOP6": parse(read(DOP6_Tablet_OTG_Vout_Activate))
+        "DOP5": parse(read(DOP5_Dminus_Ext_USB))
     }
