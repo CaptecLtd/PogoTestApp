@@ -270,7 +270,7 @@ class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
 
     def run(self):
 
-        self.suite.form.set_text("Turn off Pogo Power (SW1) and turn on battery isolation switch (BATT-SW).\n\nPress PASS when completed.")
+        self.suite.form.set_text("Turn off Pogo Power (SW1).\n\nPress PASS when completed.")
         self.suite.form.disable_fail_button()
 
 class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
@@ -410,7 +410,7 @@ class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
     def run(self):
 
         self.suite.form.set_text("Test battery isolation switch (SW1) and pogo PCB")
-
+        self.suite.form.enable_test_buttons()
         ad7 = Channel(AD7_Pogo_Battery_Output)
 
         valid, voltage = ad7.voltage_between(4.84, 4.88, 0.01)
@@ -418,11 +418,10 @@ class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
 
         if valid:
             self.suite.form.append_text_line("Voltage is within bounds of 4.84v to 4.88v, passed.")
-            self.suite.form.append_text_line("Toggle switch BATT-SW to isolate battery. PASS when completed.")
             self.set_passed()
         else:
-            self.log_failure("Voltage was NOT within bounds of 4.84v to 4.88v, failed")
-            self.set_failed()
+            self.log_failure("Voltage was NOT within bounds of 4.84v to 4.88v.", true)
+            self.suite.form.append_text_line("\nIf running via battery simulator, press PASS. If using real battery, press FAIL.")
 
 class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
 
