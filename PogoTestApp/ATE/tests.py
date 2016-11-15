@@ -420,7 +420,7 @@ class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
             self.suite.form.append_text_line("Voltage is within bounds of 4.84v to 4.88v, passed.")
             self.set_passed()
         else:
-            self.log_failure("Voltage was NOT within bounds of 4.84v to 4.88v.", true)
+            self.log_failure("Voltage was NOT within bounds of 4.84v to 4.88v.", True)
             self.suite.form.append_text_line("\nIf running via battery simulator, press PASS. If using real battery, press FAIL.")
 
 class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
