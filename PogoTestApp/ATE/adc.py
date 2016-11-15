@@ -113,7 +113,7 @@ class Channel(object):
         return float(sum(readings)) / max(len(readings), 1), valid, readings
         
     def zero_voltage(self):
-        "Returns True if near-zero voltage is read from the channel (< 0.01v), or False for any other value"
+        "Returns True if near-zero voltage is read from the channel (< 0.1v), or False for any other value"
         return self.voltage_near(0.0, 0.1, 0.1)
 
     def voltage_between(self, lower, upper, tolerance):
