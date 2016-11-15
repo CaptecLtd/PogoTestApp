@@ -95,7 +95,7 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
 
         self.suite.form.disable_test_buttons()
         
-        self.suite.form.set_text("Install PCB assemblies. Turn BATTERY ON and POGO POWER ON when hardware installed.")
+        self.suite.form.set_text("Install PCB assemblies. Turn BATTERY ON.\n\n Turn POGO POWER ON when hardware installed and battery ON.")
 
         ad1 = Channel(AD1_Pogo_Input_Volts)
 
@@ -166,7 +166,7 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 else:
                     self.suite.form.append_text_line("WARNING: Delay of %ims is out of bounds (between 400ms and 600ms)" % delay_ms)
 
-                self.suite.form.append_text_line("\nWait for LED D1 to go RED before proceeding")
+                #self.suite.form.append_text_line("\nWait for LED D1 to go RED before proceeding!")
 
             else:
                 self.suite.form.append_text_line("Awaiting DIP1 low timed out. Press RESET to try again.")
@@ -192,12 +192,12 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
     def run(self):
 
         ad3 = Channel(AD3_Batt_Board_Power_In_Volts)
-        valid, voltage = ad3.voltage_between(4.95, 5.05, 0.01)
+        valid, voltage = ad3.voltage_between(4.8, 5.2, 0.01)
 
         text = "Detected +{}v on battery board (AD3)."
 
         if not valid:
-            text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= 4.95 and <= 5.05)"
+            text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= 4.8 and <= 5.2)"
 
         text += "\n\nConfirm LED D5 is illuminated RED"
         text += "\n\nConfirm LEDs D2 and D4 are OFF completely"
