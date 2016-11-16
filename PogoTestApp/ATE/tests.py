@@ -284,11 +284,10 @@ class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
 
         ad5 = Channel(AD5_Batt_Board_Battery_Volts)
         valid, volts = ad5.voltage_between(3.5, 3.9, 0.01)
+
         if valid:
             self.suite.form.append_text_line("Measured {}v on AD5 between bounds 3.5v and 3.9v, applying LOAD 2".format(volts))
-
-            # Set high in test 1d.
-            # digio.set_high(DOP2_Tablet_Charged_Load_Switch)
+            digio.set_high(DOP2_Tablet_Charged_Load_Switch)
             
             valid, volts = ad5.voltage_between(3.5, 3.9, 0.01)
             if valid:
