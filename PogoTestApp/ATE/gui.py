@@ -279,6 +279,11 @@ class MainForm(tk.Frame):
         "Asks the user if they want to abort testing and reset the ATE"
         return messagebox.askyesno("ABORT", "Do you want to abort testing? This will finish the test session and show the summary.", icon = WARNING)
 
+    def test_pcb3d_dialogue(self):
+        ""
+        return messagebox.askyesno("Test Suite", "Are you testing PCB Rev 3d? This will affect the tests performed.")
+
+
     def set_reading_value(self, key, value):
         self._reading_rows[key]["value"].set(value)
 

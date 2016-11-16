@@ -49,13 +49,15 @@ try:
     test_suite.add_test(tests.Test3c_LEDStatusNotInChargeState())
     test_suite.add_test(tests.Test3d_BattBoardPowerInputViaPogoDisconnected())
 
-    # These tests cannot be run on POGO PCB rev 3d. P/N: 4945-60-002
-    # test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep1())
-    # test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep2())
-    # test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep3())
-
-    # This test is a placeholder for Test 3e not being able to be performed on rev 3d PCB.
-    test_suite.add_test(tests.Test3e_PCBRev3bSkip())
+    # Ask the operator if we're testing PCB rev 3d. If we are, we need to skip some tests.
+    if main_frm.test_pcb3d_dialogue():
+        # This test is a placeholder for Test 3e not being able to be performed on rev 3d PCB.
+        test_suite.add_test(tests.Test3e_PCBRev3bSkip())    
+    else:
+        # These tests cannot be run on POGO PCB rev 3d. P/N: 4945-60-002
+        test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep1())
+        test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep2())
+        test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep3())
 
     test_suite.add_test(tests.Test3f_USBCableContinuityTestStep1())
     test_suite.add_test(tests.Test3f_USBCableContinuityTestStep2())
@@ -114,6 +116,7 @@ try:
     update_readings_thread = Thread(target = update_readings)
     update_readings_thread.start()
 
+    # Kick off the test duration update thread.
     update_duration_thread = Thread(target = test_suite.form.update_duration)
     update_duration_thread.start()
 
