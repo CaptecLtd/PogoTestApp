@@ -95,8 +95,15 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
     def run(self):
 
         self.suite.form.disable_test_buttons()
-        
-        self.suite.form.set_text("Install PCB assemblies. Turn BATTERY ON.\n\nTurn POGO POWER ON when hardware installed and battery ON.")
+        str = """
+1. Install PCB Assemblies into jigs.
+2. Connect POGO PCB to battery PCB. Turn on BATT-SW to connected state.
+3. Connect POGO PCB USB lead to ATE.
+4. Do NOT connect black ATE USB flylead to POGO PCB.
+5. Turn battery switch (SW5) ON.
+6. Turn POGO power (SW1) ON, only after SW5 is on.
+"""
+        self.suite.form.set_text(str)
 
         ad1 = Channel(AD1_Pogo_Input_Volts)
 
@@ -182,7 +189,7 @@ class Test1b_PogoPowerInput(TestProcedure):
         digio.set_high(DOP1_Tablet_Full_Load_Switch)
 
     def run(self):
-        self.suite.form.set_text("Observe LED PCB D1 is RED")
+        self.suite.form.set_text("Observe LED PCB D1 is RED and LOAD 1 LED is RED.")
         self.log_failure("User indicated LED PCB D1 is not illuminated", False)
 
 class Test1c_ChargeBatteryStep1(TestProcedure):
@@ -251,7 +258,16 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
             self.log_failure("Voltage is greater than 4.5v, test failed")
             self.set_failed()
 
-class Test1d_TabletCharged(TestProcedure):
+class Test1d_TabletChargedStep1(TestProcedure):
+
+    description = "1d. Tablet Charged (Step 1"
+
+    def run(self):
+        
+        self.suite.form.set_text("Turn BATTERY OFF. Press PASS when completed.")
+        self.set_passed()
+
+class Test1d_TabletChargedStep2(TestProcedure):
     """Check tablet charged"""
 
     description = "1d. Tablet Charged"
@@ -270,9 +286,12 @@ class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
 
     description = "2a. Battery board powers tablet (Step 1)"
 
+    def setUp(self):
+        digio.set_low(DOP2_Tablet_Charged_Load_Switch)
+
     def run(self):
 
-        self.suite.form.set_text("Turn off Pogo Power (SW1).\n\nPress PASS when completed.")
+        self.suite.form.set_text("Turn BATTERY ON\n\nTurn off Pogo Power (SW1) after BATTERY ON.\n\nPress PASS when completed.")
         self.suite.form.disable_fail_button()
 
 class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
