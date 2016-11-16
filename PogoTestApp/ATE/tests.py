@@ -335,18 +335,28 @@ class Test2d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
     def run(self):
 
         self.suite.form.set_text("Checking battery board power via PoGo is disconnected")
-        ad2 = Channel(AD2_Tablet_USB_Volts)
+        ad3 = Channel(AD3_Batt_Board_Power_In_Volts)
 
-        if ad2.zero_voltage():
+        if ad3.zero_voltage():
             self.suite.form.append_text_line("Zero volts received on AD2. Test passed")
             self.set_passed()
         else:
             self.log_failure("Voltage detected on AD2, test failed.")
             self.set_failed()
 
-class Test3a_ActivationOfOTGPower(TestProcedure):
+class Test3a_ActivationOfOTGPowerStep1(TestProcedure):
 
-    description = "3a. Activation of On The Go power"
+    description = "3a. Activation of On The Go power (Step 1)"
+
+    def run(self):
+
+        self.suite.form.set_text("Turn off BATTERY. Press PASS when action completed.")
+        self.set_passed()
+        
+
+class Test3a_ActivationOfOTGPowerStep2(TestProcedure):
+
+    description = "3a. Activation of On The Go power (Step 2)"
 
     def run(self):
 
