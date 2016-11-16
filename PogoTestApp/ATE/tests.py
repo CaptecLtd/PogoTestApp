@@ -225,7 +225,7 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
                 self.suite.form.append_text_line("Voltage %.2f is in bounds" % volts)
 
                 ad5 = Channel(AD5_Batt_Board_Battery_Volts)
-                self.suite.form.append_text_line("Checking if AD5 voltage is between 3.0v and 4.07v")
+                self.suite.form.append_text_line("Checking if AD5 voltage is between 3.0v and 4.7v")
 
                 valid, volts = ad5.voltage_between(3.0, 4.7, 0.01)
 
