@@ -38,6 +38,9 @@ def setup():
     GPIO.setup(outputs, GPIO.OUT)
     GPIO.setup(inputs, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 
+    # Set DOP3 as input initially to represent a floating pin
+    GPIO.setup(DOP3_OTG_Mode_Trigger, GPIO.IN)
+
     # Set all the output pins low
     GPIO.output(outputs, GPIO.LOW)
 
@@ -46,6 +49,12 @@ def setup():
 def cleanup():
     "Clean up any of the configuation we've done to the pins"
     GPIO.cleanup()
+
+def set_input(pin, pull_up_down = GPIO.PUD_OFF):
+    GPIO.setup(pin, GPIO.IN, pull_up_down)
+
+def set_output(pin):
+    GPIO.setup(pin, GPIO.OUT)
 
 def set_high(pin):
     "Set the specified pin to high or on"

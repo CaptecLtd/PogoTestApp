@@ -363,9 +363,10 @@ class Test3a_ActivationOfOTGPowerStep2(TestProcedure):
 
         self.suite.form.set_text("Test activation of On The Go (OTG) power")
 
-        digio.set_high(DOP3_OTG_Mode_Trigger)
+        digio.set_output(DOP3_OTG_Mode_Trigger)
+        digio.set_low(DOP3_OTG_Mode_Trigger)
 
-        otg_triggered = digio.await_high(DIP2_Tablet_OTG_Sense)
+        otg_triggered = digio.await_low(DIP2_Tablet_OTG_Sense)
 
         if otg_triggered:
             self.suite.form.append_text_line("On the go power was triggered, test passed.")
