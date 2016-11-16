@@ -258,6 +258,7 @@ class Test1d_TabletCharged(TestProcedure):
     def run(self):
         
         digio.set_low(DOP1_Tablet_Full_Load_Switch)
+        digio.set_high(DOP2_Tablet_Charged_Load_Switch)
 
         self.suite.form.set_text("Observe LED D1 illuminated GREEN (tablet is charged)")
         self.log_failure("User indicated LED D1 was not illuminated green", False)
@@ -285,7 +286,9 @@ class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
         valid, volts = ad5.voltage_between(3.5, 3.9, 0.01)
         if valid:
             self.suite.form.append_text_line("Measured {}v on AD5 between bounds 3.5v and 3.9v, applying LOAD 2".format(volts))
-            digio.set_high(DOP2_Tablet_Charged_Load_Switch)
+
+            # Set high in test 1d.
+            # digio.set_high(DOP2_Tablet_Charged_Load_Switch)
             
             valid, volts = ad5.voltage_between(3.5, 3.9, 0.01)
             if valid:
