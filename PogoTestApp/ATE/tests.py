@@ -282,23 +282,23 @@ class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
 
         self.suite.form.set_text("Testing battery and USB PCBs")
 
-        ad5 = Channel(AD5_Batt_Board_Battery_Volts)
-        valid, volts = ad5.voltage_between(3.5, 3.9, 0.01)
+        ad2 = Channel(AD2_Tablet_USB_Volts)
+        valid, volts = ad2.voltage_between(4.75, 4.95, 0.01)
 
         if valid:
-            self.suite.form.append_text_line("Measured {}v on AD5 between bounds 3.5v and 3.9v, applying LOAD 2".format(volts))
+            self.suite.form.append_text_line("Measured {}v on AD2 between bounds 4.75v and 4.95v, applying LOAD 2".format(volts))
             digio.set_high(DOP2_Tablet_Charged_Load_Switch)
             
-            valid, volts = ad5.voltage_between(3.5, 3.9, 0.01)
+            valid, volts = ad2.voltage_between(4.65, 4.85, 0.1)
             if valid:
-                self.suite.form.append_text_line("Measured {}v on AD5, between bounds of 3.5v and 3.9v after LOAD 2 applied, test passed".format(volts))
+                self.suite.form.append_text_line("Measured {}v on AD2, between bounds of 4.65v and 4.85v after LOAD 2 applied, test passed".format(volts))
                 self.set_passed()
             else:
-                self.log_failure("Measured {}v on AD5, OUT OF BOUNDS between 3.5v and 3.9v. Test failed".format(volts))
+                self.log_failure("Measured {}v on AD2, OUT OF BOUNDS between 4.65v and 4.85v. Test failed".format(volts))
                 self.set_failed()
 
         else:
-            self.log_failure("Measured {}v on AD5, OUT OF BOUNDS between 3.5v and 3.9v. Test failed".format(volts))
+            self.log_failure("Measured {}v on AD2, OUT OF BOUNDS between 4.75v and 4.95v. Test failed".format(volts))
             self.set_failed()
 
 class Test2b_PogoPinsIsolatedFromBatteryPower(TestProcedure):
