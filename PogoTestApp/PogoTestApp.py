@@ -49,6 +49,7 @@ try:
     test_suite.add_test(tests.Test3d_BattBoardPowerInputViaPogoDisconnected())
     test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep1())
     test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep2())
+    test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep3())
     test_suite.add_test(tests.Test3f_USBCableContinuityTest())
     test_suite.add_test(tests.TestEnd_TestsCompleted())
 

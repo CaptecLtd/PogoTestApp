@@ -417,7 +417,16 @@ class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
 
 class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
 
-    description = "3e. No external battery voltage presented to tablet +VE (Step 1)"
+    description = "3e. External battery voltage presented to tablet +VE (Step 1)"
+
+    def run(self):
+
+        self.suite.form.set_text("Turn BATTERY ON. Press PASS when completed.")
+        self.set_passed()
+
+class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
+
+    description = "3e. External battery voltage presented to tablet +VE (Step 2)"
 
     def run(self):
 
@@ -425,19 +434,19 @@ class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
         self.suite.form.enable_test_buttons()
         ad7 = Channel(AD7_Pogo_Battery_Output)
 
-        valid, voltage = ad7.voltage_between(4.84, 4.88, 0.01)
+        valid, voltage = ad7.voltage_between(4.84, 5.0, 0.01)
         self.suite.form.append_text_line("Detected voltage: {}v on AD7".format(voltage))
 
         if valid:
-            self.suite.form.append_text_line("Voltage is within bounds of 4.84v to 4.88v, passed.")
+            self.suite.form.append_text_line("Voltage is within bounds of 4.84v to 5v, passed.")
             self.set_passed()
         else:
-            self.log_failure("Voltage was NOT within bounds of 4.84v to 4.88v.", True)
-            self.suite.form.append_text_line("\nIf running via battery simulator, press PASS. If using real battery, press FAIL.")
+            self.log_failure("Voltage was NOT within bounds of 4.84v to 5v. Test failed.")
+            self.set_failed()
 
-class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
+class Test3e_NoExternalBattVoltageToTabletStep3(TestProcedure):
 
-    description = "3e. No external battery voltage presented to tablet +VE (Step 2)"
+    description = "3e. External battery voltage presented to tablet +VE (Step 3)"
 
     def run(self):
 
@@ -449,7 +458,7 @@ class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
             self.suite.form.append_text_line("Zero voltage detected on AD7, test passed")
             self.set_passed()
         else:
-            self.suite.form.append_text_line("Voltage detected ({}v) on AD7, test failed. Check BATT-SW is toggled and press RESET.")
+            self.suite.form.append_text_line("Voltage detected ({}v) on AD7, test failed. Check BATT-SW is toggled and press RESET.".format(ad7.read_voltage()))
             self.suite.form.append_text_line("If BATT-SW is toggled, the test has failed.")
             self.set_failed()
 
