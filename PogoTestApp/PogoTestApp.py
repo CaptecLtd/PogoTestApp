@@ -54,6 +54,9 @@ try:
     # test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep2())
     # test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep3())
 
+    # This test is a placeholder for Test 3e not being able to be performed on rev 3d PCB.
+    test_suite.add_test(tests.Test3e_PCBRev3bSkip())
+
     test_suite.add_test(tests.Test3f_USBCableContinuityTestStep1())
     test_suite.add_test(tests.Test3f_USBCableContinuityTestStep2())
     test_suite.add_test(tests.TestEnd_TestsCompleted())

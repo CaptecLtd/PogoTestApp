@@ -305,10 +305,10 @@ class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
         self.suite.form.set_text("Testing battery and USB PCBs")
 
         ad2 = Channel(AD2_Tablet_USB_Volts)
-        valid, volts = ad2.voltage_between(4.75, 4.95, 0.01)
+        valid, volts = ad2.voltage_between(4.75, 5.0, 0.01)
 
         if valid:
-            self.suite.form.append_text_line("Measured {}v on AD2 between bounds 4.75v and 4.95v, applying LOAD 2".format(volts))
+            self.suite.form.append_text_line("Measured {}v on AD2 between bounds 4.75v and 5.0v, applying LOAD 2".format(volts))
 
             digio.set_high(DOP2_Tablet_Charged_Load_Switch)
 
