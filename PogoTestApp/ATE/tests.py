@@ -95,8 +95,7 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
     def run(self):
 
         self.suite.form.disable_test_buttons()
-        str = """
-1. Install PCB Assemblies into jigs.
+        str = """1. Install PCB Assemblies into jigs.
 2. Connect POGO PCB to battery PCB. Turn on BATT-SW to connected state.
 3. Connect POGO PCB USB lead to ATE.
 4. Do NOT connect black ATE USB flylead to POGO PCB.
@@ -277,8 +276,8 @@ class Test1d_TabletChargedStep2(TestProcedure):
         digio.set_low(DOP1_Tablet_Full_Load_Switch)
         digio.set_high(DOP2_Tablet_Charged_Load_Switch)
 
-        self.suite.form.set_text("Observe LED D1 illuminated GREEN (tablet is charged)")
-        self.log_failure("User indicated LED D1 was not illuminated green", False)
+        self.suite.form.set_text("Observe LED PCB D1 is GREEN and LOAD 2 LED is RED.")
+        self.log_failure("User indicated LED PCB D1 is not illuminated or RED", False)
         
 
 class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
@@ -298,6 +297,9 @@ class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
 
     description = "2a. Battery board powers tablet (Step 2)"
 
+    def setUp(self):
+        time.sleep(1)
+
     def run(self):
 
         self.suite.form.set_text("Testing battery and USB PCBs")
@@ -307,7 +309,11 @@ class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
 
         if valid:
             self.suite.form.append_text_line("Measured {}v on AD2 between bounds 4.75v and 4.95v, applying LOAD 2".format(volts))
+
             digio.set_high(DOP2_Tablet_Charged_Load_Switch)
+
+            # Sleep 1 for 1 second before 
+            time.sleep(1)
             
             valid, volts = ad2.voltage_between(4.65, 4.85, 0.1)
             if valid:
@@ -358,19 +364,22 @@ class Test2d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
         ad3 = Channel(AD3_Batt_Board_Power_In_Volts)
 
         if ad3.zero_voltage():
-            self.suite.form.append_text_line("Zero volts received on AD2. Test passed")
+            self.suite.form.append_text_line("Measured nominally zero volts on AD3. Test passed")
             self.set_passed()
         else:
-            self.log_failure("Voltage detected on AD2, test failed.")
+            self.log_failure("Voltage detected on AD3, test failed.")
             self.set_failed()
 
 class Test3a_ActivationOfOTGPowerStep1(TestProcedure):
 
     description = "3a. Activation of On The Go power (Step 1)"
 
+    def setUp(self):
+        digio.set_low(DOP2_Tablet_Charged_Load_Switch)
+
     def run(self):
 
-        self.suite.form.set_text("Turn off BATTERY. Press PASS when action completed.")
+        self.suite.form.set_text("Turn off BATTERY and connect black ATE USB flylead. Press PASS when action completed.")
         self.set_passed()
         
 
@@ -410,6 +419,7 @@ class Test3b_PogoPinsIsolatedFromOTGModePower(TestProcedure):
             self.log_failure("Voltage detected ({}v) on AD1, OTG mode enabled so pogo voltage is unexpected. Test failed.".format(ad1.read_voltage()))
             self.set_failed()
 
+
 class Test3c_LEDStatusNotInChargeState(TestProcedure):
 
     description = "3c. LED status (not in charge state)"
@@ -430,12 +440,22 @@ class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
         ad3 = Channel(AD3_Batt_Board_Power_In_Volts)
 
         if ad3.read_voltage() < 1.0:
-            self.suite.form.append_text_line("Measured less than 1 volt, battery isolated. Test passed.")
+            self.suite.form.append_text_line("Measured nominally zero volts on AD3. Test passed")
             self.set_passed()
         else:
             self.log_failure("Voltage detected ({}v) on AD3. Battery board power input should be disconnected. Test failed.".format(ad3.read_voltage()))
             self.set_failed()
 
+class Test3e_PCBRev3bSkip(TestProcedure):
+
+    description = "3e. External battery voltage presented to tablet +VE"
+
+    def run(self):
+        
+        self.suite.form.set_text("This test must be skipped for POGO PCB Rev 3d. Press PASS to continue.")
+        self.set_passed()
+
+# These tests are currently skipped for PCB rev 3d. Skip to 3f.
 class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
 
     description = "3e. External battery voltage presented to tablet +VE (Step 1)"
@@ -482,10 +502,20 @@ class Test3e_NoExternalBattVoltageToTabletStep3(TestProcedure):
             self.suite.form.append_text_line("Voltage detected ({}v) on AD7, test failed. Check BATT-SW is toggled and press RESET.".format(ad7.read_voltage()))
             self.suite.form.append_text_line("If BATT-SW is toggled, the test has failed.")
             self.set_failed()
+# End skipped tests.
 
-class Test3f_USBCableContinuityTest(TestProcedure):
 
-    description = "3f. USB cable continuity for data transfer"
+class Test3f_USBCableContinuityTestStep1(TestProcedure):
+
+    description = "3f. USB cable continuity for data transfer (Step 1)"
+
+    def run(self):
+        self.suite.form.set_text("Turn battery switch (SW5) off if already on. Press PASS when completed.")
+        self.set_passed()
+
+class Test3f_USBCableContinuityTestStep2(TestProcedure):
+
+    description = "3f. USB cable continuity for data transfer (Step 2)"
 
     def run(self):
 

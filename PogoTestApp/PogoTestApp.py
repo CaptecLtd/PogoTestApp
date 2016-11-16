@@ -48,10 +48,14 @@ try:
     test_suite.add_test(tests.Test3b_PogoPinsIsolatedFromOTGModePower())
     test_suite.add_test(tests.Test3c_LEDStatusNotInChargeState())
     test_suite.add_test(tests.Test3d_BattBoardPowerInputViaPogoDisconnected())
-    test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep1())
-    test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep2())
-    test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep3())
-    test_suite.add_test(tests.Test3f_USBCableContinuityTest())
+
+    # These tests cannot be run on POGO PCB rev 3d. P/N: 4945-60-002
+    # test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep1())
+    # test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep2())
+    # test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep3())
+
+    test_suite.add_test(tests.Test3f_USBCableContinuityTestStep1())
+    test_suite.add_test(tests.Test3f_USBCableContinuityTestStep2())
     test_suite.add_test(tests.TestEnd_TestsCompleted())
 
     # Disable input buttons to start with
