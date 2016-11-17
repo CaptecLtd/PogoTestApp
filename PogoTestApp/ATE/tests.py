@@ -168,10 +168,10 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 # We leave it up to the user to decide whether the test fails or not.
                 self.suite.form.enable_test_buttons()
 
-                if delay_ms >= 400 and delay_ms <= 600:
-                    self.suite.form.append_text_line("Delay of %ims is within bounds (400ms to 600ms), test passed." % delay_ms)
+                if delay_ms >= 400 and delay_ms <= 650:
+                    self.suite.form.append_text_line("Delay of %ims is within bounds (400ms to 650ms), test passed." % delay_ms)
                 else:
-                    self.suite.form.append_text_line("WARNING: Delay of %ims is out of bounds (between 400ms and 600ms)" % delay_ms)
+                    self.suite.form.append_text_line("WARNING: Delay of %ims is out of bounds (between 400ms and 650ms)" % delay_ms)
 
                 #self.suite.form.append_text_line("\nWait for LED D1 to go RED before proceeding!")
 
