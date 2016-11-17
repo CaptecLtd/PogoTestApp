@@ -446,7 +446,7 @@ class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
             self.log_failure("Voltage detected ({}v) on AD3. Battery board power input should be disconnected. Test failed.".format(ad3.read_voltage()))
             self.set_failed()
 
-class Test3e_PCBRev3bSkip(TestProcedure):
+class Test3e_PCBRev3dSkip(TestProcedure):
 
     description = "3e. External battery voltage presented to tablet +VE"
 
