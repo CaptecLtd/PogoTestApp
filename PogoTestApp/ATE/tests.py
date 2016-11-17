@@ -324,7 +324,7 @@ class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
                 self.set_failed()
 
         else:
-            self.log_failure("Measured {}v on AD2, OUT OF BOUNDS between 4.75v and 4.95v. Test failed".format(volts))
+            self.log_failure("Measured {}v on AD2, OUT OF BOUNDS between 4.75v and 5.0v. Test failed".format(volts))
             self.set_failed()
 
 class Test2b_PogoPinsIsolatedFromBatteryPower(TestProcedure):
@@ -379,7 +379,7 @@ class Test3a_ActivationOfOTGPowerStep1(TestProcedure):
 
     def run(self):
 
-        self.suite.form.set_text("Turn off BATTERY and connect black ATE USB flylead. Press PASS when action completed.")
+        self.suite.form.set_text("Turn off BATTERY. Press PASS when action completed.")
         self.set_passed()
         
 
@@ -455,14 +455,14 @@ class Test3e_PCBRev3bSkip(TestProcedure):
         self.suite.form.set_text("This test must be skipped for POGO PCB Rev 3d. Press PASS to continue.")
         self.set_passed()
 
-# These tests are currently skipped for PCB rev 3d. Skip to 3f.
+# These tests are currently skipped for PCB rev 3d. Skip to test 3f.
 class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
 
     description = "3e. External battery voltage presented to tablet +VE (Step 1)"
 
     def run(self):
 
-        self.suite.form.set_text("Turn BATTERY ON. Press PASS when completed.")
+        self.suite.form.set_text("Turn BATTERY ON.\n\nConnect black ATE USB flylead and press PASS when completed.")
         self.set_passed()
 
 class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
