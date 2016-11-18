@@ -72,17 +72,28 @@ class MainForm(tk.Frame):
         info_container.rowconfigure(0, minsize = 180)
 
         # Member of info container
-        self.info_label = tk.Label(info_container)
-        self.info_label["text"] = "Ready. Press RESET to begin tests."
+        self.info_label = tk.Text(info_container)
+        #self.info_label["text"] = "Ready. Press RESET to begin tests."
         self.info_label["bg"] = "white"
         self.info_label["fg"] = "black"
         self.info_label["bd"] = 1
         self.info_label["relief"] = "groove"
-        self.info_label["anchor"] = tkc.NW
-        self.info_label["wraplength"] = 740
-        self.info_label["justify"] = tkc.LEFT
-        self.info_label["font"] = ("Courier", 9)
-        self.info_label.grid( pady = padding, columnspan = 6, column = 0, row = 0, sticky = tkc.W + tkc.E + tkc.N + tkc.S)
+        #self.info_label["anchor"] = tkc.NW
+        #self.info_label["wraplength"] = 740
+        #self.info_label["justify"] = tkc.LEFT
+        self.info_label["height"] = 10
+        self.info_label["font"] = ("Courier", 10)
+        self.info_label["wrap"] = tkc.WORD
+        #self.info_label.pack(side = tkc.LEFT, fill = tkc.BOTH)
+        self.info_label.grid(column = 0, row = 0, sticky = tkc.W + tkc.E + tkc.N + tkc.S)
+
+        info_scroll = tk.Scrollbar(info_container)
+        #info_scroll.pack(side = tkc.RIGHT, fill = tkc.Y)
+        info_scroll.grid(column = 1, row = 0, sticky = tkc.N + tkc.S)
+        info_scroll.config(command = self.info_label.yview)
+
+        self.info_label.config(yscrollcommand = info_scroll.set)
+
         # End info container
 
         current_row += 1
@@ -203,12 +214,17 @@ class MainForm(tk.Frame):
 
     def set_text(self, text):
         "Sets the information text to the specified string"
-        self.info_label["text"] = text
+        self.info_label["state"] = tkc.NORMAL
+        self.info_label.delete(0.0, tkc.END)
+        self.info_label.insert(tkc.END, text)
+        self.info_label["state"] = tkc.DISABLED
         self.update()
 
     def append_text_line(self, text):
         "Appends the specified text to the existing information string"
-        self.info_label["text"] += "\n" + text
+        self.info_label["state"] = tkc.NORMAL
+        self.info_label.insert(tkc.END, "\n" + text)
+        self.info_label["state"] = tkc.DISABLED
         self.update()
 
     def update_current_test(self, test):
