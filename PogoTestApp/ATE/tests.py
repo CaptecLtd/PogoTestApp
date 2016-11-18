@@ -212,10 +212,10 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
         if not valid:
             text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= 4.8 and <= 5.2)"
 
-        text += "\n\nConfirm LED D5 is illuminated RED"
+        text += "\n\nConfirm LED D5 is illuminated solid RED"
         text += "\n\nConfirm LED D2 is OFF completely"
-        text += "\n\nLED D4 may be lit, this is acceptable."
-        text += "\nIf D2 or D4 have illuminated at all, replace battery PCB and start from beginning (ABORT button)"
+        text += "\n\nLED D4 can be ignored."
+        text += "\n\nIf D2 has illuminated, or D5 is flashing, replace battery PCB and start from beginning (ABORT button)"
 
         self.suite.form.set_text(text.format(voltage))
         self.log_failure("User indicated LED D5 is NOT illuminated red and/or D2 or D4 are illuminated", False)
