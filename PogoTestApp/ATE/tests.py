@@ -218,7 +218,7 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
         text += "\n\nIf D2 has illuminated, or D5 is flashing, replace battery PCB and start from beginning (ABORT button)"
 
         self.suite.form.set_text(text.format(voltage))
-        self.log_failure("User indicated LED D5 is NOT illuminated red and/or D2 or D4 are illuminated", False)
+        self.log_failure("User indicated LED D5 is NOT illuminated solid red and/or D2 is illuminated", False)
         
 class Test1c_ChargeBatteryStep2(TestProcedure):
     """Measure pogo power voltage divider"""
