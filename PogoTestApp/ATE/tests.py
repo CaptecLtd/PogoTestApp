@@ -526,7 +526,7 @@ class Test3f_USBCableContinuityTestStep1(TestProcedure):
     description = "3f. USB cable continuity for data transfer (Step 1)"
 
     def run(self):
-        self.suite.form.set_text("Turn battery switch (SW5) off if already on. Press PASS when completed.")
+        self.suite.form.set_text("Turn battery switch (SW5) off if already on.\n\nConnect black ATE USB flylead.\n\nPress PASS when completed.")
         self.set_passed()
 
 class Test3f_USBCableContinuityTestStep2(TestProcedure):
