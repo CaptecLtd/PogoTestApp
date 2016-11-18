@@ -174,10 +174,10 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 # We leave it up to the user to decide whether the test fails or not.
                 self.suite.form.enable_test_buttons()
 
-                if delay_ms >= 400 and delay_ms <= 650:
-                    self.suite.form.append_text_line("Delay of %ims is within bounds (400ms to 650ms), test passed." % delay_ms)
+                if delay_ms >= 400 and delay_ms <= 750:
+                    self.suite.form.append_text_line("Delay of %ims is within bounds (400ms to 750ms), test passed." % delay_ms)
                 else:
-                    self.suite.form.append_text_line("WARNING: Delay of %ims is out of bounds (between 400ms and 650ms)" % delay_ms)
+                    self.suite.form.append_text_line("WARNING: Delay of %ims is out of bounds (between 400ms and 750ms)" % delay_ms)
 
                 #self.suite.form.append_text_line("\nWait for LED D1 to go RED before proceeding!")
 
@@ -213,7 +213,8 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
             text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= 4.8 and <= 5.2)"
 
         text += "\n\nConfirm LED D5 is illuminated RED"
-        text += "\n\nConfirm LEDs D2 and D4 are OFF completely"
+        text += "\n\nConfirm LED D2 is OFF completely"
+        text += "\n\nLED D4 may be lit, this is acceptable."
         text += "\nIf D2 or D4 have illuminated at all, replace battery PCB and start from beginning (ABORT button)"
 
         self.suite.form.set_text(text.format(voltage))
@@ -283,7 +284,7 @@ class Test1d_TabletChargedStep2(TestProcedure):
         digio.set_low(DOP1_Tablet_Full_Load_Switch)
         digio.set_high(DOP2_Tablet_Charged_Load_Switch)
 
-        self.suite.form.set_text("Observe LED PCB D1 is GREEN and LOAD 2 LED is RED.")
+        self.suite.form.set_text("Observe LED PCB D1 is GREEN or ORANGE and LOAD 2 LED is RED.")
         self.log_failure("User indicated LED PCB D1 is not illuminated or RED", False)
         
 
