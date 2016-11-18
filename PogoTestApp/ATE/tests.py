@@ -19,6 +19,10 @@ class TestProcedure(object):
     # A description of what the test is doing. This is shown on the GUI.
     description = None
 
+    # If the test is set as passed during execution and auto_advance is true, the
+    # suite will advance to the next test automatically.
+    auto_advance = False
+
     suite = TestSuite()
     state = "not_run"
     failure_log = []
@@ -91,6 +95,7 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
 
     description = "0a. Connect PCBA & cable set to test station"
     aborts = True
+    auto_advance = True
 
     def run(self):
 
@@ -122,7 +127,7 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
         # We have a voltage and it's 5v
         if got_5v:
             # Skip straight to the next test.
-            self.suite.pass_test()
+            self.set_passed()
 
         # Not got 5v and/or timeout reached.
         else:
@@ -134,6 +139,7 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
     """AD1 volts applied, wait DIP1 high then count to DIP1 low"""
 
     description = "1a. Power on delay from pogo power to tablet power"
+    auto_advance = True
 
     def run(self):
 
@@ -217,6 +223,7 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
     """Measure pogo power voltage divider"""
 
     description = "1c. Charge Battery (Step 2)"
+    auto_advance = True
 
     def run(self):
         self.suite.form.set_text("Reading voltage on AD4")
@@ -296,6 +303,7 @@ class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
 class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
 
     description = "2a. Battery board powers tablet (Step 2)"
+    auto_advance = True
 
     def setUp(self):
         time.sleep(1)
@@ -330,6 +338,7 @@ class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
 class Test2b_PogoPinsIsolatedFromBatteryPower(TestProcedure):
 
     description = "2b. Pogo Pins isolated from Battery Power"
+    auto_advance = True
 
     def run(self):
         self.suite.form.enable_test_buttons()
@@ -357,6 +366,7 @@ class Test2c_LEDStatusNotInChargeState(TestProcedure):
 class Test2d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
 
     description = "2d. Battery Board power input via PoGo disconnected"
+    auto_advance = True
 
     def run(self):
 
@@ -386,6 +396,7 @@ class Test3a_ActivationOfOTGPowerStep1(TestProcedure):
 class Test3a_ActivationOfOTGPowerStep2(TestProcedure):
 
     description = "3a. Activation of On The Go power (Step 2)"
+    auto_advance = True
 
     def run(self):
 
@@ -406,6 +417,7 @@ class Test3a_ActivationOfOTGPowerStep2(TestProcedure):
 class Test3b_PogoPinsIsolatedFromOTGModePower(TestProcedure):
 
     description = "3b. Pogo pins isolated from tablet OTG mode power"
+    auto_advance = True
 
     def run(self):
         self.suite.form.set_text("Test pogo pins isolated from tablet OTG mode power")
@@ -432,6 +444,7 @@ class Test3c_LEDStatusNotInChargeState(TestProcedure):
 class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
 
     description = "3d. Battery board power input via PoGo disconnected"
+    auto_advance = True
 
     def run(self):
 
@@ -468,6 +481,7 @@ class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
 class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
 
     description = "3e. External battery voltage presented to tablet +VE (Step 2)"
+    auto_advance = True
 
     def run(self):
 
@@ -488,6 +502,7 @@ class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
 class Test3e_NoExternalBattVoltageToTabletStep3(TestProcedure):
 
     description = "3e. External battery voltage presented to tablet +VE (Step 3)"
+    auto_advance = True
 
     def run(self):
 
@@ -516,6 +531,7 @@ class Test3f_USBCableContinuityTestStep1(TestProcedure):
 class Test3f_USBCableContinuityTestStep2(TestProcedure):
 
     description = "3f. USB cable continuity for data transfer (Step 2)"
+    auto_advance = True
 
     def run(self):
 

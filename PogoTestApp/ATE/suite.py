@@ -38,6 +38,10 @@ class TestSuite(object):
         self.tests[self.current_test].setUp()
         self.tests[self.current_test].run()
 
+        # If the current test is set to advance on pass and it has passed, advance it!
+        if self.tests[self.current_test].state == "passed" and self.tests[self.current_test].auto_advance:
+            self.advance_test()
+
     def add_test(self, test):
         "Adds an instance of tests.TestProcedure to the list of tests to run"
         test.suite = self
