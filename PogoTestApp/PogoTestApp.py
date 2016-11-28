@@ -25,8 +25,8 @@ try:
     # Link the pass/fail/reset buttons to their actions
     test_suite.form.pass_btn["command"] = test_suite.pass_test
     test_suite.form.fail_btn["command"] = test_suite.fail_test
-    test_suite.form.reset_btn["command"] = test_suite.reset
-    test_suite.form.abort_btn["command"] = test_suite.abort
+    test_suite.form.reset_action = test_suite.reset
+    test_suite.form.abort_action = test_suite.abort
 
     # Define the tests we will run
     test_suite.add_test(tests.Test0a_ConnectHardwareAndAwaitPowerOn())

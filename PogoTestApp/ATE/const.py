@@ -7,7 +7,7 @@ ATE Software Ver: {swrevision} - {swdate}
 
 Ensure the PCBA jigs are UNPOPULATED before starting tests. All switches must be in OFF position.
 
-Press RESET to begin testing."""
+Press MENU, RESET to begin testing."""
 
 
 # Pin assignments

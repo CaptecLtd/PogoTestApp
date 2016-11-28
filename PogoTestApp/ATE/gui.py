@@ -8,6 +8,9 @@ import os
 
 class MainForm(tk.Frame):
     
+    reset_action = None
+    abort_action = None
+
     _reading_rows = None
     _stage_template = "Test Stage: {description}"
     _counting = False
@@ -46,6 +49,15 @@ class MainForm(tk.Frame):
         self._duration_count = tk.StringVar()
         self._duration_count.set("Test Duration: N/A")
 
+        # Build our popup menu
+        self.popup = tk.Menu(self.root, tearoff = 0)
+        self.popup.add_command(label = "Reset", command = self.handle_reset)
+        self.popup.add_separator()
+        self.popup.add_command(label = "Abort", command = self.handle_abort)
+        self.popup.add_separator()
+        self.popup.add_command(label = "OFF", command = self.handle_shutdown)
+        self.popup["font"] = btn_font
+
         current_row = 0
 
         # Test Stage information
@@ -82,7 +94,7 @@ class MainForm(tk.Frame):
         #self.info_label["wraplength"] = 740
         #self.info_label["justify"] = tkc.LEFT
         self.info_label["height"] = 10
-        self.info_label["font"] = ("Courier", 10)
+        self.info_label["font"] = ("Courier", 11)
         self.info_label["wrap"] = tkc.WORD
         #self.info_label.pack(side = tkc.LEFT, fill = tkc.BOTH)
         self.info_label.grid(column = 0, row = 0, sticky = tkc.W + tkc.E + tkc.N + tkc.S)
@@ -182,20 +194,20 @@ class MainForm(tk.Frame):
         self.fail_btn.grid(padx = padding, pady = padding, column = 1, row = current_row)
 
         self.reset_btn = tk.Button(self)
-        self.reset_btn["text"] = "RESET"
-        self.reset_btn["font"] = btn_font
-        self.reset_btn.grid(padx = padding, pady = padding, column = 2, row = current_row)
+        #self.reset_btn["text"] = "RESET"
+        #self.reset_btn["font"] = btn_font
+        #self.reset_btn.grid(padx = padding, pady = padding, column = 2, row = current_row)
 
         self.abort_btn = tk.Button(self)
-        self.abort_btn["text"] = "ABORT"
-        self.abort_btn["font"] = btn_font
-        self.abort_btn.grid(padx = padding, pady = padding, column = 3, row = current_row)
+        #self.abort_btn["text"] = "ABORT"
+        #self.abort_btn["font"] = btn_font
+        #self.abort_btn.grid(padx = padding, pady = padding, column = 3, row = current_row)
 
-        self.shutdown_btn = tk.Button(self)
-        self.shutdown_btn["text"] = "OFF"
-        self.shutdown_btn["font"] = btn_font
-        self.shutdown_btn["command"] = self.handle_shutdown
-        self.shutdown_btn.grid(padx = padding, pady = padding, sticky = tkc.E, column = 4, row = current_row)
+        self.menu_btn = tk.Button(self)
+        self.menu_btn["text"] = "MENU"
+        self.menu_btn["font"] = btn_font
+        self.menu_btn["command"] = self.handle_menu
+        self.menu_btn.grid(padx = padding, pady = padding, sticky = tkc.E, column = 4, row = current_row)
 
         # / Control buttons
 
@@ -306,6 +318,16 @@ class MainForm(tk.Frame):
 
         for reading in voltages.items():
             self.set_reading_value(reading[0], reading[1])
+
+    def handle_abort(self):
+        self.abort_action()
+
+    def handle_reset(self):
+        self.reset_action()
+
+    def handle_menu(self):
+        x, y = (self.menu_btn.winfo_rootx(), self.menu_btn.winfo_rooty() - self.popup.winfo_reqheight())
+        self.popup.post(x, y)
 
     def handle_shutdown(self):
         if messagebox.askyesno("Shutdown?", "Are you sure you want to turn the ATE controller off?", icon = WARNING):
