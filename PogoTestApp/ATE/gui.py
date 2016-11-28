@@ -252,6 +252,10 @@ class MainForm(tk.Frame):
         self.enable_pass_button();
         self.enable_fail_button();
 
+    def enable_test_buttons_delay(self, delay = 500):
+        "Enable pass and fail buttons after 'delay' ms"
+        self.root.after(delay, self.enable_test_buttons)
+
     def disable_control_buttons(self):
         self.disable_reset_button()
         self.disable_abort_button()

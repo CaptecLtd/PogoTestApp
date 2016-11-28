@@ -23,6 +23,10 @@ class TestProcedure(object):
     # suite will advance to the next test automatically.
     auto_advance = False
 
+    # If set to True, the pass/fail buttons will be enabled at the beginning of the test after a delay.
+    # If set to False, the pass/fail buttons will be disabled. The test will need to enable them during execution.
+    enable_pass_fail = True
+
     suite = TestSuite()
     state = "not_run"
     failure_log = []
@@ -85,7 +89,9 @@ class TestXX_FakeTest(TestProcedure):
     def run(self):
 
         self.suite.form.set_text("Pass or fail")
-        self.set_passed()
+        time.sleep(2)
+        self.suite.form.append_text_line("after timer")
+        #self.set_passed()
 
 """
 The classes below are "live" tests run as part of the ATE itself. They are not unit tested.
@@ -143,6 +149,10 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
 
     def run(self):
 
+        # Delays in milliseconds for Q4.
+        delay_lower = 400
+        delay_higher = 750
+
         # Disable test buttons here as we're waiting for digio input.
         self.suite.form.disable_test_buttons()
 
@@ -174,10 +184,10 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 # We leave it up to the user to decide whether the test fails or not.
                 self.suite.form.enable_test_buttons()
 
-                if delay_ms >= 400 and delay_ms <= 750:
-                    self.suite.form.append_text_line("Delay of %ims is within bounds (400ms to 750ms), test passed." % delay_ms)
+                if delay_ms >= delay_lower and delay_ms <= delay_higher:
+                    self.suite.form.append_text_line("Delay of %ims is within bounds (%ims to %ims), test passed." % delay_ms, delay_lower, delay_higher)
                 else:
-                    self.suite.form.append_text_line("WARNING: Delay of %ims is out of bounds (between 400ms and 750ms)" % delay_ms)
+                    self.suite.form.append_text_line("WARNING: Delay of %ims is out of bounds (between %ims and %ims)" % delay_ms, delay_lower, delay_higher)
 
                 #self.suite.form.append_text_line("\nWait for LED D1 to go RED before proceeding!")
 
@@ -204,13 +214,16 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
 
     def run(self):
 
+        bound_lower = 4.8
+        bound_higher = 5.2
+
         ad3 = Channel(AD3_Batt_Board_Power_In_Volts)
-        valid, voltage = ad3.voltage_between(4.8, 5.2, 0.01)
+        valid, voltage = ad3.voltage_between(bound_lower, bound_higher, 0.01)
 
         text = "Detected +{}v on battery board (AD3)."
 
         if not valid:
-            text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= 4.8 and <= 5.2)"
+            text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= %i and <= %i)" % bound_lower, bound_higher
 
         text += "\n\nConfirm LED D5 is illuminated solid RED"
         text += "\n\nConfirm LED D2 is OFF completely"
@@ -227,22 +240,30 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
     auto_advance = True
 
     def run(self):
+
+        ad4_first_measure = 4.5
+        ad4_second_lower = 2.0
+        ad4_second_higher = 3.0
+
+        ad5_lower = 3.0
+        ad5_higher = 4.7
+
         self.suite.form.set_text("Reading voltage on AD4")
         ad4 = Channel(AD4_Batt_Board_Temp_Sense_Cutoff)
 
-        if ad4.read_voltage() < 4.5:
-            self.suite.form.append_text_line("Voltage is less than 4.5v")
+        if ad4.read_voltage() < ad4_first_measure:
+            self.suite.form.append_text_line("Voltage is less than %iv" % ad4_first_measure)
 
-            self.suite.form.append_text_line("Checking voltage on AD4 is between 2.0v and 3.0v")
-            valid, volts = ad4.voltage_between(2.0, 3.0, 0.01)
+            self.suite.form.append_text_line("Checking voltage on AD4 is between %iv and %iv" % ad4_second_lower, ad4_second_higher)
+            valid, volts = ad4.voltage_between(ad4_second_lower, ad4_second_higher, 0.01)
 
             if valid:
                 self.suite.form.append_text_line("Voltage %.2f is in bounds" % volts)
 
                 ad5 = Channel(AD5_Batt_Board_Battery_Volts)
-                self.suite.form.append_text_line("Checking if AD5 voltage is between 3.0v and 4.7v")
+                self.suite.form.append_text_line("Checking if AD5 voltage is between %iv and %iv" % ad5_lower, ad5_higher)
 
-                valid, volts = ad5.voltage_between(3.0, 4.7, 0.01)
+                valid, volts = ad5.voltage_between(ad5_lower, ad5_higher, 0.01)
 
                 if valid:
                     self.suite.form.append_text_line("Battery PCB voltage is %.2f, test passed." % volts)
@@ -262,12 +283,13 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
                 self.log_failure("Voltage %.2f is OUT OF BOUNDS, test failed." % volts)
                 self.set_failed()
         else:
-            self.log_failure("Voltage is greater than 4.5v, test failed")
+            self.log_failure("Voltage is greater than %iv, test failed" % ad4_first_measure)
             self.set_failed()
 
 class Test1d_TabletChargedStep1(TestProcedure):
 
-    description = "1d. Tablet Charged (Step 1"
+    description = "1d. Tablet Charged (Step 1)"
+    enable_pass_fail = False
 
     def run(self):
         
@@ -292,6 +314,7 @@ class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
     """Battery PCB and USB PCB Test"""
 
     description = "2a. Battery board powers tablet (Step 1)"
+    enable_pass_fail = False
 
     def setUp(self):
         digio.set_low(DOP2_Tablet_Charged_Load_Switch)
@@ -299,7 +322,7 @@ class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
     def run(self):
 
         self.suite.form.set_text("Turn BATTERY ON\n\nTurn off Pogo Power (SW1) after BATTERY ON.\n\nPress PASS when completed.")
-        self.suite.form.disable_fail_button()
+        self.set_passed()
 
 class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
 
@@ -311,29 +334,35 @@ class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
 
     def run(self):
 
+        ad2_first_lower = 4.75
+        ad2_first_higher = 5.0
+
+        ad2_second_lower = 4.65
+        ad2_second_higher = 4.85
+
         self.suite.form.set_text("Testing battery and USB PCBs")
 
         ad2 = Channel(AD2_Tablet_USB_Volts)
-        valid, volts = ad2.voltage_between(4.75, 5.0, 0.01)
+        valid, volts = ad2.voltage_between(ad2_first_lower, ad2_first_higher, 0.01)
 
         if valid:
-            self.suite.form.append_text_line("Measured {}v on AD2 between bounds 4.75v and 5.0v, applying LOAD 2".format(volts))
+            self.suite.form.append_text_line("Measured {}v on AD2 between bounds {}v and {}v, applying LOAD 2".format(volts, ad2_first_lower, ad2_first_higher))
 
             digio.set_high(DOP2_Tablet_Charged_Load_Switch)
 
             # Sleep 1 for 1 second before 
             time.sleep(1)
             
-            valid, volts = ad2.voltage_between(4.65, 4.85, 0.1)
+            valid, volts = ad2.voltage_between(ad2_second_lower, ad2_second_higher, 0.1)
             if valid:
-                self.suite.form.append_text_line("Measured {}v on AD2, between bounds of 4.65v and 4.85v after LOAD 2 applied, test passed".format(volts))
+                self.suite.form.append_text_line("Measured {}v on AD2, between bounds of {}v and {}v after LOAD 2 applied, test passed".format(volts, ad2_second_lower, ad2_second_higher))
                 self.set_passed()
             else:
-                self.log_failure("Measured {}v on AD2, OUT OF BOUNDS between 4.65v and 4.85v. Test failed".format(volts))
+                self.log_failure("Measured {}v on AD2, OUT OF BOUNDS between {}v and {}. Test failed".format(volts, ad2_second_lower, ad2_second_higher))
                 self.set_failed()
 
         else:
-            self.log_failure("Measured {}v on AD2, OUT OF BOUNDS between 4.75v and 5.0v. Test failed".format(volts))
+            self.log_failure("Measured {}v on AD2, OUT OF BOUNDS between {}v and {}v. Test failed".format(volts, ad2_first_lower, ad2_first_higher))
             self.set_failed()
 
 class Test2b_PogoPinsIsolatedFromBatteryPower(TestProcedure):
@@ -384,6 +413,7 @@ class Test2d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
 class Test3a_ActivationOfOTGPowerStep1(TestProcedure):
 
     description = "3a. Activation of On The Go power (Step 1)"
+    enable_pass_fail = False
 
     def setUp(self):
         digio.set_low(DOP2_Tablet_Charged_Load_Switch)
@@ -463,6 +493,7 @@ class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
 class Test3e_PCBRev3dSkip(TestProcedure):
 
     description = "3e. External battery voltage presented to tablet +VE"
+    enable_pass_fail = False
 
     def run(self):
         
@@ -473,6 +504,7 @@ class Test3e_PCBRev3dSkip(TestProcedure):
 class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
 
     description = "3e. External battery voltage presented to tablet +VE (Step 1)"
+    enable_pass_fail = False
 
     def run(self):
 
@@ -486,18 +518,21 @@ class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
 
     def run(self):
 
+        ad7_lower = 4.84
+        ad7_higher = 5.0
+
         self.suite.form.set_text("Test battery isolation switch (SW1) and pogo PCB")
         self.suite.form.enable_test_buttons()
         ad7 = Channel(AD7_Pogo_Battery_Output)
 
-        valid, voltage = ad7.voltage_between(4.84, 5.0, 0.01)
+        valid, voltage = ad7.voltage_between(ad7_lower, ad7_higher, 0.01)
         self.suite.form.append_text_line("Detected voltage: {}v on AD7".format(voltage))
 
         if valid:
-            self.suite.form.append_text_line("Voltage is within bounds of 4.84v to 5v, passed.")
+            self.suite.form.append_text_line("Voltage is within bounds of {}v to {}v, passed.".format(ad7_lower, ad7_higher))
             self.set_passed()
         else:
-            self.log_failure("Voltage was NOT within bounds of 4.84v to 5v. Test failed.")
+            self.log_failure("Voltage was NOT within bounds of {}v to {}v. Test failed.".format(ad7_lower, ad7_higher))
             self.set_failed()
 
 class Test3e_NoExternalBattVoltageToTabletStep3(TestProcedure):
@@ -524,6 +559,7 @@ class Test3e_NoExternalBattVoltageToTabletStep3(TestProcedure):
 class Test3f_USBCableContinuityTestStep1(TestProcedure):
 
     description = "3f. USB cable continuity for data transfer (Step 1)"
+    enable_pass_fail = False
 
     def run(self):
         self.suite.form.set_text("Turn battery switch (SW5) off if already on.\n\nConnect black ATE USB flylead.\n\nPress PASS when completed.")
@@ -577,6 +613,7 @@ class Test3f_USBCableContinuityTestStep2(TestProcedure):
 class TestEnd_TestsCompleted(TestProcedure):
     
     description = "Testing completed"
+    enable_pass_fail = False
 
     def run(self):
         self.suite.form.set_text("All tests finished. Press PASS to display the test summary.")

@@ -1,4 +1,5 @@
 from enum import Enum
+from threading import Thread
 from ATE.adc import Channel
 from ATE.gui import MainForm
 import ATE.digio as digio
@@ -25,14 +26,25 @@ class TestSuite(object):
         self.form.clear_duration()
 
     def execute(self):
-        "Processes any GUI updates for the current test and runs the current test's setUp() and run() methods"
+        "Processes any GUI updates for the current test and runs the current test's setUp() and run() methods in a thread"
 
+        thread = Thread(target = self._execute)
+        thread.start()
+
+    def _execute(self):
+        "Thread worker for running GUI updates, executing the test and potentially advancing to the next test."
+        
         # GUI isn't created when running Unit Tests so we check here before doing GUI operations.
         if self.form:
             self.form.set_info_default()
             self.form.enable_control_buttons()
-            self.form.enable_test_buttons()
             self.form.update_current_test(self.tests[self.current_test])
+
+            # We enable pass/fail buttons automatically after a delay if the test allows it and it's not going to auto advance on pass.
+            if self.tests[self.current_test].enable_pass_fail and not self.tests[self.current_test].auto_advance:
+                self.form.enable_test_buttons_delay()
+            else:
+                self.form.disable_test_buttons()
 
         self.tests[self.current_test].breakout = False
         self.tests[self.current_test].setUp()
