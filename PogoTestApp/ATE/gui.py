@@ -52,11 +52,12 @@ class MainForm(tk.Frame):
         # Build our popup menu
         self.popup = tk.Menu(self.root, tearoff = 0)
         self.popup.add_command(label = "RESET", command = self.handle_reset)
-        self.popup.add_separator()
         self.popup.add_command(label = "ABORT", command = self.handle_abort)
         self.popup.add_separator()
         self.popup.add_command(label = "OFF", command = self.handle_shutdown)
         self.popup["font"] = btn_font
+
+        self.bind("<Button-1>", self.handle_menu_hide)
 
         current_row = 0
 
@@ -277,16 +278,16 @@ class MainForm(tk.Frame):
         self.enable_abort_button()
 
     def enable_reset_button(self):
-        self.reset_btn["state"] = "normal"
+        self.popup.entryconfig(0, state = "normal")
 
     def disable_reset_button(self):
-        self.reset_btn["state"] = "disabled"
+        self.popup.entryconfig(0, state = "disabled")
 
     def enable_abort_button(self):
-        self.abort_btn["state"] = "normal"
+        self.popup.entryconfig(1, state = "normal")
 
     def disable_abort_button(self):
-        self.abort_btn["state"] = "disabled"
+        self.popup.entryconfig(1, state = "disabled")
 
     def enable_pass_button(self):
         self.pass_btn["state"] = "normal"
@@ -328,6 +329,9 @@ class MainForm(tk.Frame):
     def handle_menu(self):
         x, y = (self.menu_btn.winfo_rootx(), self.menu_btn.winfo_rooty() - self.popup.winfo_reqheight())
         self.popup.post(x, y)
+
+    def handle_menu_hide(self, event):
+        self.popup.unpost()
 
     def handle_shutdown(self):
         if messagebox.askyesno("Shutdown?", "Are you sure you want to turn the ATE controller off?", icon = WARNING):
