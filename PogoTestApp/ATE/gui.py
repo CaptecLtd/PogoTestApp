@@ -51,9 +51,9 @@ class MainForm(tk.Frame):
 
         # Build our popup menu
         self.popup = tk.Menu(self.root, tearoff = 0)
-        self.popup.add_command(label = "Reset", command = self.handle_reset)
+        self.popup.add_command(label = "RESET", command = self.handle_reset)
         self.popup.add_separator()
-        self.popup.add_command(label = "Abort", command = self.handle_abort)
+        self.popup.add_command(label = "ABORT", command = self.handle_abort)
         self.popup.add_separator()
         self.popup.add_command(label = "OFF", command = self.handle_shutdown)
         self.popup["font"] = btn_font
