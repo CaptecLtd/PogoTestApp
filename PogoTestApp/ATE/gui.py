@@ -244,7 +244,7 @@ class MainForm(tk.Frame):
         self.update()
 
     def append_image(self, path):
-        "Takes a path to a gif image and appends it on a new line to the info box"
+        "Takes a path to a gif image and appends it on a new line to the info box."
         if os.path.exists(path):
             img = tk.PhotoImage(file = path)
             self.info_label.images.append(img)
@@ -252,6 +252,8 @@ class MainForm(tk.Frame):
             self.info_label.insert(tkc.END, "\n")
             self.info_label.image_create(tkc.END, image = self.info_label.images[len(self.info_label.images) -1])
             self.info_label["state"] = tkc.DISABLED
+        else:
+            print("Image file ""%s"" not found" % path)
 
     def update_current_test(self, test):
         "Updates the test stage label with the details of the current test"
