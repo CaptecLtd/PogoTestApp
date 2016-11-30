@@ -195,7 +195,7 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 #self.suite.form.append_text_line("\nWait for LED D1 to go RED before proceeding!")
 
             else:
-                self.suite.form.append_text_line("Awaiting DIP1 low timed out. Press RESET to try again.")
+                self.suite.form.append_text_line("Awaiting DIP1 low timed out. Press MENU, RESET to try again.")
                 self.suite.form.disable_pass_button()
 
 class Test1b_PogoPowerInput(TestProcedure):
@@ -553,7 +553,7 @@ class Test3e_NoExternalBattVoltageToTabletStep3(TestProcedure):
             self.suite.form.append_text_line("Zero voltage detected on AD7, test passed")
             self.set_passed()
         else:
-            self.suite.form.append_text_line("Voltage detected ({}v) on AD7, test failed. Check BATT-SW is toggled and press RESET.".format(ad7.read_voltage()))
+            self.suite.form.append_text_line("Voltage detected ({}v) on AD7, test failed. Check BATT-SW is toggled and press MENU, RESET.".format(ad7.read_voltage()))
             self.suite.form.append_text_line("If BATT-SW is toggled, the test has failed.")
             self.set_failed()
 # End skipped tests.
