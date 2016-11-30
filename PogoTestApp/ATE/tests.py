@@ -583,7 +583,7 @@ class Test3f_USBCableContinuityTestStep2(TestProcedure):
         digio.set_high(DOP4_Dplus_Ext_USB)
         if digio.await_high(DIP3_Dplus_Tablet_USB_Sense, 2):
             digio.set_low(DOP4_Dplus_Ext_USB)
-            if not digio.read(DIP3_Dplus_Tablet_USB_Sense):
+            if digio.await_low(DIP3_Dplus_Tablet_USB_Sense, 0.2):
                 self.suite.form.append_text_line("D+ continuity OK")
                 got_Dplus = True
             else:
@@ -596,7 +596,7 @@ class Test3f_USBCableContinuityTestStep2(TestProcedure):
         digio.set_high(DOP5_Dminus_Ext_USB)
         if digio.await_high(DIP4_Dminus_Tablet_USB_Sense, 2):
             digio.set_low(DOP5_Dminus_Ext_USB)
-            if not digio.read(DIP4_Dminus_Tablet_USB_Sense):
+            if digio.await_low(DIP4_Dminus_Tablet_USB_Sense, 0.2):
                 self.suite.form.append_text_line("D- continuity OK")
                 got_Dminus = True
             else:
