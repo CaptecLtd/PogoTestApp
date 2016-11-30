@@ -4,6 +4,7 @@ from tkinter import messagebox
 from tkinter.messagebox import WARNING, ABORTRETRYIGNORE
 from ATE.const import *
 import os
+import os.path
 #import tkmessagebox
 
 class MainForm(tk.Frame):
@@ -86,6 +87,7 @@ class MainForm(tk.Frame):
 
         # Member of info container
         self.info_label = tk.Text(info_container)
+        self.info_label.images = []
         #self.info_label["text"] = "Ready. Press RESET to begin tests."
         self.info_label["bg"] = "white"
         self.info_label["fg"] = "black"
@@ -227,6 +229,7 @@ class MainForm(tk.Frame):
 
     def set_text(self, text):
         "Sets the information text to the specified string"
+        self.info_label.images = []
         self.info_label["state"] = tkc.NORMAL
         self.info_label.delete(0.0, tkc.END)
         self.info_label.insert(tkc.END, text)
@@ -239,6 +242,16 @@ class MainForm(tk.Frame):
         self.info_label.insert(tkc.END, "\n" + text)
         self.info_label["state"] = tkc.DISABLED
         self.update()
+
+    def append_image(self, path):
+        "Takes a path to a gif image and appends it on a new line to the info box"
+        if os.path.exists(path):
+            img = tk.PhotoImage(file = path)
+            self.info_label.images.append(img)
+            self.info_label["state"] = tkc.NORMAL
+            self.info_label.insert(tkc.END, "\n")
+            self.info_label.image_create(tkc.END, image = self.info_label.images[len(self.info_label.images) -1])
+            self.info_label["state"] = tkc.DISABLED
 
     def update_current_test(self, test):
         "Updates the test stage label with the details of the current test"

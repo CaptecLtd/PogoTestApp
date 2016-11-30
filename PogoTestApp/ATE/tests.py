@@ -89,8 +89,11 @@ class TestXX_FakeTest(TestProcedure):
     def run(self):
 
         self.suite.form.set_text("Pass or fail")
-        time.sleep(2)
-        self.suite.form.append_text_line("after timer")
+        self.suite.form.append_image("Resources/Untitled.gif")
+        self.suite.form.append_text_line("Middle text between gifs")
+        self.suite.form.append_image("Resources/Untitled.gif")
+        self.suite.form.append_text_line("Text after")
+
         #self.set_passed()
 
 """

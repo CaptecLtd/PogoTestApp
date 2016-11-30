@@ -67,12 +67,14 @@
   <ItemGroup>
     <Folder Include="ADCPi\" />
     <Folder Include="ATE\" />
+    <Folder Include="Resources\" />
     <Folder Include="RPiDummy\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ADCPi\LICENSE" />
     <Content Include="ADCPi\README.md" />
     <Content Include="requirements.txt" />
+    <Content Include="Resources\Untitled.gif" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
