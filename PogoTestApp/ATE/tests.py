@@ -110,11 +110,10 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
 
         self.suite.form.disable_test_buttons()
         str = """1. Install PCB Assemblies into jigs.
-2. Connect POGO PCB to battery PCB. Turn on BATT-SW to connected state.
-3. Connect POGO PCB USB lead to ATE.
-4. Do NOT connect black ATE USB flylead to POGO PCB.
-5. Turn battery switch (SW5) ON.
-6. Turn POGO power (SW1) ON, only after SW5 is on.
+2. Connect POGO PCB to battery PCB.
+3. Connect POGO PCB USB lead to USB out.
+4. Switch on (SW5).
+5. Switch on (SW1).
 """
         self.suite.form.set_text(str)
 
@@ -228,10 +227,8 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
         if not valid:
             text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= %i and <= %i)" % bound_lower, bound_higher
 
-        text += "\n\nConfirm LED D5 is illuminated solid RED"
-        text += "\n\nConfirm LED D2 is OFF completely"
-        text += "\n\nLED D4 can be ignored."
-        text += "\n\nIf D2 has illuminated, or D5 is flashing, replace battery PCB and start from beginning (ABORT button)"
+        text += "\n\nCheck LED D5 illuminated."
+        text += "\n\nIf D2 illuminated or D5 flashing, fail the test."
 
         self.suite.form.set_text(text.format(voltage))
         self.log_failure("User indicated LED D5 is NOT illuminated solid red and/or D2 is illuminated", False)
@@ -296,7 +293,7 @@ class Test1d_TabletChargedStep1(TestProcedure):
 
     def run(self):
         
-        self.suite.form.set_text("Turn BATTERY OFF. Press PASS when completed.")
+        self.suite.form.set_text("Switch off (SW5). Press PASS when completed.")
         self.set_passed()
 
 class Test1d_TabletChargedStep2(TestProcedure):
@@ -324,7 +321,7 @@ class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
 
     def run(self):
 
-        self.suite.form.set_text("Turn BATTERY ON\n\nTurn off Pogo Power (SW1) after BATTERY ON.\n\nPress PASS when completed.")
+        self.suite.form.set_text("Switch on (SW5).\n\nTurn off (SW1).\n\nPress PASS when completed.")
         self.set_passed()
 
 class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
@@ -423,7 +420,7 @@ class Test3a_ActivationOfOTGPowerStep1(TestProcedure):
 
     def run(self):
 
-        self.suite.form.set_text("Turn off BATTERY. Press PASS when action completed.")
+        self.suite.form.set_text("Switch off (SW5). Press PASS when action completed.")
         self.set_passed()
         
 
@@ -511,7 +508,7 @@ class Test3e_NoExternalBattVoltageToTabletStep1(TestProcedure):
 
     def run(self):
 
-        self.suite.form.set_text("Turn BATTERY ON.\n\nConnect black ATE USB flylead and press PASS when completed.")
+        self.suite.form.set_text("Switch on (SW5).\n\nConnect black ATE USB flylead and press PASS when completed.")
         self.set_passed()
 
 class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
@@ -565,7 +562,7 @@ class Test3f_USBCableContinuityTestStep1(TestProcedure):
     enable_pass_fail = False
 
     def run(self):
-        self.suite.form.set_text("Turn battery switch (SW5) off if already on.\n\nConnect black ATE USB flylead.\n\nPress PASS when completed.")
+        self.suite.form.set_text("Confirm (SW5) off.\n\nConnect USB IN cable.\n\nPress PASS when completed.")
         self.set_passed()
 
 class Test3f_USBCableContinuityTestStep2(TestProcedure):

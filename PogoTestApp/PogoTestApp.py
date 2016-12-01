@@ -50,7 +50,7 @@ try:
     test_suite.add_test(tests.Test3d_BattBoardPowerInputViaPogoDisconnected())
 
     # This test is a placeholder for Test 3e not being able to be performed on rev 3d PCB.
-    test_suite.add_test(tests.Test3e_PCBRev3dSkip())    
+    # test_suite.add_test(tests.Test3e_PCBRev3dSkip())    
     
     # These tests cannot be run on POGO PCB rev 3d. P/N: 4945-60-002
     # test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep1())
