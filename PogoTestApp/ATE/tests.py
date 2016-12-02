@@ -179,17 +179,17 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 delay_ms = (span.microseconds / 1000)
                 delay_ms = delay_ms + (span.seconds * 1000)
         
-                self.suite.form.append_text_line("Detected delay of %ims" % delay_ms)
-                self.suite.form.append_text_line("Tablet USB voltage (AD2) is {}".format(Channel(AD2_Tablet_USB_Volts).read_voltage()))
-                self.suite.form.append_text_line("External USB voltage (AD6) is {}".format(Channel(AD6_External_USB_Volts).read_voltage()))
+                self.suite.form.append_text_line("Detected delay of {}ms".format(delay_ms))
+                self.suite.form.append_text_line("Tablet USB voltage (AD2) is {:.2f}v".format(Channel(AD2_Tablet_USB_Volts).read_voltage()))
+                self.suite.form.append_text_line("External USB voltage (AD6) is {:.2f}v".format(Channel(AD6_External_USB_Volts).read_voltage()))
 
                 # We leave it up to the user to decide whether the test fails or not.
                 self.suite.form.enable_test_buttons()
 
                 if delay_ms >= delay_lower and delay_ms <= delay_higher:
-                    self.suite.form.append_text_line("Delay of %ims is within bounds (%ims to %ims), test passed." % delay_ms, delay_lower, delay_higher)
+                    self.suite.form.append_text_line("Delay of {}ms is within bounds ({}ms to {}ms), test passed.".format(delay_ms, delay_lower, delay_higher))
                 else:
-                    self.suite.form.append_text_line("WARNING: Delay of %ims is out of bounds (between %ims and %ims)" % delay_ms, delay_lower, delay_higher)
+                    self.suite.form.append_text_line("WARNING: Delay of {}ms is out of bounds (between {}ms and {}ms)".format(delay_ms, delay_lower, delay_higher))
 
                 #self.suite.form.append_text_line("\nWait for LED D1 to go RED before proceeding!")
 
@@ -225,7 +225,7 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
         text = "Detected +{}v on battery board (AD3)."
 
         if not valid:
-            text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= %i and <= %i)" % bound_lower, bound_higher
+            text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= {:.2f}v and <= {:.2f}v)".format(bound_lower, bound_higher)
 
         text += "\n\nCheck LED D5 illuminated."
         text += "\n\nIf D2 illuminated or D5 flashing, fail the test."
@@ -252,38 +252,31 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
         ad4 = Channel(AD4_Batt_Board_Temp_Sense_Cutoff)
 
         if ad4.read_voltage() < ad4_first_measure:
-            self.suite.form.append_text_line("Voltage is less than %iv" % ad4_first_measure)
+            self.suite.form.append_text_line("Voltage is less than {:.2f}v".format(ad4_first_measure))
 
-            self.suite.form.append_text_line("Checking voltage on AD4 is between %iv and %iv" % ad4_second_lower, ad4_second_higher)
+            self.suite.form.append_text_line("Checking voltage on AD4 is between {:.2f}v and {:.2f}v".format(ad4_second_lower, ad4_second_higher))
             valid, volts = ad4.voltage_between(ad4_second_lower, ad4_second_higher, 0.01)
 
             if valid:
-                self.suite.form.append_text_line("Voltage %.2f is in bounds" % volts)
+                self.suite.form.append_text_line("Voltage {:.2f} is in bounds".format(volts))
 
                 ad5 = Channel(AD5_Batt_Board_Battery_Volts)
-                self.suite.form.append_text_line("Checking if AD5 voltage is between %iv and %iv" % ad5_lower, ad5_higher)
+                self.suite.form.append_text_line("Checking if AD5 voltage is between {:.2f}v and {:.2f}v".format(ad5_lower, ad5_higher))
 
                 valid, volts = ad5.voltage_between(ad5_lower, ad5_higher, 0.01)
 
                 if valid:
-                    self.suite.form.append_text_line("Battery PCB voltage is %.2f, test passed." % volts)
+                    self.suite.form.append_text_line("Battery PCB voltage is {:.2f}v, test passed.".format(volts))
                     self.set_passed()
-                    """
-                    if volts > 3.9:
-                        self.suite.form.append_text_line("Voltage is above 3.9v, please change battery and reset test")
-                    else:
-                        self.suite.form.append_text_line("Battery PCB voltage is %.2f, test passed." % volts)
-                        self.set_passed()
-                    """
 
                 else:
-                    self.log_failure("Battery PCB voltage is %.2f, test failed." % volts)
+                    self.log_failure("Battery PCB voltage is {:.2f}v, test failed.".format(volts))
                     self.set_failed()
             else:
-                self.log_failure("Voltage %.2f is OUT OF BOUNDS, test failed." % volts)
+                self.log_failure("Voltage {:.2f}v is OUT OF BOUNDS, test failed.".format(volts))
                 self.set_failed()
         else:
-            self.log_failure("Voltage is greater than %iv, test failed" % ad4_first_measure)
+            self.log_failure("Voltage is greater than {:.2f}v, test failed".format(ad4_first_measure))
             self.set_failed()
 
 class Test1d_TabletChargedStep1(TestProcedure):
