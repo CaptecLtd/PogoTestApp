@@ -181,7 +181,6 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
         
                 self.suite.form.append_text_line("Detected delay of {}ms".format(delay_ms))
                 self.suite.form.append_text_line("Tablet USB voltage (AD2) is {:.2f}v".format(Channel(AD2_Tablet_USB_Volts).read_voltage()))
-                self.suite.form.append_text_line("External USB voltage (AD6) is {:.2f}v".format(Channel(AD6_External_USB_Volts).read_voltage()))
 
                 # We leave it up to the user to decide whether the test fails or not.
                 self.suite.form.enable_test_buttons()
