@@ -241,8 +241,8 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
     def run(self):
 
         ad4_first_measure = 4.5
-        ad4_second_lower = 2.0
-        ad4_second_higher = 3.0
+        ad4_second_lower = 2.5
+        ad4_second_higher = 3.2
 
         ad5_lower = 3.0
         ad5_higher = 4.7
