@@ -190,6 +190,17 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 else:
                     self.suite.form.append_text_line("WARNING: Delay of {}ms is out of bounds (between {}ms and {}ms)".format(delay_ms, delay_lower, delay_higher))
 
+                bound_lower = 4.8
+                bound_higher = 5.2
+
+                ad3 = Channel(AD3_Batt_Board_Power_In_Volts)
+                valid, voltage = ad3.voltage_between(bound_lower, bound_higher, 0.01)
+
+                text = "Detected +{}v on battery board (AD3)."
+
+                if not valid:
+                    text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= {:.2f}v and <= {:.2f}v)".format(bound_lower, bound_higher)
+
                 #self.suite.form.append_text_line("\nWait for LED D1 to go RED before proceeding!")
 
             else:
@@ -214,17 +225,6 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
     description = "1c. Charge Battery (Step 1)"
 
     def run(self):
-
-        bound_lower = 4.8
-        bound_higher = 5.2
-
-        ad3 = Channel(AD3_Batt_Board_Power_In_Volts)
-        valid, voltage = ad3.voltage_between(bound_lower, bound_higher, 0.01)
-
-        text = "Detected +{}v on battery board (AD3)."
-
-        if not valid:
-            text += "\n\nWARNING: This voltage is OUTSIDE of the required bounds (>= {:.2f}v and <= {:.2f}v)".format(bound_lower, bound_higher)
 
         text += "\n\nCheck LED D5 illuminated."
         text += "\n\nIf D2 illuminated or D5 flashing, fail the test."
