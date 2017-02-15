@@ -227,10 +227,10 @@ class Test1c_ChargeBatteryStep1(TestProcedure):
 
     def run(self):
 
-        text += "\n\nCheck LED D5 illuminated."
+        text = "Check LED D5 illuminated."
         text += "\n\nIf D2 illuminated or D5 flashing, fail the test."
 
-        self.suite.form.set_text(text.format(voltage))
+        self.suite.form.set_text(text)
         self.log_failure("User indicated LED D5 is NOT illuminated solid red and/or D2 is illuminated", False)
         
 class Test1c_ChargeBatteryStep2(TestProcedure):
