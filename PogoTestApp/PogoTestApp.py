@@ -10,9 +10,14 @@ try:
     from ATE import gui, tests, suite, const, version, adc, digio
     import sys
     import tkinter as tk
+    import configparser
+    import importlib
     from threading import Thread
     from getopt import getopt, GetoptError
     from time import sleep
+
+    suite_selection = gui.SuiteSelectionForm()
+    suite_selection.loop()
 
     # Create our Tk instance for the form
     root = tk.Tk()
@@ -30,35 +35,13 @@ try:
 
     #test_suite.add_test(tests.TestXX_FakeTest())
 
-    # Define the tests we will run
-    test_suite.add_test(tests.Test0a_ConnectHardwareAndAwaitPowerOn())
-    test_suite.add_test(tests.Test1a_MeasurePowerOnDelay())
-    test_suite.add_test(tests.Test1b_PogoPowerInput())
-    test_suite.add_test(tests.Test1c_ChargeBatteryStep1())
-    test_suite.add_test(tests.Test1c_ChargeBatteryStep2())
-    test_suite.add_test(tests.Test1d_TabletChargedStep1())
-    test_suite.add_test(tests.Test1d_TabletChargedStep2())
-    test_suite.add_test(tests.Test2a_BatteryBoardPowersTabletStep1())
-    test_suite.add_test(tests.Test2a_BatteryBoardPowersTabletStep2())
-    test_suite.add_test(tests.Test2b_PogoPinsIsolatedFromBatteryPower())
-    test_suite.add_test(tests.Test2c_LEDStatusNotInChargeState())
-    test_suite.add_test(tests.Test2d_BattBoardPowerInputViaPogoDisconnected())
-    test_suite.add_test(tests.Test3a_ActivationOfOTGPowerStep1())
-    test_suite.add_test(tests.Test3a_ActivationOfOTGPowerStep2())
-    test_suite.add_test(tests.Test3b_PogoPinsIsolatedFromOTGModePower())
-    test_suite.add_test(tests.Test3c_LEDStatusNotInChargeState())
-    test_suite.add_test(tests.Test3d_BattBoardPowerInputViaPogoDisconnected())
+    config = configparser.ConfigParser()
+    config.read("tests.ini")
+    suite_idx = config["settings"]["selected_suite"]
 
-    # This test is a placeholder for Test 3e not being able to be performed on rev 3d PCB.
-    # test_suite.add_test(tests.Test3e_PCBRev3dSkip())    
-    
-    # These tests cannot be run on POGO PCB rev 3d. P/N: 4945-60-002
-    # test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep1())
-    # test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep2())
-    # test_suite.add_test(tests.Test3e_NoExternalBattVoltageToTabletStep3())
+    for idx, cls in config["suite%d" % int(suite_idx)].items():
+        test_suite.add_test(getattr(tests, cls))
 
-    test_suite.add_test(tests.Test3f_USBCableContinuityTestStep1())
-    test_suite.add_test(tests.Test3f_USBCableContinuityTestStep2())
     test_suite.add_test(tests.TestEnd_TestsCompleted())
 
     # Disable input buttons to start with
@@ -104,7 +87,7 @@ try:
 
     # Different conversion factor for AD4.
     adc.conversion_factors = {
-        const.AD4_Batt_Board_Temp_Sense_Cutoff: 1.1505 * 0.8710
+        const.AD4_V_TP13_NTC: 1.1505 * 0.8710
         }
 
     # Kick off the readings display test

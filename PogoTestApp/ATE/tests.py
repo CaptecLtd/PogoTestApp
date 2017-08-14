@@ -117,7 +117,7 @@ class Test0a_ConnectHardwareAndAwaitPowerOn(TestProcedure):
 """
         self.suite.form.set_text(str)
 
-        ad1 = Channel(AD1_Pogo_Input_Volts)
+        ad1 = Channel(AD1_V_pogo)
 
         # Wait for channel 1 voltage
 
@@ -160,7 +160,7 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
 
         self.suite.form.set_text("Waiting for DIP1 to become high")
 
-        dip1_high = digio.await_high(DIP1_TP3_Q4_Startup_Delay, 2)
+        dip1_high = digio.await_high(DIP1_PWRUP_Delay, 2)
 
         if not dip1_high:
             self.log_failure("DIP1 did not become high, cannot measure power on delay. Test failed.")
@@ -170,7 +170,7 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
             self.suite.form.append_text_line("Got high, waiting for DIP1 to go low")
             before = datetime.now()
 
-            got_low = digio.await_low(DIP1_TP3_Q4_Startup_Delay)
+            got_low = digio.await_low(DIP1_PWRUP_Delay)
 
             if got_low:
                 after = datetime.now()
@@ -180,7 +180,7 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 delay_ms = delay_ms + (span.seconds * 1000)
         
                 self.suite.form.append_text_line("Detected delay of {}ms".format(delay_ms))
-                self.suite.form.append_text_line("Tablet USB voltage (AD2) is {:.2f}v".format(Channel(AD2_Tablet_USB_Volts).read_voltage()))
+                self.suite.form.append_text_line("Tablet USB voltage (AD2) is {:.2f}v".format(Channel(AD2_V_5V_pwr).read_voltage()))
 
                 # We leave it up to the user to decide whether the test fails or not.
                 self.suite.form.enable_test_buttons()
@@ -193,7 +193,7 @@ class Test1a_MeasurePowerOnDelay(TestProcedure):
                 bound_lower = 4.8
                 bound_higher = 5.2
 
-                ad3 = Channel(AD3_Batt_Board_Power_In_Volts)
+                ad3 = Channel(AD3_V_in)
                 valid, voltage = ad3.voltage_between(bound_lower, bound_higher, 0.01)
 
                 text = "Detected +{:.2f}v on battery board (AD3).".format(voltage)
@@ -214,7 +214,7 @@ class Test1b_PogoPowerInput(TestProcedure):
     description = "1b. Pogo power input"
 
     def setUp(self):
-        digio.set_high(DOP1_Tablet_Full_Load_Switch)
+        digio.set_high(DOP1_Load_ON)
 
     def run(self):
         self.suite.form.set_text("Observe LED PCB D1 is RED and LOAD 1 LED is RED.")
@@ -249,7 +249,7 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
         ad5_higher = 4.7
 
         self.suite.form.set_text("Reading voltage on AD4")
-        ad4 = Channel(AD4_Batt_Board_Temp_Sense_Cutoff)
+        ad4 = Channel(AD4_V_TP13_NTC)
 
         if ad4.read_voltage() < ad4_first_measure:
             self.suite.form.append_text_line("Voltage is less than {:.2f}v".format(ad4_first_measure))
@@ -260,7 +260,7 @@ class Test1c_ChargeBatteryStep2(TestProcedure):
             if valid:
                 self.suite.form.append_text_line("Voltage {:.2f} is in bounds".format(volts))
 
-                ad5 = Channel(AD5_Batt_Board_Battery_Volts)
+                ad5 = Channel(AD5_V_bat)
                 self.suite.form.append_text_line("Checking if AD5 voltage is between {:.2f}v and {:.2f}v".format(ad5_lower, ad5_higher))
 
                 valid, volts = ad5.voltage_between(ad5_lower, ad5_higher, 0.01)
@@ -296,8 +296,8 @@ class Test1d_TabletChargedStep2(TestProcedure):
 
     def run(self):
         
-        digio.set_low(DOP1_Tablet_Full_Load_Switch)
-        digio.set_high(DOP2_Tablet_Charged_Load_Switch)
+        digio.set_low(DOP1_Load_ON)
+        digio.set_high(DOP2_Discharge_Load)
 
         self.suite.form.set_text("Observe LED PCB D1 is GREEN or ORANGE and LOAD 2 LED is RED.")
         self.log_failure("User indicated LED PCB D1 is not illuminated or RED", False)
@@ -310,7 +310,7 @@ class Test2a_BatteryBoardPowersTabletStep1(TestProcedure):
     enable_pass_fail = False
 
     def setUp(self):
-        digio.set_low(DOP2_Tablet_Charged_Load_Switch)
+        digio.set_low(DOP2_Discharge_Load)
 
     def run(self):
 
@@ -335,13 +335,13 @@ class Test2a_BatteryBoardPowersTabletStep2(TestProcedure):
 
         self.suite.form.set_text("Testing battery and USB PCBs")
 
-        ad2 = Channel(AD2_Tablet_USB_Volts)
+        ad2 = Channel(AD2_V_5V_pwr)
         valid, volts = ad2.voltage_between(ad2_first_lower, ad2_first_higher, 0.01)
 
         if valid:
             self.suite.form.append_text_line("Measured {}v on AD2 between bounds {}v and {}v, applying LOAD 2".format(volts, ad2_first_lower, ad2_first_higher))
 
-            digio.set_high(DOP2_Tablet_Charged_Load_Switch)
+            digio.set_high(DOP2_Discharge_Load)
 
             # Sleep 1 for 1 second before 
             time.sleep(1)
@@ -367,7 +367,7 @@ class Test2b_PogoPinsIsolatedFromBatteryPower(TestProcedure):
         self.suite.form.enable_test_buttons()
         self.suite.form.set_text("Reading voltage from AD1, expecting 0V")
 
-        ad1 = Channel(AD1_Pogo_Input_Volts)
+        ad1 = Channel(AD1_V_pogo)
 
         if ad1.zero_voltage():
             self.suite.form.append_text_line("Zero voltage from AD1 received. Test passed")
@@ -394,7 +394,7 @@ class Test2d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
     def run(self):
 
         self.suite.form.set_text("Checking battery board power via PoGo is disconnected")
-        ad3 = Channel(AD3_Batt_Board_Power_In_Volts)
+        ad3 = Channel(AD3_V_in)
 
         if ad3.zero_voltage():
             self.suite.form.append_text_line("Measured nominally zero volts on AD3. Test passed")
@@ -409,7 +409,7 @@ class Test3a_ActivationOfOTGPowerStep1(TestProcedure):
     enable_pass_fail = False
 
     def setUp(self):
-        digio.set_low(DOP2_Tablet_Charged_Load_Switch)
+        digio.set_low(DOP2_Discharge_Load)
 
     def run(self):
 
@@ -426,10 +426,10 @@ class Test3a_ActivationOfOTGPowerStep2(TestProcedure):
 
         self.suite.form.set_text("Test activation of On The Go (OTG) power")
 
-        digio.set_output(DOP3_OTG_Mode_Trigger)
-        digio.set_low(DOP3_OTG_Mode_Trigger)
+        digio.set_output(DOP3_TP7_GPIO)
+        digio.set_low(DOP3_TP7_GPIO)
 
-        otg_triggered = digio.await_low(DIP2_Tablet_OTG_Sense)
+        otg_triggered = digio.await_low(DIP2_OTG_OK)
 
         if otg_triggered:
             self.suite.form.append_text_line("On the go power was triggered, test passed.")
@@ -446,7 +446,7 @@ class Test3b_PogoPinsIsolatedFromOTGModePower(TestProcedure):
     def run(self):
         self.suite.form.set_text("Test pogo pins isolated from tablet OTG mode power")
 
-        ad1 = Channel(AD1_Pogo_Input_Volts)
+        ad1 = Channel(AD1_V_pogo)
 
         if ad1.zero_voltage():
             self.suite.form.append_text_line("Zero voltage received on AD1, pogo pins are isolated. Test passed.")
@@ -474,7 +474,7 @@ class Test3d_BattBoardPowerInputViaPogoDisconnected(TestProcedure):
 
         self.suite.form.set_text("Checking battery board input isolation")
 
-        ad3 = Channel(AD3_Batt_Board_Power_In_Volts)
+        ad3 = Channel(AD3_V_in)
 
         if ad3.read_voltage() < 1.0:
             self.suite.form.append_text_line("Measured nominally zero volts on AD3. Test passed")
@@ -516,7 +516,7 @@ class Test3e_NoExternalBattVoltageToTabletStep2(TestProcedure):
 
         self.suite.form.set_text("Test battery isolation switch (SW1) and pogo PCB")
         self.suite.form.enable_test_buttons()
-        ad7 = Channel(AD7_Pogo_Battery_Output)
+        ad7 = Channel(AD7_V_sys_out)
 
         valid, voltage = ad7.voltage_between(ad7_lower, ad7_higher, 0.01)
         self.suite.form.append_text_line("Detected voltage: {}v on AD7".format(voltage))
@@ -537,7 +537,7 @@ class Test3e_NoExternalBattVoltageToTabletStep3(TestProcedure):
 
         self.suite.form.set_text("Checking for zero voltage on AD7")
 
-        ad7 = Channel(AD7_Pogo_Battery_Output)
+        ad7 = Channel(AD7_V_sys_out)
 
         if ad7.zero_voltage():
             self.suite.form.append_text_line("Zero voltage detected on AD7, test passed")
@@ -570,10 +570,10 @@ class Test3f_USBCableContinuityTestStep2(TestProcedure):
         got_Dplus = False
         got_Dminus = False
 
-        digio.set_high(DOP4_Dplus_Ext_USB)
-        if digio.await_high(DIP3_Dplus_Tablet_USB_Sense, 2):
-            digio.set_low(DOP4_Dplus_Ext_USB)
-            if digio.await_low(DIP3_Dplus_Tablet_USB_Sense, 0.2):
+        digio.set_high(DOP4_TP5_GPIO)
+        if digio.await_high(DIP3_Dplus_J5_3_OK, 2):
+            digio.set_low(DOP4_TP5_GPIO)
+            if digio.await_low(DIP3_Dplus_J5_3_OK, 0.2):
                 self.suite.form.append_text_line("D+ continuity OK")
                 got_Dplus = True
             else:
@@ -581,12 +581,12 @@ class Test3f_USBCableContinuityTestStep2(TestProcedure):
         else:
             self.log_failure("D+ no signal")
 
-        digio.set_low(DOP4_Dplus_Ext_USB)
+        digio.set_low(DOP4_TP5_GPIO)
 
-        digio.set_high(DOP5_Dminus_Ext_USB)
-        if digio.await_high(DIP4_Dminus_Tablet_USB_Sense, 2):
-            digio.set_low(DOP5_Dminus_Ext_USB)
-            if digio.await_low(DIP4_Dminus_Tablet_USB_Sense, 0.2):
+        digio.set_high(DOP5_TP6_GPIO)
+        if digio.await_high(DIP4_Dminus_J5_2_OK, 2):
+            digio.set_low(DOP5_TP6_GPIO)
+            if digio.await_low(DIP4_Dminus_J5_2_OK, 0.2):
                 self.suite.form.append_text_line("D- continuity OK")
                 got_Dminus = True
             else:
@@ -594,7 +594,7 @@ class Test3f_USBCableContinuityTestStep2(TestProcedure):
         else:
             self.log_failure("D- no signal")
 
-        digio.set_low(DOP5_Dminus_Ext_USB)
+        digio.set_low(DOP5_TP6_GPIO)
 
         if got_Dminus and got_Dplus:
             self.suite.form.append_text_line("Continuity for D+ and D- OK, test passed")

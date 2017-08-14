@@ -13,26 +13,41 @@ Press MENU, RESET to begin testing."""
 # Pin assignments
 
 # These reference analogue channels on the ADC.
-AD1_Pogo_Input_Volts = 1
-AD2_Tablet_USB_Volts = 2
-AD3_Batt_Board_Power_In_Volts = 3
-AD4_Batt_Board_Temp_Sense_Cutoff = 4
-AD5_Batt_Board_Battery_Volts = 5
-AD6_External_USB_Volts = 6
-AD7_Pogo_Battery_Output = 7
+AD1_V_pogo = 1
+AD2_V_5V_pwr = 2
+AD3_V_in = 3
+AD4_V_TP13_NTC = 4
+AD5_V_bat = 5
+AD6_V_sense = 6
+AD7_V_sys_out = 7
+AD8_V_out = 8
 
 # Digital Inputs
 # These correspond to the GPIO pins (BCM naming convention)
-DIP1_TP3_Q4_Startup_Delay = 23
-DIP2_Tablet_OTG_Sense = 25
-DIP3_Dplus_Tablet_USB_Sense = 8
-DIP4_Dminus_Tablet_USB_Sense = 7
-DIP5_Tablet_OTG_Vout_Activate = 20
+DIP1_PWRUP_Delay = 23
+DIP2_OTG_OK = 27
+DIP3_Dplus_J5_3_OK = 26
+DIP4_Dminus_J5_2_OK = 19
+DIP5_5V_PWR = 22
+DIP6_From_J7_4 = 6
+DIP7_J3_LINK_OK = 20
+DIP8_LED_RD = 16
+DIP9_LED_GN = 12
+DIP10_USB_PERpins_OK = 8
+DIP11_5V_ATE_in = 24
 
 # Digital Outputs
 # These correspond to the GPIO pins (BCM naming convention)
-DOP1_Tablet_Full_Load_Switch = 17
-DOP2_Tablet_Charged_Load_Switch = 18
-DOP3_OTG_Mode_Trigger = 27
-DOP4_Dplus_Ext_USB = 19
-DOP5_Dminus_Ext_USB = 26
+DOP1_Load_ON = 17
+DOP2_Discharge_Load = 10
+DOP3_TP7_GPIO = 25
+DOP4_TP5_GPIO = 4
+DOP5_TP6_GPIO = 21
+DOP6_T_SW_ON = 18
+DOP7_Cold_sim = 9
+DOP8_Hot_sim = 11
+DOP9_TO_J7_1 = 5
+DOP10_FLT_loop_back = 13
+DOP11_POGO_ON_GPIO = 7
+DOP12_BAT1_GPIO = 15
+DOP13_BAT0_GPIO = 14

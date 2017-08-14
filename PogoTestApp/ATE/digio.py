@@ -19,19 +19,33 @@ def setup():
         
     # Specify which pins belong to which group
     outputs = [
-        DOP1_Tablet_Full_Load_Switch,
-        DOP2_Tablet_Charged_Load_Switch,
-        DOP3_OTG_Mode_Trigger,
-        DOP4_Dplus_Ext_USB,
-        DOP5_Dminus_Ext_USB
+        DOP1_Load_ON,
+        DOP2_Discharge_Load,
+        DOP3_TP7_GPIO,
+        DOP4_TP5_GPIO,
+        DOP5_TP6_GPIO,
+        DOP6_T_SW_ON,
+        DOP7_Cold_sim,
+        DOP8_Hot_sim,
+        DOP9_TO_J7_1,
+        DOP10_FLT_loop_back,
+        DOP11_POGO_ON_GPIO,
+        DOP12_BAT1_GPIO,
+        DOP13_BAT0_GPIO
     ]
 
     inputs = [
-        DIP1_TP3_Q4_Startup_Delay,
-        DIP2_Tablet_OTG_Sense,
-        DIP3_Dplus_Tablet_USB_Sense,
-        DIP4_Dminus_Tablet_USB_Sense,
-        DIP5_Tablet_OTG_Vout_Activate
+        DIP1_PWRUP_Delay,
+        DIP2_OTG_OK,
+        DIP3_Dplus_J5_3_OK,
+        DIP4_Dminus_J5_2_OK,
+        DIP5_5V_PWR,
+        DIP6_From_J7_4,
+        DIP7_J3_LINK_OK,
+        DIP8_LED_RD,
+        DIP9_LED_GN,
+        DIP10_USB_PERpins_OK,
+        DIP11_5V_ATE_in
     ]
 
     # Configure input and output pins accordingly
@@ -43,7 +57,7 @@ def setup():
 
     # Set DOP3 as input initially to represent a floating pin
     # This must be done AFTER all the output pins are configured, otherwise GPIO.output will throw an exception.
-    GPIO.setup(DOP3_OTG_Mode_Trigger, GPIO.IN)
+    GPIO.setup(DOP3_TP7_GPIO, GPIO.IN)
 
 
 # Reset the state of the GPIO pins when our application exits.
@@ -109,11 +123,17 @@ def read_all_inputs():
             return "Low"
 
     return {
-        "DIP1": parse(read(DIP1_TP3_Q4_Startup_Delay)),
-        "DIP2": parse(read(DIP2_Tablet_OTG_Sense)),
-        "DIP3": parse(read(DIP3_Dplus_Tablet_USB_Sense)),
-        "DIP4": parse(read(DIP4_Dminus_Tablet_USB_Sense)),
-        "DIP5": parse(read(DIP5_Tablet_OTG_Vout_Activate))
+        "DIP1": parse(read(DIP1_PWRUP_Delay)),
+        "DIP2": parse(read(DIP2_OTG_OK)),
+        "DIP3": parse(read(DIP3_Dplus_J5_3_OK)),
+        "DIP4": parse(read(DIP4_Dminus_J5_2_OK)),
+        "DIP5": parse(read(DIP5_5V_PWR)),
+        "DIP6": parse(read(DIP6_From_J7_4)),
+        "DIP7": parse(read(DIP7_J3_LINK_OK)),
+        "DIP8": parse(read(DIP8_LED_RD)),
+        "DIP9": parse(read(DIP9_LED_GN)),
+        "DIP10": parse(read(DIP10_USB_PERpins_OK)),
+        "DIP11": parse(read(DIP11_5V_ATE_in))
     }
 
 def read_all_outputs():
@@ -126,9 +146,17 @@ def read_all_outputs():
             return "Off"
 
     return {
-        "DOP1": parse(read(DOP1_Tablet_Full_Load_Switch)),
-        "DOP2": parse(read(DOP2_Tablet_Charged_Load_Switch)),
-        "DOP3": parse(read(DOP3_OTG_Mode_Trigger)),
-        "DOP4": parse(read(DOP4_Dplus_Ext_USB)),
-        "DOP5": parse(read(DOP5_Dminus_Ext_USB))
+        "DOP1": parse(read(DOP1_Load_ON)),
+        "DOP2": parse(read(DOP2_Discharge_Load)),
+        "DOP3": parse(read(DOP3_TP7_GPIO)),
+        "DOP4": parse(read(DOP4_TP5_GPIO)),
+        "DOP5": parse(read(DOP5_TP6_GPIO)),
+        "DOP6": parse(read(DOP6_T_SW_ON)),
+        "DOP7": parse(read(DOP7_Cold_sim)),
+        "DOP8": parse(read(DOP8_Hot_sim)),
+        "DOP9": parse(read(DOP9_TO_J7_1)),
+        "DOP10": parse(read(DOP10_FLT_loop_back)),
+        "DOP11": parse(read(DOP11_POGO_ON_GPIO)),
+        "DOP12": parse(read(DOP12_BAT1_GPIO)),
+        "DOP13": parse(read(DOP13_BAT0_GPIO))
     }

@@ -24,13 +24,14 @@ def read_all_voltages():
         return round(Channel(channel).read_voltage(), 2)
 
     return {
-        "AD1": read(const.AD1_Pogo_Input_Volts),
-        "AD2": read(const.AD2_Tablet_USB_Volts),
-        "AD3": read(const.AD3_Batt_Board_Power_In_Volts),
-        "AD4": read(const.AD4_Batt_Board_Temp_Sense_Cutoff),
-        "AD5": read(const.AD5_Batt_Board_Battery_Volts),
-        "AD6": read(const.AD6_External_USB_Volts),
-        "AD7": read(const.AD7_Pogo_Battery_Output)
+        "AD1": read(const.AD1_V_pogo),
+        "AD2": read(const.AD2_V_5V_pwr),
+        "AD3": read(const.AD3_V_in),
+        "AD4": read(const.AD4_V_TP13_NTC),
+        "AD5": read(const.AD5_V_bat),
+        "AD6": read(const.AD6_V_sense),
+        "AD7": read(const.AD7_V_sys_out),
+        "AD8": read(const.AD8_V_out)
     }
 
 # Contains a dictionary of channel: factor values.

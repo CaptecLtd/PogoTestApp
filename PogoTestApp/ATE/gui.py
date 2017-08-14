@@ -5,12 +5,15 @@ from tkinter.messagebox import WARNING, ABORTRETRYIGNORE
 from ATE.const import *
 import os
 import os.path
+import sys
+import configparser
 #import tkmessagebox
 
 class MainForm(tk.Frame):
     
     reset_action = None
     abort_action = None
+    selected_suite_index = None
 
     _reading_rows = None
     _stage_template = "Test Stage: {description}"
@@ -80,10 +83,10 @@ class MainForm(tk.Frame):
 
         # Info text box container
 
-        info_container = tk.Frame(self, width = 760, height = 180)
+        info_container = tk.Frame(self, width = 760, height = 80)
         info_container.grid(column = 0, row = current_row, columnspan = 5)
         info_container.columnconfigure(0, minsize = 760)
-        info_container.rowconfigure(0, minsize = 180)
+        info_container.rowconfigure(0, minsize = 80)
 
         # Member of info container
         self.info_label = tk.Text(info_container)
@@ -96,7 +99,7 @@ class MainForm(tk.Frame):
         #self.info_label["anchor"] = tkc.NW
         #self.info_label["wraplength"] = 740
         #self.info_label["justify"] = tkc.LEFT
-        self.info_label["height"] = 10
+        self.info_label["height"] = 9
         self.info_label["font"] = ("Courier", 11)
         self.info_label["wrap"] = tkc.WORD
         #self.info_label.pack(side = tkc.LEFT, fill = tkc.BOTH)
@@ -140,25 +143,40 @@ class MainForm(tk.Frame):
         # Readings rows
 
         self._reading_rows = {
-            "AD1": {"name": "AD1 Pogo Input Volts", "value": tk.StringVar(), "column": 0, "row": 1 },
-            "AD2": {"name": "AD2 Tablet USB Volts", "value": tk.StringVar(), "column": 0, "row": 2 },
-            "AD3": {"name": "AD3 Batt Board Power In Volts", "value": tk.StringVar(), "column": 0, "row": 3},
-            "AD4": {"name": "AD4 Batt Board Temp Sense Cutoff", "value": tk.StringVar(), "column": 0, "row": 4},
-            "AD5": {"name": "AD5 Batt Board Battery Volts", "value": tk.StringVar(), "column": 0, "row": 5},
-            "AD6": {"name": "AD6 External USB Volts", "value": tk.StringVar(), "column": 0, "row": 6},
-            "AD7": {"name": "AD7 Pogo Battery Output", "value": tk.StringVar(), "column": 0, "row": 7},
+            "AD1": {"name": "AD1 POGO", "value": tk.StringVar(), "column": 0, "row": 1 },
+            "AD2": {"name": "AD2 +5V PWR", "value": tk.StringVar(), "column": 0, "row": 2 },
+            "AD3": {"name": "AD3 IN", "value": tk.StringVar(), "column": 0, "row": 3},
+            "AD4": {"name": "AD4 TP13 NTC", "value": tk.StringVar(), "column": 0, "row": 4},
+            "AD5": {"name": "AD5 BAT", "value": tk.StringVar(), "column": 0, "row": 5},
+            "AD6": {"name": "AD6 SENSE", "value": tk.StringVar(), "column": 0, "row": 6},
+            "AD7": {"name": "AD7 SYS OUT", "value": tk.StringVar(), "column": 0, "row": 7},
+            "AD8": {"name": "AD8 OUT", "value": tk.StringVar(), "column": 0, "row": 8},
 
-            "DOP1": {"name": "DOP1 Tablet Full Load Switch", "value": tk.StringVar(), "column": 2, "row": 1},
-            "DOP2": {"name": "DOP2 Tablet Charged Load Switch", "value": tk.StringVar(), "column": 2, "row": 2},
-            "DOP3": {"name": "DOP3 OTG Mode Trigger", "value": tk.StringVar(), "column": 2, "row": 3},
-            "DOP4": {"name": "DOP4 D+ Ext USB", "value": tk.StringVar(), "column": 2, "row": 4},
-            "DOP5": {"name": "DOP5 D- Ext USB", "value": tk.StringVar(), "column": 2, "row": 5},
+            "DOP1": {"name": "DOP1 Load ON", "value": tk.StringVar(), "column": 2, "row": 1},
+            "DOP2": {"name": "DOP2 Discharge Load", "value": tk.StringVar(), "column": 2, "row": 2},
+            "DOP3": {"name": "DOP3 TP7 GPIO", "value": tk.StringVar(), "column": 2, "row": 3},
+            "DOP4": {"name": "DOP4 TP5 GPIO", "value": tk.StringVar(), "column": 2, "row": 4},
+            "DOP5": {"name": "DOP5 TP6 GPIO", "value": tk.StringVar(), "column": 2, "row": 5},
+            "DOP6": {"name": "DOP6 T SW ON", "value": tk.StringVar(), "column": 2, "row": 6},
+            "DOP7": {"name": "DOP7 Cold sim", "value": tk.StringVar(), "column": 2, "row": 7},
+            "DOP8": {"name": "DOP8 Hot sim", "value": tk.StringVar(), "column": 2, "row": 8},
+            "DOP9": {"name": "DOP9 TO J7-1", "value": tk.StringVar(), "column": 2, "row": 9},
+            "DOP10": {"name": "DOP10 FLT loop back", "value": tk.StringVar(), "column": 2, "row": 10},
+            "DOP11": {"name": "DOP11 POGO ON GPIO", "value": tk.StringVar(), "column": 2, "row": 11},
+            "DOP12": {"name": "DOP12 BAT1 GPIO", "value": tk.StringVar(), "column": 2, "row": 12},
+            "DOP13": {"name": "DOP13 BAT0 GPIO", "value": tk.StringVar(), "column": 2, "row": 13},
 
             "DIP1": {"name": "DIP1 TP3 Q4 Startup Delay", "value": tk.StringVar(), "column": 4, "row": 1},
             "DIP2": {"name": "DIP2 Tablet OTG Sense", "value": tk.StringVar(), "column": 4, "row": 2},
             "DIP3": {"name": "DIP3 D+ Tablet USB Sense", "value": tk.StringVar(), "column": 4, "row": 3},
             "DIP4": {"name": "DIP4 D- Tablet USB Sense", "value": tk.StringVar(), "column": 4, "row": 4},
-            "DIP5": {"name": "DIP5 Tablet OTG Vout Activate", "value": tk.StringVar(), "column": 4, "row": 5}
+            "DIP5": {"name": "DIP5 Tablet OTG Vout Activate", "value": tk.StringVar(), "column": 4, "row": 5},
+            "DIP6": {"name": "DIP6 From J7-4", "value": tk.StringVar(), "column": 4, "row": 6},
+            "DIP7": {"name": "DIP7 J3 LINK OK", "value": tk.StringVar(), "column": 4, "row": 7},
+            "DIP8": {"name": "DIP8 LED RD", "value": tk.StringVar(), "column": 4, "row": 8},
+            "DIP9": {"name": "DIP9 LED GN", "value": tk.StringVar(), "column": 4, "row": 9},
+            "DIP10": {"name": "DIP10 USB PERpins OK", "value": tk.StringVar(), "column": 4, "row": 10},
+            "DIP11": {"name": "DIP11 +5V ATE in", "value": tk.StringVar(), "column": 4, "row": 11},
         }
 
         # Add all the configured rows to the form
@@ -374,3 +392,60 @@ class MainForm(tk.Frame):
 
     def clear_duration(self):
         self._duration_count.set("Test Duration: N/A")
+
+
+"""
+This class is used to specify which suite of tests are to be run. It
+modifies the tests.ini file's [settings] selected_suite key with the chosen index.
+The PogoTestApp program then loads in the config and sets up the tests depending on the
+suite chosen.
+
+The classes specified in the ini file must exist (obviously).
+
+This method was chosen as it's a little more modular and involves less modification to the 
+main ATE software framework.
+
+"""
+
+class SuiteSelectionForm():
+
+    selected_suite_index = None
+
+    def select_suite(self):
+        self.selected_suite_index = self.frm.suite_list.curselection()[0]
+        print("Selected suite: %d" % self.selected_suite_index)
+        self.config["settings"]["selected_suite"] = str(self.selected_suite_index)
+        with open("tests.ini", "w") as configfile:
+            self.config.write(configfile)
+            self.root.destroy()
+            self.root.quit()
+
+    def loop(self):
+        self.root.mainloop()
+
+    def __init__(self):
+        self.config = configparser.ConfigParser()
+        self.root = tk.Tk()
+
+        self.config.read("tests.ini")
+
+        # Create test suite selection window
+        self.frm = tk.Toplevel(self.root)
+        self.frm.title("Select test suite")
+        self.frm.geometry("300x250")
+
+        self.frm.lb = tk.Label(self.frm, text="Please select the test suite to run.")
+        self.frm.lb.pack()
+
+        self.frm.suite_list = tk.Listbox(self.frm, selectmode=tk.SINGLE)
+        self.frm.suite_list.pack(fill=tk.BOTH, expand=1)
+        
+        for k, v in self.config["suites"].items():
+            self.frm.suite_list.insert(tk.END, v)
+
+        self.frm.btn = tk.Button(self.frm, text="Select", command=self.select_suite)
+        self.frm.btn.pack()
+
+        self.frm.wm_attributes("-topmost", 1)
+
+        
