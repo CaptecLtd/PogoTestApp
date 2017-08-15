@@ -46,7 +46,7 @@ class MainForm(tk.Frame):
         master.deiconify()
 
     def create_widgets(self):
-        padding = 10
+        padding = 8
         btn_font = "Arial 18 bold"
         header_font = "Arial 10 bold"
 
@@ -84,7 +84,7 @@ class MainForm(tk.Frame):
         # Info text box container
 
         info_container = tk.Frame(self, width = 760, height = 80)
-        info_container.grid(column = 0, row = current_row, columnspan = 5)
+        info_container.grid(column = 0, row = current_row, columnspan = 8)
         info_container.columnconfigure(0, minsize = 760)
         info_container.rowconfigure(0, minsize = 80)
 
@@ -124,59 +124,59 @@ class MainForm(tk.Frame):
         # Readings headers
 
         h1 = tk.Label(readings_container)
-        h1["text"] = "Voltage Measurements"
+        h1["text"] = "Voltages (AD)"
         h1["font"] = header_font
         h1.grid(column = 0, row = 0, columnspan = 2, sticky = tkc.W + tkc.N)
 
         h2 = tk.Label(readings_container)
-        h2["text"] = "Digital Outputs"
+        h2["text"] = "Digital Outputs (DOP)"
         h2["font"] = header_font
         h2.grid(column = 2, row = 0, columnspan = 2, sticky = tkc.W + tkc.N)
 
         h3 = tk.Label(readings_container)
-        h3["text"] = "Digital Inputs"
+        h3["text"] = "Digital Inputs (DIP)"
         h3["font"] = header_font
-        h3.grid(column = 4, row = 0, columnspan = 2, sticky = tkc.W + tkc.N)
+        h3.grid(column = 6, row = 0, columnspan = 2, sticky = tkc.W + tkc.N)
 
         # / Readings headers
 
         # Readings rows
 
         self._reading_rows = {
-            "AD1": {"name": "AD1 POGO", "value": tk.StringVar(), "column": 0, "row": 1 },
-            "AD2": {"name": "AD2 +5V PWR", "value": tk.StringVar(), "column": 0, "row": 2 },
-            "AD3": {"name": "AD3 IN", "value": tk.StringVar(), "column": 0, "row": 3},
-            "AD4": {"name": "AD4 TP13 NTC", "value": tk.StringVar(), "column": 0, "row": 4},
-            "AD5": {"name": "AD5 BAT", "value": tk.StringVar(), "column": 0, "row": 5},
-            "AD6": {"name": "AD6 SENSE", "value": tk.StringVar(), "column": 0, "row": 6},
-            "AD7": {"name": "AD7 SYS OUT", "value": tk.StringVar(), "column": 0, "row": 7},
-            "AD8": {"name": "AD8 OUT", "value": tk.StringVar(), "column": 0, "row": 8},
+            "AD1": {"name": "1 POGO", "value": tk.StringVar(), "column": 0, "row": 1 },
+            "AD2": {"name": "2 +5V PWR", "value": tk.StringVar(), "column": 0, "row": 2 },
+            "AD3": {"name": "3 IN", "value": tk.StringVar(), "column": 0, "row": 3},
+            "AD4": {"name": "4 TP13 NTC", "value": tk.StringVar(), "column": 0, "row": 4},
+            "AD5": {"name": "5 BAT", "value": tk.StringVar(), "column": 0, "row": 5},
+            "AD6": {"name": "6 SENSE", "value": tk.StringVar(), "column": 0, "row": 6},
+            "AD7": {"name": "7 SYS OUT", "value": tk.StringVar(), "column": 0, "row": 7},
+            "AD8": {"name": "8 OUT", "value": tk.StringVar(), "column": 0, "row": 8},
 
-            "DOP1": {"name": "DOP1 Load ON", "value": tk.StringVar(), "column": 2, "row": 1},
-            "DOP2": {"name": "DOP2 Discharge Load", "value": tk.StringVar(), "column": 2, "row": 2},
-            "DOP3": {"name": "DOP3 TP7 GPIO", "value": tk.StringVar(), "column": 2, "row": 3},
-            "DOP4": {"name": "DOP4 TP5 GPIO", "value": tk.StringVar(), "column": 2, "row": 4},
-            "DOP5": {"name": "DOP5 TP6 GPIO", "value": tk.StringVar(), "column": 2, "row": 5},
-            "DOP6": {"name": "DOP6 T SW ON", "value": tk.StringVar(), "column": 2, "row": 6},
-            "DOP7": {"name": "DOP7 Cold sim", "value": tk.StringVar(), "column": 2, "row": 7},
-            "DOP8": {"name": "DOP8 Hot sim", "value": tk.StringVar(), "column": 2, "row": 8},
-            "DOP9": {"name": "DOP9 TO J7-1", "value": tk.StringVar(), "column": 2, "row": 9},
-            "DOP10": {"name": "DOP10 FLT loop back", "value": tk.StringVar(), "column": 2, "row": 10},
-            "DOP11": {"name": "DOP11 POGO ON GPIO", "value": tk.StringVar(), "column": 2, "row": 11},
-            "DOP12": {"name": "DOP12 BAT1 GPIO", "value": tk.StringVar(), "column": 2, "row": 12},
-            "DOP13": {"name": "DOP13 BAT0 GPIO", "value": tk.StringVar(), "column": 2, "row": 13},
+            "DOP1": {"name": "1 Load ON", "value": tk.StringVar(), "column": 2, "row": 1},
+            "DOP2": {"name": "2 Discharge Load", "value": tk.StringVar(), "column": 2, "row": 2},
+            "DOP3": {"name": "3 TP7 GPIO", "value": tk.StringVar(), "column": 2, "row": 3},
+            "DOP4": {"name": "4 TP5 GPIO", "value": tk.StringVar(), "column": 2, "row": 4},
+            "DOP5": {"name": "5 TP6 GPIO", "value": tk.StringVar(), "column": 2, "row": 5},
+            "DOP6": {"name": "6 T SW ON", "value": tk.StringVar(), "column": 2, "row": 6},
+            "DOP7": {"name": "7 Cold sim", "value": tk.StringVar(), "column": 2, "row": 7},
+            "DOP8": {"name": "8 Hot sim", "value": tk.StringVar(), "column": 2, "row": 8},
+            "DOP9": {"name": "9 TO J7-1", "value": tk.StringVar(), "column": 4, "row": 1},
+            "DOP10": {"name": "10 FLT loop back", "value": tk.StringVar(), "column": 4, "row": 2},
+            "DOP11": {"name": "11 POGO ON GPIO", "value": tk.StringVar(), "column": 4, "row": 3},
+            "DOP12": {"name": "12 BAT1 GPIO", "value": tk.StringVar(), "column": 4, "row": 4},
+            "DOP13": {"name": "13 BAT0 GPIO", "value": tk.StringVar(), "column": 4, "row": 5},
 
-            "DIP1": {"name": "DIP1 TP3 Q4 Startup Delay", "value": tk.StringVar(), "column": 4, "row": 1},
-            "DIP2": {"name": "DIP2 Tablet OTG Sense", "value": tk.StringVar(), "column": 4, "row": 2},
-            "DIP3": {"name": "DIP3 D+ Tablet USB Sense", "value": tk.StringVar(), "column": 4, "row": 3},
-            "DIP4": {"name": "DIP4 D- Tablet USB Sense", "value": tk.StringVar(), "column": 4, "row": 4},
-            "DIP5": {"name": "DIP5 Tablet OTG Vout Activate", "value": tk.StringVar(), "column": 4, "row": 5},
-            "DIP6": {"name": "DIP6 From J7-4", "value": tk.StringVar(), "column": 4, "row": 6},
-            "DIP7": {"name": "DIP7 J3 LINK OK", "value": tk.StringVar(), "column": 4, "row": 7},
-            "DIP8": {"name": "DIP8 LED RD", "value": tk.StringVar(), "column": 4, "row": 8},
-            "DIP9": {"name": "DIP9 LED GN", "value": tk.StringVar(), "column": 4, "row": 9},
-            "DIP10": {"name": "DIP10 USB PERpins OK", "value": tk.StringVar(), "column": 4, "row": 10},
-            "DIP11": {"name": "DIP11 +5V ATE in", "value": tk.StringVar(), "column": 4, "row": 11},
+            "DIP1": {"name": "1 TP3 Q4 Startup Delay", "value": tk.StringVar(), "column": 6, "row": 1},
+            "DIP2": {"name": "2 Tablet OTG Sense", "value": tk.StringVar(), "column": 6, "row": 2},
+            "DIP3": {"name": "3 D+ Tablet USB Sense", "value": tk.StringVar(), "column": 6, "row": 3},
+            "DIP4": {"name": "4 D- Tablet USB Sense", "value": tk.StringVar(), "column": 6, "row": 4},
+            "DIP5": {"name": "5 Tablet OTG Vout Activate", "value": tk.StringVar(), "column": 6, "row": 5},
+            "DIP6": {"name": "6 From J7-4", "value": tk.StringVar(), "column": 6, "row": 6},
+            "DIP7": {"name": "7 J3 LINK OK", "value": tk.StringVar(), "column": 6, "row": 7},
+            "DIP8": {"name": "8 LED RD", "value": tk.StringVar(), "column": 6, "row": 8},
+            "DIP9": {"name": "9 LED GN", "value": tk.StringVar(), "column": 8, "row": 1},
+            "DIP10": {"name": "10 USB PERpins OK", "value": tk.StringVar(), "column": 8, "row": 2},
+            "DIP11": {"name": "11 +5V ATE in", "value": tk.StringVar(), "column": 8, "row": 3},
         }
 
         # Add all the configured rows to the form
@@ -188,6 +188,7 @@ class MainForm(tk.Frame):
 
             lbl = tk.Label(readings_container)
             lbl["text"] = v["name"]
+            #lbl["font"] = ("Arial Narrow", 10)
             lbl.grid(column = v["column"], row = v["row"], sticky = tkc.W + tkc.N)
 
             val = tk.Label(readings_container)
@@ -409,12 +410,12 @@ main ATE software framework.
 
 class SuiteSelectionForm():
 
-    selected_suite_index = None
-
     def select_suite(self):
-        self.selected_suite_index = self.frm.suite_list.curselection()[0]
-        print("Selected suite: %d" % self.selected_suite_index)
-        self.config["settings"]["selected_suite"] = str(self.selected_suite_index)
+        elm = self.frm.suite_list.curselection()
+        if len(elm) != 1:
+            return
+
+        self.config["settings"]["selected_suite"] = str(elm[0])
         with open("tests.ini", "w") as configfile:
             self.config.write(configfile)
             self.root.destroy()
@@ -427,23 +428,30 @@ class SuiteSelectionForm():
         self.config = configparser.ConfigParser()
         self.root = tk.Tk()
 
+        font = ("Arial", 20)
+
         self.config.read("tests.ini")
 
         # Create test suite selection window
         self.frm = tk.Toplevel(self.root)
         self.frm.title("Select test suite")
-        self.frm.geometry("300x250")
+        self.frm.geometry("800x480")
 
-        self.frm.lb = tk.Label(self.frm, text="Please select the test suite to run.")
+        self.frm.lb = tk.Label(self.frm, text="Please select the test suite to run and tap BEGIN.")
+        self.frm.lb["font"] = font
         self.frm.lb.pack()
 
-        self.frm.suite_list = tk.Listbox(self.frm, selectmode=tk.SINGLE)
+        self.frm.suite_list = tk.Listbox(self.frm)
+        self.frm.suite_list["font"] = font
+        self.frm.suite_list["activestyle"] = "none"
         self.frm.suite_list.pack(fill=tk.BOTH, expand=1)
+        self.frm.suite_list.selection_anchor(0)
         
         for k, v in self.config["suites"].items():
             self.frm.suite_list.insert(tk.END, v)
 
-        self.frm.btn = tk.Button(self.frm, text="Select", command=self.select_suite)
+        self.frm.btn = tk.Button(self.frm, text="BEGIN", command=self.select_suite)
+        self.frm.btn["font"] = font
         self.frm.btn.pack()
 
         self.frm.wm_attributes("-topmost", 1)
