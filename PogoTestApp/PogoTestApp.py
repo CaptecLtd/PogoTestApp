@@ -16,6 +16,7 @@ try:
     from getopt import getopt, GetoptError
     from time import sleep
 
+    # Show the suite selection form and keep it up until it gets closed by the user.
     suite_selection = gui.SuiteSelectionForm()
     suite_selection.loop()
 
@@ -35,13 +36,16 @@ try:
 
     #test_suite.add_test(tests.TestXX_FakeTest())
 
+    # Read the configured selected suite by SuiteSelection.
     config = configparser.ConfigParser()
     config.read("tests.ini")
     suite_idx = config["settings"]["selected_suite"]
 
+    # Add all the tests found in the suite.
     for idx, cls in config["suite%d" % int(suite_idx)].items():
-        test_suite.add_test(getattr(tests, cls))
+        test_suite.add_test(getattr(tests, cls)())
 
+    # Add a final "test" to show a generic completion message.
     test_suite.add_test(tests.TestEnd_TestsCompleted())
 
     # Disable input buttons to start with
