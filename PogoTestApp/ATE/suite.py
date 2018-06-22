@@ -10,6 +10,7 @@ class TestSuite(object):
     "Suite of tests for the user to complete. Controls the running and state of tests. Call TestSuite.reset() before interacting with any tests. "
     tests = []
     current_test = -1
+    selected_suite = None
     form = None
     timer = None
     summary_shown = False

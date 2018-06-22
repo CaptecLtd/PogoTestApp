@@ -34,6 +34,20 @@ def read_all_voltages():
         "AD8": read(const.AD8_V_out)
     }
 
+def get_all_channels():
+    "Returns a dictionary of all channels"
+
+    return {
+        "AD1": Channel(const.AD1_V_pogo),
+        "AD2": Channel(const.AD2_V_5V_pwr),
+        "AD3": Channel(const.AD3_V_in),
+        "AD4": Channel(const.AD4_V_TP13_NTC),
+        "AD5": Channel(const.AD5_V_bat),
+        "AD6": Channel(const.AD6_V_sense),
+        "AD7": Channel(const.AD7_V_sys_out),
+        "AD8": Channel(const.AD8_V_out)
+    }
+
 # Contains a dictionary of channel: factor values.
 # If a channel is loaded matching the key, all readings will be multiplied by factor.
 conversion_factors = {}
