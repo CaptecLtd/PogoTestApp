@@ -101,25 +101,26 @@ class TestXX_FakeTest(TestProcedure):
 The classes below are "live" tests run as part of the ATE itself. They are not unit tested.
 """
 
-class Test00_Setup(TestProcedure):
+class Test_Setup1(TestProcedure):
 
     description = "Setup 1 of 2"
     enable_pass_fail = False
 
     def run(self):
-        txt = """Ensure:
-Transport switch - OFF
-J2 on power management board connected to J2_pwr on ATE
-J6_CON connected to J6 on connection board
-J2_CON connected to J2 on connection board
-J7_CON is mated with J7 housing from connection board
-J4_micro USB and J5_tablet USB connected to J4 and J5 on connection board"""
+        txt = """Before starting, please ensure:
+
+- Applicable PCBs are installed.
+- PSU_pogo, PSU_ATE and battery simulator PSU are connected and switched on.
+- Transport manual switch is OFF.
+
+Tap PASS to confirm.
+"""
 
         self.suite.form.set_text(txt)
         self.set_passed();
 
 
-class Test01_Setup(TestProcedure):
+class Test_Setup2(TestProcedure):
 
     description = "Setup 2 of 2"
     enable_pass_fail = False
@@ -132,165 +133,181 @@ POGO_SW to be turned on"""
         self.suite.form.set_text(txt)
         self.set_passed()
 
-class Test02_Rev01(TestProcedure):
+class TestPWR_1(TestProcedure):
 
-    description = "Load Switch (4950-060-10-01)"
+    description = "Power Management PCB - Pin Test"
     enable_pass_fail = False
+    auto_advance = True
 
     def run(self):
+        digio.set_low(digio.inputs)
+        digio.set_high(DOP6_T_SW_ON)
+
+        digio.await_high(DIP1_PWRUP_Delay)
         
-        self.suite.form.set_text("Turn on SW_1.25A")
-        self.set_passed()
+        inputs = digio.read_all_inputs()
 
-class Test02_Rev02(TestProcedure):
+        expected_values = [
+            DIP1_PWRUP_Delay: 1,
+            DIP2_OTG_OK: 0,
+            DIP3_Dplus_J5_3_OK: 0,
+            DIP4_Dminus_J5_2_OK: 0,
+            DIP5_5V_PWR: 1,
+            DIP6_From_J7_4: 0,
+            DIP7_J3_LINK_OK: 1,
+            DIP8_LED_RD: 1,
+            DIP9_LED_GN: 0,
+            DIP10_USB_PERpins_OK: 0,
+            DIP11_5V_ATE_in: 1
+        ]
 
-    description = "Load Switch (4950-060-10-02)"
+        if (inputs != expected_values):
+            self.suite.form.set_text("Input DIP values don't match expected.")
+            self.set_failed()
+        else:
+            self.set_passed()
+
+class TestPWR_2(TestProcedure):
+
+    description = "Power Management PCB - Power Up Delay"
     enable_pass_fail = False
+    auto_advance = True
 
     def run(self):
-        
-        self.suite.form.set_text("Turn on SW_0.8A")
-        self.set_passed()
 
-class Test02_Rev03(TestProcedure):
+        ad1 = Channel(AD1_V_pogo)
+        ad5 = Channel(AD5_V_bat)
+        ad7 = Channel(AD7_V_sys_out)
+        ad8 = Channel(AD8_V_out)
 
-    description = "Load Switch (4950-060-10-03)"
-    enable_pass_fail = False
+        if ad5.voltage_between(0, 1.50) and ad7.voltage_between(0, 2.00) and ad8.voltage_between(0, 2.00):
 
-    def run(self):
-        
-        self.suite.form.set_text("Turn on SW_1.13A")
-        self.set_passed()
+            digio.set_high(DOP12_BAT1_GPIO)
+            
+            if ad5.voltage_between(3.95, 4.25) and ad7.voltage_between(4.90, 5.15) and ad8.voltage_between(4.85, 5.10):
+                self.set_passed()
+            else:
+                self.suite.form.set_text("Voltages for AD5, AD7 or AD8 were not within tolerable values (DOP12 high)")
+                self.set_failed()
 
-class Test02_Rev04(TestProcedure):
-
-    description = "Load Switch (4950-060-10-04)"
-    enable_pass_fail = False
-
-    def run(self):
-        
-        self.suite.form.set_text("Turn on SW_0.36A")
-        self.set_passed()
-
-class TestB2_FirstStage(TestProcedure):
-
-    description = "First stage test"
-
-    def run(self):
+        else:
+            self.suite.form.set_text("Voltages for AD5, AD7 or AD8 were not within tolerable values (DOP12 low)")
+            self.set_failed()
 
         digio.set_high(DOP11_POGO_ON_GPIO)
-    
-        dig_inputs = digio.read_all_inputs()
-        dig_expected = {
-            "DIP1": 1,
-            "DIP2": 0,
-            "DIP3": 0,
-            "DIP4": 0,
-            "DIP5": 1,
-            "DIP6": 0,
-            "DIP7": 0,
-            "DIP8": 1,
-            "DIP9": 0,
-            "DIP10": 1,
-            "DIP11": 1
-        }
 
-        if self.suite.selected_suite == 0 or self.suite.selected_suite == 2:
-            dig_expected["DIP7"] = 1
+        if ad1.voltage_between(0, 2.00) and ad8.voltage_between(4.85, 5.10):
 
-        if dig_inputs == dig_expected:
-            self.set_passed()
+            time.sleep(0.1)
+            digio.set_low(DOP11_POGO_ON_GPIO)
+
+            low_passed, low_delay = digio.await_low(DIP1_PWRUP_Delay)
+            high_passed, high_delay = digio.await_high(DIP1_PWRUP_Delay)
+
+            delay = low_delay + high_delay
+
+            if (low_passed and high_passed) and (delay > 0.5 and delay < 1.0):
+                if (ad1.voltage_between(4.90, 5.10) and ad8.voltage_between(4.85, 5.10)):
+                    self.set_passed()
+                else:
+                    self.log_failure("AD1 or AD8 voltage not within limits")
+            else:
+                self.log_failure("DIP1 low or high out of tolerance, or delay < 500ms or > 1000ms")
         else:
-            self.suite.form.set_text("Failure on power up")
-            if dig_inputs["DIP1"] == 0:
-                self.suite.form.append_text("Output failure")
-            if dig_inputs["DIP5"] == 0:
-                self.suite.form.append_text("Pogo failed to turn on")
-            if (self.suite.selected_suite == 0 or self.suite.selected_suite == 2) and dig_inputs["DIP7"] == 0:
-                self.suite.form.append_text("Link LK3 was not made")
-            if (self.suite.selected_suite == 1 or self.suite.selected_suite == 3) and dig_inputs["DIP7"] == 1:
-                self.suite.form.append_text("Incorrect version entered?")
-            if dig_inputs["DIP10"] == 0:
-                self.suite.form.append_text("Fault with J4 and J5 connectors")
-            if dig_inputs["DIP11"] == 0:
-                self.suite.form.append_text("Error with ATE")
-            self.set_failed()
+            self.log_failure("AD1 voltage > 2.00v or AD8 out of bounds")
 
-        # Handle ADC channels
-        channels = adc.get_all_channels()
-        adc_error = False
+class TestPWR_3(TestProcedure):
 
-        ad1b, ad1v = channels["AD1"].voltage_between(4.8, 5.2, 0.01)
-        if not ad1b:
-            self.suite.form.append_text("AD1: %d is out of bounds (>= 4.8, <= 5.2)" % ad1v)
-            adc_error = True
+    description = "Power Management PCB - Back up mode"
+    enable_pass_fail = False
+    auto_advance = True
 
-        ad2b, ad2v = channels["AD2"].voltage_between(4.8, 5.2, 0.01)
-        if not ad2b:
-            self.suite.form.append_text("AD2: %d is out of bounds (>= 4.8, <= 5.2)" % ad2v)
-            adc_error = True
-
-        ad3b, ad3v = channels["AD3"].voltage_between(4.8, 5.2, 0.01)
-        if not ad3b:
-            self.suite.form.append_text("AD3: %d is out of bounds (>= 4.8, <= 5.2)" % ad3v)
-            adc_error = True
-
-        ad4b, ad4v = channels["AD4"].voltage_between(1.8, 3.2, 0.01)
-        if not ad4b:
-            self.suite.form.append_text("AD4: %d is out of bounds (>= 1.8, <= 3.2)" % ad4v)
-            adc_error = True
-
-        ad5b, ad5v = channels["AD5"].voltage_between(0.2, 1.5, 0.01)
-        if not ad5b:
-            self.suite.form.append_text("AD5: %d is out of bounds (>= 0.2, <= 1.5)" % ad5v)
-            adc_error = True
-    
-        ad6b, ad6v = channels["AD6"].voltage_between(0.2, 0.5, 0.01)
-        if not ad6b:
-            self.suite.form.append_text("AD6: %d is out of bounds (>= 0.2, <= 0.5)" % ad6v)
-            adc_error = True
-
-        ad7b, ad7v = channels["AD7"].voltage_between(0.1, 1.5, 0.01)
-        if not ad7b:
-            self.suite.form.append_text("AD7: %d is out of bounds (>= 0.1, <= 1.5)" % ad7v)
-            adc_error = True
-
-        ad8b, ad8v = channels["AD8"].voltage_between(4.75, 5.15, 0.01)
-        if not ad8b:
-            self.suite.form.append_text("AD8: %d is out of bounds (>= 4.75, <= 5.15)" % ad8v)
-            adc_error = True
-
-        if adc_error:
-            self.set_failed()
-        else:
-            self.set_passed()
-
-class TestB3_1_PowerMgmt_CheckIO(TestProcedure):
-
-    description = "Power Management Board - I/O Check"
-
-   
-
-class TestB3_2_PowerMgmt_CheckPowerUp(TestProcedure):
-
-    description = "Power Management Board - Power Up Check"
-
-class TestB3_3_PowerMgmt_BackupMode(TestProcedure):
-
-    description = "Power Management Board - Backup Mode Test"
-
-class TestB3_4_PowerMgmt_NormalMode(TestProcedure):
-
-    description = "Power Management Board - Normal Mode Test"
-
-class TestB3_5_PowerMgmt_ThermalProtection(TestProcedure):
-
-    description = "Power Management Board - Thermal Protection"
-
-class TestB4_1_ConnectionBoard_LineQuality(TestProcedure):
-
-    description = "Connection Board - Line Quality"
+    def run(self):
         
+        ad5 = Channel(AD5_V_bat)
+        ad6 = Channel(AD6_V_sense)
+        ad7 = Channel(AD7_V_sys_out)
+        ad8 = Channel(AD8_V_out)
+        
+        digio.set_low([DOP12_BAT1_GPIO, DOP13_BAT0_GPIO, DOP2_Discharge_Load])
+
+        if (ad5.voltage_near(2.64, 0.2) and 
+            ad6.voltage_near(1.57, 0.2) and 
+            ad7.voltage_between(0, 1.50) and 
+            ad8.voltage_between(0, 1.50)):
+            
+            digio.set_high(DOP13_BAT0_GPIO)
+            
+            if (ad5.voltage_near(3.35, 0.1) and 
+                ad6.voltage_near(2.0, 0.2) and 
+                ad7.voltage_near(5.0, 0.15) and 
+                ad8.voltage_between(0, 1.50)):
+                
+                digio.set_low(DOP13_BAT0_GPIO)
+                digio.set_high(DOP12_BAT1_GPIO)
+
+                if (ad5.voltage_near(4.09, 0.1) and
+                    ad6.voltage_near(2.42, 0.2) and
+                    ad7.voltage_near(5.0, 0.15) and
+                    ad8.voltage_near(5.0, 0.15)):
+
+                    digio.set_high(DOP2_Discharge_Load)
+
+                    if (ad5.voltage_near(4.08, 0.1) and
+                        ad6.voltage_near(3.73, 0.2) and
+                        ad7.voltage_near(4.9, 0.15) and
+                        ad8.voltage_near(4.9, 0.15)):
+
+                        self.set_passed()
+
+class TestPWR_4(TestProcedure):
+
+    description = "Power Management PCB - Normal mode test"
+    enable_pass_fail = False
+    auto_advance = True
+
+class TestPWR_5(TestProcedure):
+
+    description = "Power Management PCB - Thermal protection test"
+    enable_pass_fail = False
+    auto_advance = True
+
+class TestPWR_6(TestProcedure):
+
+    description = "Power Management PCB - Reset"
+    enable_pass_fail = False
+    auto_advance = True
+
+class TestCON_1(TestProcedure):
+
+    description = "Connection PCB - Digital Read"
+    enable_pass_fail = False
+    auto_advance = True
+
+class TestCON_2(TestProcedure):
+
+    description = "Connection PCB - Analogue Read"
+    enable_pass_fail = False
+    auto_advance = True
+
+class TestCON_3(TestProcedure):
+
+    description = "Connection PCB - USB Data Lines"
+    enable_pass_fail = False
+    auto_advance = True
+
+class TestCON_4(TestProcedure):
+
+    description = "Connection PCB - Ethernet filter"
+    enable_pass_fail = False
+    auto_advance = True
+
+class TestCON_5(TestProcedure):
+
+    description = "Connection PCB - Complete"
+    enable_pass_fail = False
+    auto_advance = True
+
 
 class TestEnd_TestsCompleted(TestProcedure):
     

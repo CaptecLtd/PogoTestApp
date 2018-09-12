@@ -13,40 +13,40 @@ except ImportError:
     print("GPIO libraries could not be loaded. NO HARDWARE INTERACTION WILL TAKE PLACE.")
     import RPiDummy.GPIODummy as GPIO
 
+# Specify which pins belong to which group
+outputs = [
+    DOP1_Load_ON,
+    DOP2_Discharge_Load,
+    DOP3_TP7_GPIO,
+    DOP4_TP5_GPIO,
+    DOP5_TP6_GPIO,
+    DOP6_T_SW_ON,
+    DOP7_Cold_sim,
+    DOP8_Hot_sim,
+    DOP9_TO_J7_1,
+    DOP10_FLT_loop_back,
+    DOP11_POGO_ON_GPIO,
+    DOP12_BAT1_GPIO,
+    DOP13_BAT0_GPIO
+]
+
+inputs = [
+    DIP1_PWRUP_Delay,
+    DIP2_OTG_OK,
+    DIP3_Dplus_J5_3_OK,
+    DIP4_Dminus_J5_2_OK,
+    DIP5_5V_PWR,
+    DIP6_From_J7_4,
+    DIP7_J3_LINK_OK,
+    DIP8_LED_RD,
+    DIP9_LED_GN,
+    DIP10_USB_PERpins_OK,
+    DIP11_5V_ATE_in
+]
+
 def setup():
     "Set the GPIO pins to how we want them for the application"
     GPIO.setmode(GPIO.BCM)
-        
-    # Specify which pins belong to which group
-    outputs = [
-        DOP1_Load_ON,
-        DOP2_Discharge_Load,
-        DOP3_TP7_GPIO,
-        DOP4_TP5_GPIO,
-        DOP5_TP6_GPIO,
-        DOP6_T_SW_ON,
-        DOP7_Cold_sim,
-        DOP8_Hot_sim,
-        DOP9_TO_J7_1,
-        DOP10_FLT_loop_back,
-        DOP11_POGO_ON_GPIO,
-        DOP12_BAT1_GPIO,
-        DOP13_BAT0_GPIO
-    ]
-
-    inputs = [
-        DIP1_PWRUP_Delay,
-        DIP2_OTG_OK,
-        DIP3_Dplus_J5_3_OK,
-        DIP4_Dminus_J5_2_OK,
-        DIP5_5V_PWR,
-        DIP6_From_J7_4,
-        DIP7_J3_LINK_OK,
-        DIP8_LED_RD,
-        DIP9_LED_GN,
-        DIP10_USB_PERpins_OK,
-        DIP11_5V_ATE_in
-    ]
 
     # Configure input and output pins accordingly
     GPIO.setup(outputs, GPIO.OUT)
