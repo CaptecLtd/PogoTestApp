@@ -131,16 +131,16 @@ class Channel(object):
         "Returns True if less than 1 volt is read from the channel, or False for any other value."
         return self.read_voltage() < 1.0
 
-    def voltage_between(self, lower, upper, tolerance):
+    def voltage_between(self, lower, upper, tolerance = 0.1):
         "Reads voltage from the channel and returns bool (is between lower and upper) and voltage read"
         v = self.read_voltage()
         return ((self.isclose(lower, v, tolerance) or v >= lower) and (self.isclose(upper, v, tolerance) or v <= upper)), v
 
-    def voltage_near(self, target, relative_tolerance, absolute_tolerance = 0.0):
+    def voltage_near(self, target, relative_tolerance = 0.1, absolute_tolerance = 0.0):
         "Reads voltage from the channel and returns true if target is within tolerance, false if not"
         return self.isclose(target, self.read_voltage(), relative_tolerance, absolute_tolerance)
 
-    def await_voltage(self, target, tolerance, timeout = 10):
+    def await_voltage(self, target, tolerance = 0.1, timeout = 10):
         "Waits for the specified voltage within tolerance, returning true if matched or false if timeout seconds pass"
         time = 0
         while time <= timeout:

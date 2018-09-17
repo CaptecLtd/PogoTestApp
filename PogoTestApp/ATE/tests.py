@@ -147,7 +147,7 @@ class TestPWR_1(TestProcedure):
         
         inputs = digio.read_all_inputs()
 
-        expected_values = [
+        expected_values = {
             DIP1_PWRUP_Delay: 1,
             DIP2_OTG_OK: 0,
             DIP3_Dplus_J5_3_OK: 0,
@@ -159,7 +159,7 @@ class TestPWR_1(TestProcedure):
             DIP9_LED_GN: 0,
             DIP10_USB_PERpins_OK: 0,
             DIP11_5V_ATE_in: 1
-        ]
+        }
 
         if (inputs != expected_values):
             self.suite.form.set_text("Input DIP values don't match expected.")
@@ -266,11 +266,107 @@ class TestPWR_4(TestProcedure):
     enable_pass_fail = False
     auto_advance = True
 
+    def run(self):
+
+        digio.set_low(digio.outputs)
+        digio.set_high(DOP6_T_SW_ON)
+
+        time.sleep(0.02)
+
+        ad5 = Channel(AD5_V_bat)
+        ad6 = Channel(AD6_V_sense)
+        ad8 = Channel(AD8_V_out)
+
+        if (ad5.voltage_near(2.56, 0.2) and
+            ad6.voltage_near(1.18, 0.3) and
+            ad8.voltage_near(5.00, 0.15)):
+
+            digio.set_high(DOP13_BAT0_GPIO)
+
+            if (ad5.voltage_near(4.05, 0.1) and
+                ad6.voltage_between(0, 0.2) and
+                ad8.voltage_between(4.90, 0.2)):
+
+                digio.set_low(DOP12_BAT1_GPIO)
+                digio.set_high(DOP13_BAT0_GPIO)
+
+                if (ad5.voltage_near(4.10, 0.1) and
+                    ad6.voltage_near(1.40, 0.3) and
+                    ad8.voltage_near(4.90, 0.2)):
+
+                    digio.set_high(DOP12_BAT1_GPIO)
+
+                    if (ad5.voltage_near(4.35, 0.1) and
+                        ad6.voltage_near(2.62, 0.3) and 
+                        ad8.voltage_near(5.0, 0.2)):
+
+                        self.set_passed()
+
+                    else:
+                        self.log_failure("Voltages in stage 4 out of tolerance")
+
+                else:
+                    self.log_failure("Voltages in stage 3 out of tolerance")
+
+            else:
+                self.log_failure("Voltages in stage 2 out of tolerance")
+
+        else:
+            self.log_failure("Voltages in stage 1 out of tolerance")
+
+
 class TestPWR_5(TestProcedure):
 
     description = "Power Management PCB - Thermal protection test"
     enable_pass_fail = False
     auto_advance = True
+
+    def run(self):
+
+        ad3 = Channel(AD3_V_in)
+        ad4 = Channel(AD4_V_TP13_NTC)
+        ad6 = Channel(AD6_V_sense)
+
+        digio.set_low(digio.outputs)
+        digio.set_high(DOP6_T_SW_ON)
+        digio.set_high(DOP12_BAT1_GPIO) # not sure if this should be high or low, to be checked.
+
+
+        digio.set_high(DOP13_BAT0_GPIO)
+
+        if (ad3.voltage_near(4.9, 0.2) and
+            ad4.voltage_between((ad3.read_voltage() * 0.3), (ad3.read_voltage() * 0.75)) and
+            ad6.voltage_between(0, 0.2)):
+
+            digio.set_high(DOP7_Cold_sim)
+
+            if (ad3.voltage_near(4.9, 0.2) and
+                ad4.read_voltage() > (ad3.read_voltage() * 0.75) and
+                ad6.voltage_near(2.0, 0.2)):
+
+                digio.set_low(DOP7_Cold_sim)
+                digio.set_high(DOP8_Hot_sim)
+
+                if (ad3.voltage_near(4.9, 0.2) and
+                    ad4.read_voltage() < (ad3.read_voltage() * 0.3) and
+                    ad6.voltage_near(2.0, 0.2)):
+
+                    digio.set_low(DOP8_Hot_sim)
+
+                    if (ad3.voltage_near(4.9, 0.2) and
+                        ad4.voltage_between((ad3.read_voltage() * 0.3), (ad3.read_voltage() * 0.75)) and
+                        ad6.voltage_between(0, 0.2)):
+
+                        self.set_passed()
+                    else:
+                        self.log_failure("Stage 4 tolerances out of range")
+                else:
+                    self.log_failure("Stage 3 tolerances out of range")
+            else:
+                self.log_failure("Stage 2 tolerances out of range")
+        else:
+            self.log_failure("Stage 1 tolerances out of range")
+
 
 class TestPWR_6(TestProcedure):
 
@@ -278,11 +374,60 @@ class TestPWR_6(TestProcedure):
     enable_pass_fail = False
     auto_advance = True
 
-class TestCON_1(TestProcedure):
+    def run(self):
 
-    description = "Connection PCB - Digital Read"
+        digio.set_low(digio.outputs)
+        digio.set_high(DOP11_POGO_ON_GPIO)
+
+
+class TestCON_1a(TestProcedure):
+
+    description = "Connection PCB - Digital Read (1 of 2)"
+    enable_pass_fail = False
+    auto_advance = False
+
+    def run(self):
+
+        if self.suite.selected_suite == 0:
+            self.suite.form.append_text_line("Turn SW_1.25A to ON")
+        if self.suite.selected_suite == 1:
+            self.suite.form.append_text_line("Turn SW_0.8A to ON")
+        if self.suite.selected_suite == 2:
+            self.suite.form.append_text_line("Turn SW_1.14A to ON")
+        if self.suite.selected_suite == 3:
+            self.suite.form.append_text_line("Turn SW_0.36A to ON")
+
+        self.set_passed()
+
+class TestCON_1b(TestProcedure):
+
+    description = "Connection PCB - Digital Read (2 of 2)"
     enable_pass_fail = False
     auto_advance = True
+    
+    def run(self):
+
+        digio.set_low(digio.outputs)
+        digio.set_high(DOP6_T_SW_ON)
+
+        expected_inputs = {
+            DIP1_PWRUP_Delay: 1,
+            DIP2_OTG_OK: 0,
+            DIP3_Dplus_J5_3_OK: 0,
+            DIP4_Dminus_J5_2_OK: 0,
+            DIP5_5V_PWR: 1,
+            DIP6_From_J7_4: 0,
+            DIP7_J3_LINK_OK: 1,
+            DIP8_LED_RD: 1,
+            DIP9_LED_GN: 0,
+            DIP10_USB_PERpins_OK: 1,
+            DIP11_5V_ATE_in: 1
+        }
+
+        if digio.read_all_inputs == expected_inputs:
+            self.set_passed()
+        else:
+            self.log_failure("Digital inputs not as expected")
 
 class TestCON_2(TestProcedure):
 
@@ -290,11 +435,95 @@ class TestCON_2(TestProcedure):
     enable_pass_fail = False
     auto_advance = True
 
+    def run(self):
+
+        ad6 = Channel(AD6_V_sense)
+
+        if (ad6.voltage_between(0, 0.02) and
+            digio.read(DIP9_LED_GN) == 0 and
+            digio.read(DIP8_LED_RD) == 1):
+
+            digio.set_high(DOP1_Load_ON)
+
+            if self.suite.selected_suite == 0:
+                if ad6.voltage_between(2.48, 2.79) and (digio.read(DIP9_LED_GN) == 1 and
+                digio.read(DIP8_LED_RD) == 0):
+                    self.set_passed()
+                else:
+                    self.log_failure("Voltage out of bounds")
+            
+            if self.suite.selected_suite == 1:
+                if ad6.voltage_between(1.44, 1.74) and (digio.read(DIP9_LED_GN) == 1 and
+                digio.read(DIP8_LED_RD) == 0):
+                    self.set_passed()
+                else:
+                    self.log_failure("Voltage out of bounds")
+
+            if self.suite.selected_suite == 2:
+                if ad6.voltage_between(2.26, 2.54) and (digio.read(DIP9_LED_GN) == 1 and
+                digio.read(DIP8_LED_RD) == 0):
+                    self.set_passed()
+                else:
+                    self.log_failure("Voltage out of bounds")
+
+            if self.suite.selected_suite == 3:
+                if ad6.voltage_between(0.74, 0.94) and (digio.read(DIP9_LED_GN) == 1 and
+                digio.read(DIP8_LED_RD) == 0):
+                    self.set_passed()
+                else:
+                    self.log_failure("Voltage out of bounds")
+        else:
+            self.log_failure("Voltage out of bounds")   
+                
+
 class TestCON_3(TestProcedure):
 
     description = "Connection PCB - USB Data Lines"
     enable_pass_fail = False
     auto_advance = True
+
+    def run(self):
+
+        digio.set_high(DOP4_TP5_GPIO)
+        digio.set_low(DOP5_TP6_GPIO)
+        digio.set_high(DOP3_TP7_GPIO)
+
+        if (digio.read(DIP4_Dminus_J5_2_OK) == 1 and
+            digio.read(DIP3_Dplus_J5_3_OK) == 1 and
+            digio.read(DIP2_OTG_OK)) == 1:
+
+            digio.set_low(DOP3_TP7_GPIO)
+
+            if (digio.read(DIP4_Dminus_J5_2_OK) == 1 and
+                digio.read(DIP3_Dplus_J5_3_OK) == 0 and
+                digio.read(DIP2_OTG_OK) == 0):
+
+                digio.set_low(DOP4_TP5_GPIO)
+                digio.set_high(DOP5_TP6_GPIO)
+                digio.set_high(DOP3_TP7_GPIO)
+
+                if (digio.read(DIP4_Dminus_J5_2_OK) == 1 and
+                    digio.read(DIP3_Dplus_J5_3_OK) == 1 and
+                    digio.read(DIP2_OTG_OK)) == 1:
+
+                    digio.set_low(DOP4_TP5_GPIO)
+                    digio.set_low(DOP3_TP7_GPIO)
+
+                    if (digio.read(DIP4_Dminus_J5_2_OK) == 0 and
+                        digio.read(DIP3_Dplus_J5_3_OK) == 1 and
+                        digio.read(DIP2_OTG_OK)) == 0:
+
+                        self.set_passed()
+
+                    else:
+                        self.log_failure("Digital I/O unexpected result")
+                else:
+                    self.log_failure("Digital I/O unexpected result")
+            else:
+                self.log_failure("Digital I/O unexpected result")
+        else:
+            self.log_failure("Digital I/O unexpected result")
+
 
 class TestCON_4(TestProcedure):
 
@@ -302,11 +531,40 @@ class TestCON_4(TestProcedure):
     enable_pass_fail = False
     auto_advance = True
 
+    def run(self):
+
+        digio.set_high(DOP10_FLT_loop_back)
+        digio.set_high(DOP9_TO_J7_1)
+
+        if digio.read(DIP6_From_J7_4) == 1:
+            digio.set_low(DOP9_TO_J7_1)
+            if digio.read(DIP6_From_J7_4) == 0:
+                digio.set_low(DOP10_FLT_loop_back)
+                digio.set_high(DOP9_TO_J7_1)
+                if digio.read(DIP6_From_J7_4) == 0:
+                    digio.set_low(DOP9_TO_J7_1)
+                    if digio.read(DIP6_From_J7_4) == 0:
+                        self.set_passed()
+                    else:
+                        self.log_failure("DIP6 unexpected value")
+                else:
+                    self.log_failure("DIP6 unexpected value")
+            else:
+                self.log_failure("DIP6 unexpected value")
+        else:
+            self.log_failure("DIP6 unexpected value")
+
+
 class TestCON_5(TestProcedure):
 
     description = "Connection PCB - Complete"
     enable_pass_fail = False
     auto_advance = True
+
+    def run(self):
+
+        digio.set_low(digio.outputs)
+        digio.set_high(DOP11_POGO_ON_GPIO)
 
 
 class TestEnd_TestsCompleted(TestProcedure):
