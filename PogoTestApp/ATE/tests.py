@@ -140,7 +140,7 @@ class TestPWR_1(TestProcedure):
     auto_advance = True
 
     def run(self):
-        digio.set_low(digio.inputs)
+        digio.set_low(digio.outputs)
         digio.set_high(DOP6_T_SW_ON)
 
         digio.await_high(DIP1_PWRUP_Delay)

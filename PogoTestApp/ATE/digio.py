@@ -47,7 +47,7 @@ inputs = [
 def setup():
     "Set the GPIO pins to how we want them for the application"
     GPIO.setmode(GPIO.BCM)
-
+    print("Pin Setup")
     # Configure input and output pins accordingly
     GPIO.setup(outputs, GPIO.OUT)
     GPIO.setup(inputs, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
@@ -57,7 +57,7 @@ def setup():
 
     # Set DOP3 as input initially to represent a floating pin
     # This must be done AFTER all the output pins are configured, otherwise GPIO.output will throw an exception.
-    GPIO.setup(DOP3_TP7_GPIO, GPIO.IN)
+    #GPIO.setup(DOP3_TP7_GPIO, GPIO.IN)
 
 
 # Reset the state of the GPIO pins when our application exits.
