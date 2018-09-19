@@ -82,6 +82,10 @@ class TestProcedure(object):
             "not_run": "Not Run"
         }.get(self.state, "Unknown")
 
+    def wait(self, delay = 0.1):
+        "Waits for number of seconds specified by delay before advancing."
+        time.sleep(delay)
+
 
 class TestXX_FakeTest(TestProcedure):
 
@@ -117,7 +121,7 @@ Tap PASS to confirm.
 """
 
         self.suite.form.set_text(txt)
-        self.set_passed();
+        self.set_passed()
 
 
 class Test_Setup2(TestProcedure):
@@ -162,8 +166,7 @@ class TestPWR_1(TestProcedure):
         }
 
         if (inputs != expected_values):
-            self.suite.form.set_text("Input DIP values don't match expected.")
-            self.set_failed()
+            self.log_failure("Input DIP values don't match expected.")
         else:
             self.set_passed()
 
@@ -187,18 +190,16 @@ class TestPWR_2(TestProcedure):
             if ad5.voltage_between(3.95, 4.25) and ad7.voltage_between(4.90, 5.15) and ad8.voltage_between(4.85, 5.10):
                 self.set_passed()
             else:
-                self.suite.form.set_text("Voltages for AD5, AD7 or AD8 were not within tolerable values (DOP12 high)")
-                self.set_failed()
+                self.log_failure("Voltages for AD5, AD7 or AD8 were not within tolerable values (DOP12 high)")
 
         else:
-            self.suite.form.set_text("Voltages for AD5, AD7 or AD8 were not within tolerable values (DOP12 low)")
-            self.set_failed()
+            self.log_failure("Voltages for AD5, AD7 or AD8 were not within tolerable values (DOP12 low)")
 
         digio.set_high(DOP11_POGO_ON_GPIO)
 
         if ad1.voltage_between(0, 2.00) and ad8.voltage_between(4.85, 5.10):
 
-            time.sleep(0.1)
+            self.wait()
             digio.set_low(DOP11_POGO_ON_GPIO)
 
             low_passed, low_delay = digio.await_low(DIP1_PWRUP_Delay)
@@ -231,12 +232,16 @@ class TestPWR_3(TestProcedure):
         
         digio.set_low([DOP12_BAT1_GPIO, DOP13_BAT0_GPIO, DOP2_Discharge_Load])
 
+        self.wait()
+
         if (ad5.voltage_near(2.64, 0.2) and 
             ad6.voltage_near(1.57, 0.2) and 
             ad7.voltage_between(0, 1.50) and 
             ad8.voltage_between(0, 1.50)):
             
             digio.set_high(DOP13_BAT0_GPIO)
+
+            self.wait()
             
             if (ad5.voltage_near(3.35, 0.1) and 
                 ad6.voltage_near(2.0, 0.2) and 
@@ -246,12 +251,16 @@ class TestPWR_3(TestProcedure):
                 digio.set_low(DOP13_BAT0_GPIO)
                 digio.set_high(DOP12_BAT1_GPIO)
 
+                self.wait()
+
                 if (ad5.voltage_near(4.09, 0.1) and
                     ad6.voltage_near(2.42, 0.2) and
                     ad7.voltage_near(5.0, 0.15) and
                     ad8.voltage_near(5.0, 0.15)):
 
                     digio.set_high(DOP2_Discharge_Load)
+                    
+                    self.wait()
 
                     if (ad5.voltage_near(4.08, 0.1) and
                         ad6.voltage_near(3.73, 0.2) and
@@ -271,7 +280,7 @@ class TestPWR_4(TestProcedure):
         digio.set_low(digio.outputs)
         digio.set_high(DOP6_T_SW_ON)
 
-        time.sleep(0.02)
+        self.wait(0.02)
 
         ad5 = Channel(AD5_V_bat)
         ad6 = Channel(AD6_V_sense)
@@ -282,6 +291,7 @@ class TestPWR_4(TestProcedure):
             ad8.voltage_near(5.00, 0.15)):
 
             digio.set_high(DOP13_BAT0_GPIO)
+            self.wait()
 
             if (ad5.voltage_near(4.05, 0.1) and
                 ad6.voltage_between(0, 0.2) and
@@ -289,12 +299,14 @@ class TestPWR_4(TestProcedure):
 
                 digio.set_low(DOP12_BAT1_GPIO)
                 digio.set_high(DOP13_BAT0_GPIO)
+                self.wait()
 
                 if (ad5.voltage_near(4.10, 0.1) and
                     ad6.voltage_near(1.40, 0.3) and
                     ad8.voltage_near(4.90, 0.2)):
 
                     digio.set_high(DOP12_BAT1_GPIO)
+                    self.wait()
 
                     if (ad5.voltage_near(4.35, 0.1) and
                         ad6.voltage_near(2.62, 0.3) and 
@@ -331,14 +343,16 @@ class TestPWR_5(TestProcedure):
         digio.set_high(DOP6_T_SW_ON)
         digio.set_high(DOP12_BAT1_GPIO) # not sure if this should be high or low, to be checked.
 
-
         digio.set_high(DOP13_BAT0_GPIO)
+
+        self.wait()
 
         if (ad3.voltage_near(4.9, 0.2) and
             ad4.voltage_between((ad3.read_voltage() * 0.3), (ad3.read_voltage() * 0.75)) and
             ad6.voltage_between(0, 0.2)):
 
             digio.set_high(DOP7_Cold_sim)
+            self.wait()
 
             if (ad3.voltage_near(4.9, 0.2) and
                 ad4.read_voltage() > (ad3.read_voltage() * 0.75) and
@@ -346,12 +360,14 @@ class TestPWR_5(TestProcedure):
 
                 digio.set_low(DOP7_Cold_sim)
                 digio.set_high(DOP8_Hot_sim)
+                self.wait()
 
                 if (ad3.voltage_near(4.9, 0.2) and
                     ad4.read_voltage() < (ad3.read_voltage() * 0.3) and
                     ad6.voltage_near(2.0, 0.2)):
 
                     digio.set_low(DOP8_Hot_sim)
+                    self.wait()
 
                     if (ad3.voltage_near(4.9, 0.2) and
                         ad4.voltage_between((ad3.read_voltage() * 0.3), (ad3.read_voltage() * 0.75)) and
@@ -444,6 +460,7 @@ class TestCON_2(TestProcedure):
             digio.read(DIP8_LED_RD) == 1):
 
             digio.set_high(DOP1_Load_ON)
+            self.wait()
 
             if self.suite.selected_suite == 0:
                 if ad6.voltage_between(2.48, 2.79) and (digio.read(DIP9_LED_GN) == 1 and
@@ -487,12 +504,14 @@ class TestCON_3(TestProcedure):
         digio.set_high(DOP4_TP5_GPIO)
         digio.set_low(DOP5_TP6_GPIO)
         digio.set_high(DOP3_TP7_GPIO)
+        self.wait()
 
         if (digio.read(DIP4_Dminus_J5_2_OK) == 1 and
             digio.read(DIP3_Dplus_J5_3_OK) == 1 and
             digio.read(DIP2_OTG_OK)) == 1:
 
             digio.set_low(DOP3_TP7_GPIO)
+            self.wait()
 
             if (digio.read(DIP4_Dminus_J5_2_OK) == 1 and
                 digio.read(DIP3_Dplus_J5_3_OK) == 0 and
@@ -501,6 +520,7 @@ class TestCON_3(TestProcedure):
                 digio.set_low(DOP4_TP5_GPIO)
                 digio.set_high(DOP5_TP6_GPIO)
                 digio.set_high(DOP3_TP7_GPIO)
+                self.wait()
 
                 if (digio.read(DIP4_Dminus_J5_2_OK) == 1 and
                     digio.read(DIP3_Dplus_J5_3_OK) == 1 and
@@ -508,6 +528,7 @@ class TestCON_3(TestProcedure):
 
                     digio.set_low(DOP4_TP5_GPIO)
                     digio.set_low(DOP3_TP7_GPIO)
+                    self.wait()
 
                     if (digio.read(DIP4_Dminus_J5_2_OK) == 0 and
                         digio.read(DIP3_Dplus_J5_3_OK) == 1 and
@@ -535,14 +556,18 @@ class TestCON_4(TestProcedure):
 
         digio.set_high(DOP10_FLT_loop_back)
         digio.set_high(DOP9_TO_J7_1)
+        self.wait()
 
         if digio.read(DIP6_From_J7_4) == 1:
             digio.set_low(DOP9_TO_J7_1)
+            self.wait()
             if digio.read(DIP6_From_J7_4) == 0:
                 digio.set_low(DOP10_FLT_loop_back)
                 digio.set_high(DOP9_TO_J7_1)
+                self.wait()
                 if digio.read(DIP6_From_J7_4) == 0:
                     digio.set_low(DOP9_TO_J7_1)
+                    self.wait()
                     if digio.read(DIP6_From_J7_4) == 0:
                         self.set_passed()
                     else:
