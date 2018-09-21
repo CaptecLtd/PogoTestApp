@@ -277,7 +277,6 @@ class TestPWR_4(TestProcedure):
 
     def run(self):
 
-        digio.set_low(digio.outputs)
         digio.set_high(DOP6_T_SW_ON)
 
         self.wait(0.02)
@@ -339,7 +338,6 @@ class TestPWR_5(TestProcedure):
         ad4 = Channel(AD4_V_TP13_NTC)
         ad6 = Channel(AD6_V_sense)
 
-        digio.set_low(digio.outputs)
         digio.set_high(DOP6_T_SW_ON)
         digio.set_high(DOP12_BAT1_GPIO) # not sure if this should be high or low, to be checked.
 
