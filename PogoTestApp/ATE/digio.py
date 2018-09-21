@@ -89,14 +89,14 @@ def await_high(pin, timeout = 10):
     waiting = 0
     timed_out = False
     while waiting <= timeout:
-
+        print(waiting)
         if read(pin):
-            return True
+            return True, waiting
 
         time.sleep(0.1)
         waiting += 0.1
 
-    return False
+    return False, waiting
 
 def await_low(pin, timeout = 10):
     "Waits timeout seconds for pin to go low. Returns True if pin did become low, or False if timeout reached"
@@ -106,21 +106,22 @@ def await_low(pin, timeout = 10):
     while waiting <= timeout:
 
         if not read(pin):
-            return True
+            return True, waiting
 
         time.sleep(0.1)
         waiting += 0.1
 
-    return False
+    return False, waiting
 
 def read_all_inputs():
     "Reads all the defined input pins and returns a dictionary of pin: value"
 
     def parse(reading):
-        if reading:
-            return "High"
-        else:
-            return "Low"
+        return reading
+        #if reading:
+        #    return "High"
+        #else:
+        #    return "Low"
 
     return {
         "DIP1": parse(read(DIP1_PWRUP_Delay)),

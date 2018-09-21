@@ -141,7 +141,7 @@ class TestPWR_1(TestProcedure):
 
     description = "Power Management PCB - Pin Test"
     enable_pass_fail = False
-    auto_advance = True
+    auto_advance = False
 
     def run(self):
         digio.set_low(digio.outputs)
@@ -149,21 +149,25 @@ class TestPWR_1(TestProcedure):
 
         digio.await_high(DIP1_PWRUP_Delay)
         
+        self.wait()
+        
         inputs = digio.read_all_inputs()
 
         expected_values = {
-            DIP1_PWRUP_Delay: 1,
-            DIP2_OTG_OK: 0,
-            DIP3_Dplus_J5_3_OK: 0,
-            DIP4_Dminus_J5_2_OK: 0,
-            DIP5_5V_PWR: 1,
-            DIP6_From_J7_4: 0,
-            DIP7_J3_LINK_OK: 1,
-            DIP8_LED_RD: 1,
-            DIP9_LED_GN: 0,
-            DIP10_USB_PERpins_OK: 0,
-            DIP11_5V_ATE_in: 1
+            "DIP1": 1,
+            "DIP2": 0,
+            "DIP3": 0,
+            "DIP4": 0,
+            "DIP5": 1,
+            "DIP6": 0,
+            "DIP7": 1,
+            "DIP8": 1,
+            "DIP9": 0,
+            "DIP10": 1,
+            "DIP11": 1
         }
+        print(inputs)
+        print(expected_values)
 
         if (inputs != expected_values):
             self.log_failure("Input DIP values don't match expected.")
@@ -174,7 +178,7 @@ class TestPWR_2(TestProcedure):
 
     description = "Power Management PCB - Power Up Delay"
     enable_pass_fail = False
-    auto_advance = True
+    auto_advance = False
 
     def run(self):
 
@@ -199,13 +203,21 @@ class TestPWR_2(TestProcedure):
 
         if ad1.voltage_between(0, 2.00) and ad8.voltage_between(4.85, 5.10):
 
+            ad2 = Channel(AD2_V_5V_pwr)
+
             self.wait()
             digio.set_low(DOP11_POGO_ON_GPIO)
-
+            
             low_passed, low_delay = digio.await_low(DIP1_PWRUP_Delay)
+
+            self.wait(0.5)
+
+            #print("ad2:" + ad2.await_voltage(5.03))
+
             high_passed, high_delay = digio.await_high(DIP1_PWRUP_Delay)
 
             delay = low_delay + high_delay
+            print("Low: {}, High: {}, Low D: {}, High D: {}".format(low_passed, high_passed, low_delay, high_delay))
 
             if (low_passed and high_passed) and (delay > 0.5 and delay < 1.0):
                 if (ad1.voltage_between(4.90, 5.10) and ad8.voltage_between(4.85, 5.10)):
@@ -221,7 +233,7 @@ class TestPWR_3(TestProcedure):
 
     description = "Power Management PCB - Back up mode"
     enable_pass_fail = False
-    auto_advance = True
+    
 
     def run(self):
         
@@ -268,12 +280,24 @@ class TestPWR_3(TestProcedure):
                         ad8.voltage_near(4.9, 0.15)):
 
                         self.set_passed()
+                    else:
+                        self.log_failure("failure stage 4")
+
+                else:
+                    self.log_failure("failure stage 3")
+
+            else:
+                self.log_failure("failure stage 2")
+
+        else:
+            self.log_failure("failure stage 1")
+                        
 
 class TestPWR_4(TestProcedure):
 
     description = "Power Management PCB - Normal mode test"
     enable_pass_fail = False
-    auto_advance = True
+    auto_advance = False
 
     def run(self):
 
@@ -330,7 +354,7 @@ class TestPWR_5(TestProcedure):
 
     description = "Power Management PCB - Thermal protection test"
     enable_pass_fail = False
-    auto_advance = True
+    auto_advance = False
 
     def run(self):
 
@@ -386,7 +410,7 @@ class TestPWR_6(TestProcedure):
 
     description = "Power Management PCB - Reset"
     enable_pass_fail = False
-    auto_advance = True
+    auto_advance = False
 
     def run(self):
 
@@ -417,7 +441,7 @@ class TestCON_1b(TestProcedure):
 
     description = "Connection PCB - Digital Read (2 of 2)"
     enable_pass_fail = False
-    auto_advance = True
+    auto_advance = False
     
     def run(self):
 
@@ -447,7 +471,7 @@ class TestCON_2(TestProcedure):
 
     description = "Connection PCB - Analogue Read"
     enable_pass_fail = False
-    auto_advance = True
+    auto_advance = False
 
     def run(self):
 
@@ -495,7 +519,7 @@ class TestCON_3(TestProcedure):
 
     description = "Connection PCB - USB Data Lines"
     enable_pass_fail = False
-    auto_advance = True
+    auto_advance = False
 
     def run(self):
 
@@ -548,7 +572,7 @@ class TestCON_4(TestProcedure):
 
     description = "Connection PCB - Ethernet filter"
     enable_pass_fail = False
-    auto_advance = True
+    auto_advance = False
 
     def run(self):
 
@@ -582,7 +606,7 @@ class TestCON_5(TestProcedure):
 
     description = "Connection PCB - Complete"
     enable_pass_fail = False
-    auto_advance = True
+    auto_advance = False
 
     def run(self):
 
