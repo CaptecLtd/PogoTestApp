@@ -253,56 +253,65 @@ class TestPWR_3(TestProcedure):
         ad6 = Channel(AD6_V_sense)
         ad7 = Channel(AD7_V_sys_out)
         ad8 = Channel(AD8_V_out)
-        
+
+        digio.set_high(DOP11_POGO_ON_GPIO)
+        digio.set_low(DOP6_T_SW_ON)
+
         digio.set_low([DOP12_BAT1_GPIO, DOP13_BAT0_GPIO, DOP2_Discharge_Load])
 
         self.wait()
 
+        # Step 1
         if (ad5.voltage_near(2.64, 0.2) and 
             ad6.voltage_near(1.57, 0.2) and 
             ad7.voltage_between(0, 1.50) and 
             ad8.voltage_between(0, 1.50)):
             
-            digio.set_high(DOP13_BAT0_GPIO)
+            digio.set_high(DOP6_T_SW_ON)
 
             self.wait()
             
+            # Step 2
             if (ad5.voltage_near(3.35, 0.1) and 
                 ad6.voltage_near(2.0, 0.2) and 
                 ad7.voltage_near(5.0, 0.15) and 
                 ad8.voltage_between(0, 1.50)):
                 
-                digio.set_low(DOP13_BAT0_GPIO)
-                digio.set_high(DOP12_BAT1_GPIO)
+                digio.set_high(DOP13_BAT0_GPIO)
 
                 self.wait()
 
-                if (ad5.voltage_near(4.09, 0.1) and
+                # Step 3
+                if (ad5.voltage_near(3.90, 0.1) and
                     ad6.voltage_near(2.42, 0.2) and
                     ad7.voltage_near(5.0, 0.15) and
                     ad8.voltage_near(5.0, 0.15)):
 
                     digio.set_high(DOP2_Discharge_Load)
+                    digio.set_high(DOP12_BAT1_GPIO)
+                    digio.set_low(DOP13_BAT0_GPIO)
                     
                     self.wait()
 
-                    if (ad5.voltage_near(4.08, 0.1) and
-                        ad6.voltage_near(3.73, 0.2) and
-                        ad7.voltage_near(4.9, 0.15) and
-                        ad8.voltage_near(4.9, 0.15)):
+                    # Step 4
+                    if (ad5.voltage_near(4.10, 0.1) and
+                        ad6.voltage_near(2.40, 0.2) and
+                        ad7.voltage_near(5.0, 0.15) and
+                        ad8.voltage_near(5.0, 0.15)):
 
                         self.set_passed()
+
                     else:
-                        self.log_failure("Failure, expected AD5 = 4.08 ± 0.1, AD6 = 3.73 ± 0.2, AD7 = 4.90 ± 0.15, AD8 = 4.90 ± 0.15")
+                        self.log_failure("S4 Failure, expected AD5 = 4.08 ± 0.1, AD6 = 3.73 ± 0.2, AD7 = 4.90 ± 0.15, AD8 = 4.90 ± 0.15")
 
                 else:
-                    self.log_failure("Failure, expected AD5 = 4.09 ± 0.1, AD6 = 2.42 ± 0.2, AD7 = 5.0 ± 0.15, AD8 = 5.0 ± 0.15")
+                    self.log_failure("S3 Failure, expected AD5 = 4.09 ± 0.1, AD6 = 2.42 ± 0.2, AD7 = 5.0 ± 0.15, AD8 = 5.0 ± 0.15")
 
             else:
-                self.log_failure("Failure, expected AD5 3.35 ± 0.2, AD6 = 2.0 ± 0.2, AD7 = 5.0 ± 0.15, AD8 < 1.5")
+                self.log_failure("S2 Failure, expected AD5 3.35 ± 0.2, AD6 = 2.0 ± 0.2, AD7 = 5.0 ± 0.15, AD8 < 1.5")
 
         else:
-            self.log_failure("Failure, expected AD5 = 2.54 ± 0.2, AD6 = 1.57 ± 0.2, AD7 < 1.5, AD8 < 1.5")
+            self.log_failure("S1 Failure, expected AD5 = 2.64 ± 0.2, AD6 = 1.57 ± 0.2, AD7 < 1.5, AD8 < 1.5")
                         
 
 class TestPWR_4(TestProcedure):
