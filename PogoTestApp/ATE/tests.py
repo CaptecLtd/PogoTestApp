@@ -154,7 +154,7 @@ class TestPWR_1(TestProcedure):
         inputs = digio.read_all_inputs()
 
         expected_values = {
-            "DIP1": 0,
+            "DIP1": 1,
             "DIP2": 0,
             "DIP3": 0,
             "DIP4": 0,
