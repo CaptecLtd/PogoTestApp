@@ -15,6 +15,8 @@ class MainForm(tk.Frame):
     abort_action = None
     selected_suite_index = None
 
+    debug_backgrounds = True
+
     _reading_rows = None
     _stage_template = "Test Stage: {description}"
     _counting = False
@@ -26,10 +28,14 @@ class MainForm(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
         master.resizable(0,0) # Disallow resizing of the form
+        if self.debug_backgrounds:
+            master.configure(background='red')
         master.geometry("800x480")
         master.title("X231 PCB Tester")
 
         self.root = master
+        if self.debug_backgrounds:
+            self['bg'] = 'blue'
         self.pack()
         self.create_widgets()
 
@@ -79,13 +85,13 @@ class MainForm(tk.Frame):
 
         # / Test Stage Information
 
-        current_row =+ 1
+        current_row += 1
 
         # Info text box container
 
-        info_container = tk.Frame(self, width = 760, height = 80)
+        info_container = tk.Frame(self, width = 740, height = 80)
         info_container.grid(column = 0, row = current_row, columnspan = 8)
-        info_container.columnconfigure(0, minsize = 760)
+        info_container.columnconfigure(0, minsize = 740)
         info_container.rowconfigure(0, minsize = 80)
 
         # Member of info container
