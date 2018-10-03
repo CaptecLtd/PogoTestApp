@@ -212,9 +212,10 @@ class TestPWR_2(TestProcedure):
             self.wait()
             digio.set_low(DOP11_POGO_ON_GPIO)
             
+            self.wait()
             low_passed, low_delay = digio.await_low(DIP1_PWRUP_Delay)
 
-            self.wait(0.5)
+            self.wait(0.05)
 
             #print("ad2:" + ad2.await_voltage(5.03))
 
