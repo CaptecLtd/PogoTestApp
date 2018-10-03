@@ -176,7 +176,7 @@ class TestPWR_2(TestProcedure):
 
     description = "Power Management PCB - Power Up Delay"
     enable_pass_fail = False
-    auto_advance = False
+    auto_advance = True
 
     def run(self):
 
@@ -196,17 +196,20 @@ class TestPWR_2(TestProcedure):
             self.wait(0.01)
 
             if ad5.voltage_between(3.95, 4.25) and ad7.voltage_between(4.90, 5.15) and ad8.voltage_between(4.85, 5.10):
-                
+                self.set_passed()
+                """                
                 digio.set_high(DOP11_POGO_ON_GPIO)
 
                 if ad1.voltage_between(0, 2.00) and ad8.voltage_between(4.85, 5.10):
 
                     ad2 = Channel(AD2_V_5V_pwr)
-
-                    self.wait(0.5)
+                    
+                    delay_after_DOP11_high = 0.5
+                    self.wait(delay_after_DOP11_high)
+                    
                     digio.set_low(DOP11_POGO_ON_GPIO)
                     
-                    self.wait(0.05)
+                    #self.wait(0.05)
                     low_passed, low_delay = digio.await_low(DIP1_PWRUP_Delay)
 
                     self.wait(0.05)
@@ -215,7 +218,9 @@ class TestPWR_2(TestProcedure):
 
                     high_passed, high_delay = digio.await_high(DIP1_PWRUP_Delay)
 
-                    delay = low_delay + high_delay
+                    delay = low_delay + high_delay + delay_after_DOP11_high
+
+                    print("Total delay: {}".format(delay))
                     print("Low: {}, High: {}, Low D: {}, High D: {}".format(low_passed, high_passed, low_delay, high_delay))
 
                     if (low_passed and high_passed) and (delay > 0.5 and delay < 1.0):
@@ -227,6 +232,7 @@ class TestPWR_2(TestProcedure):
                         self.log_failure("DIP1 low or high out of tolerance, or delay < 500ms or > 1000ms")
                 else:
                     self.log_failure("AD1 voltage > 2.00v or AD8 out of bounds")
+                """
 
             else:
                 self.log_failure("Voltages for AD5, AD7 or AD8 were not within tolerable values (DOP12 high)")

@@ -95,7 +95,8 @@ def await_high(pin, timeout = 10):
             return True, delay
             
         diff = (datetime.datetime.now() - start_time)
-        delay += diff.seconds + (diff.microseconds / 1000)
+        delay = (diff.seconds + (diff.microseconds / 1000000))
+        print("High: {}dl, {}s {}ns".format(delay, diff.seconds,diff.microseconds))
 
         if delay >= timeout:
             break
@@ -113,8 +114,10 @@ def await_low(pin, timeout = 10):
             return True, delay
 
         diff = (datetime.datetime.now() - start_time)
-        delay += diff.seconds + (diff.microseconds / 1000)
+        delay = (diff.seconds + (diff.microseconds / 1000000))
         
+        print("Low: {}".format(delay))
+        print(diff)
         if delay >= timeout:
             break
 
