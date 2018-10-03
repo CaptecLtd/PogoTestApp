@@ -24,6 +24,7 @@ try:
     root = tk.Tk()
     main_frm = gui.MainForm(root)
 
+
     # Create our test suite instance and link to the form
     test_suite = suite.TestSuite()
     test_suite.form = main_frm

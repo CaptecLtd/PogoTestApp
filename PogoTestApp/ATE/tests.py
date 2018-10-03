@@ -185,10 +185,16 @@ class TestPWR_2(TestProcedure):
         ad7 = Channel(AD7_V_sys_out)
         ad8 = Channel(AD8_V_out)
 
-        if ad5.voltage_between(0, 1.50) and ad7.voltage_between(0, 2.00) and ad8.voltage_between(0, 2.00):
+        digio.set_high(DOP6_T_SW_ON)
+        digio.set_low(DOP13_BAT0_GPIO)
 
-            digio.set_high(DOP12_BAT1_GPIO)
+        self.wait(0.01)
+
+        if ad5.voltage_between(0, 1.50) and ad7.voltage_between(0, 2.00) and ad8.voltage_between(0, 2.00):
             
+            digio.set_high(DOP12_BAT1_GPIO)
+            self.wait(0.01)
+
             if ad5.voltage_between(3.95, 4.25) and ad7.voltage_between(4.90, 5.15) and ad8.voltage_between(4.85, 5.10):
                 self.set_passed()
             else:
