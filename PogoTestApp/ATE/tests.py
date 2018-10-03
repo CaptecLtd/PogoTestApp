@@ -166,8 +166,6 @@ class TestPWR_1(TestProcedure):
             "DIP10": 1,
             "DIP11": 1
         }
-        print(inputs)
-        print(expected_values)
 
         if (inputs != expected_values):
             self.log_failure("Input DIP values don't match expected.")

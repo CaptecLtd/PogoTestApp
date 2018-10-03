@@ -255,6 +255,9 @@ class MainForm(tk.Frame):
         self.info_label["state"] = tkc.DISABLED
         self.update()
 
+    def clear_text(self):
+        self.set_text("")
+
     def append_text_line(self, text):
         "Appends the specified text to the existing information string"
         self.info_label["state"] = tkc.NORMAL
@@ -282,22 +285,22 @@ class MainForm(tk.Frame):
         self.test_stage["text"] = text
 
     def disable_all_buttons(self):
-        self.disable_test_buttons();
-        self.disable_control_buttons();
+        self.disable_test_buttons()
+        self.disable_control_buttons()
 
     def enable_all_buttons(self):
-        self.enable_test_buttons();
-        self.enable_control_buttons();
+        self.enable_test_buttons()
+        self.enable_control_buttons()
 
     def disable_test_buttons(self):
         "Disable pass and fail buttons"
-        self.disable_pass_button();
-        self.disable_fail_button();
+        self.disable_pass_button()
+        self.disable_fail_button()
 
     def enable_test_buttons(self):
         "Enable pass and fail buttons"
-        self.enable_pass_button();
-        self.enable_fail_button();
+        self.enable_pass_button()
+        self.enable_fail_button()
 
     def enable_test_buttons_delay(self, delay = 500):
         "Enable pass and fail buttons after 'delay' ms"
@@ -355,10 +358,12 @@ class MainForm(tk.Frame):
             self.set_reading_value(reading[0], reading[1])
 
     def handle_abort(self):
-        self.abort_action()
+        if self.abort_action != None:
+            self.abort_action()
 
     def handle_reset(self):
-        self.reset_action()
+        if self.reset_action != None:
+            self.reset_action()
 
     def handle_menu(self):
         x, y = (self.menu_btn.winfo_rootx(), self.menu_btn.winfo_rooty() - self.popup.winfo_reqheight())
