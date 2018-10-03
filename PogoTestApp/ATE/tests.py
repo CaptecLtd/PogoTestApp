@@ -196,43 +196,44 @@ class TestPWR_2(TestProcedure):
             self.wait(0.01)
 
             if ad5.voltage_between(3.95, 4.25) and ad7.voltage_between(4.90, 5.15) and ad8.voltage_between(4.85, 5.10):
-                self.set_passed()
+                
+                digio.set_high(DOP11_POGO_ON_GPIO)
+
+                if ad1.voltage_between(0, 2.00) and ad8.voltage_between(4.85, 5.10):
+
+                    ad2 = Channel(AD2_V_5V_pwr)
+
+                    self.wait(0.5)
+                    digio.set_low(DOP11_POGO_ON_GPIO)
+                    
+                    self.wait(0.05)
+                    low_passed, low_delay = digio.await_low(DIP1_PWRUP_Delay)
+
+                    self.wait(0.05)
+
+                    #print("ad2:" + ad2.await_voltage(5.03))
+
+                    high_passed, high_delay = digio.await_high(DIP1_PWRUP_Delay)
+
+                    delay = low_delay + high_delay
+                    print("Low: {}, High: {}, Low D: {}, High D: {}".format(low_passed, high_passed, low_delay, high_delay))
+
+                    if (low_passed and high_passed) and (delay > 0.5 and delay < 1.0):
+                        if (ad1.voltage_between(4.90, 5.10) and ad8.voltage_between(4.85, 5.10)):
+                            self.set_passed()
+                        else:
+                            self.log_failure("AD1 or AD8 voltage not within limits")
+                    else:
+                        self.log_failure("DIP1 low or high out of tolerance, or delay < 500ms or > 1000ms")
+                else:
+                    self.log_failure("AD1 voltage > 2.00v or AD8 out of bounds")
+
             else:
                 self.log_failure("Voltages for AD5, AD7 or AD8 were not within tolerable values (DOP12 high)")
 
         else:
             self.log_failure("Voltages for AD5, AD7 or AD8 were not within tolerable values (DOP12 low)")
 
-        digio.set_high(DOP11_POGO_ON_GPIO)
-
-        if ad1.voltage_between(0, 2.00) and ad8.voltage_between(4.85, 5.10):
-
-            ad2 = Channel(AD2_V_5V_pwr)
-
-            self.wait()
-            digio.set_low(DOP11_POGO_ON_GPIO)
-            
-            self.wait()
-            low_passed, low_delay = digio.await_low(DIP1_PWRUP_Delay)
-
-            self.wait(0.05)
-
-            #print("ad2:" + ad2.await_voltage(5.03))
-
-            high_passed, high_delay = digio.await_high(DIP1_PWRUP_Delay)
-
-            delay = low_delay + high_delay
-            print("Low: {}, High: {}, Low D: {}, High D: {}".format(low_passed, high_passed, low_delay, high_delay))
-
-            if (low_passed and high_passed) and (delay > 0.5 and delay < 1.0):
-                if (ad1.voltage_between(4.90, 5.10) and ad8.voltage_between(4.85, 5.10)):
-                    self.set_passed()
-                else:
-                    self.log_failure("AD1 or AD8 voltage not within limits")
-            else:
-                self.log_failure("DIP1 low or high out of tolerance, or delay < 500ms or > 1000ms")
-        else:
-            self.log_failure("AD1 voltage > 2.00v or AD8 out of bounds")
 
 class TestPWR_3(TestProcedure):
 
