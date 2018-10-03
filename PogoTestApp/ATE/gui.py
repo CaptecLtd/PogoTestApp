@@ -15,7 +15,9 @@ class MainForm(tk.Frame):
     abort_action = None
     selected_suite_index = None
 
-    debug_backgrounds = True
+    # Adds some primary colour goodness to backgrounds
+    # for alignment debugging
+    debug_backgrounds = False
 
     _reading_rows = None
     _stage_template = "Test Stage: {description}"

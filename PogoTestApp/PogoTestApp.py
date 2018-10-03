@@ -69,7 +69,7 @@ try:
         readings.update(digio.read_all_inputs())
         readings.update(digio.read_all_outputs())
         main_frm.update_readings(readings)
-        root.after(1000, update_readings)
+        root.after(250, update_readings)
 
     # Attempt to set "OK" on each label.
     def readings_display_test():
