@@ -200,7 +200,7 @@ class MainForm(tk.Frame):
             val = tk.Label(readings_container)
             val["textvariable"] = v["value"]
             val["width"] = 5
-            val.grid(column = v["column"] + 1, row = v["row"], sticky = tkc.W + tkc.N, padx = 5)
+            val.grid(column = v["column"] + 1, row = v["row"], sticky = tkc.W + tkc.N)
 
         # / Reading rows
         # / Reading container
