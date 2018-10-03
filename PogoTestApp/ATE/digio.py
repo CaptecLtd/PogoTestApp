@@ -1,6 +1,6 @@
 "Digital I/O abstraction module"
 
-import time as time
+import datetime as datetime
 import atexit
 from ATE.const import *
 
@@ -86,32 +86,39 @@ def read(pin):
 
 def await_high(pin, timeout = 10):
     "Waits timeout seconds for pin to go high. Returns True if pin did go high, or False if timeout reached"
-    waiting = 0
-    timed_out = False
-    while waiting <= timeout:
-        print(waiting)
+
+    start_time = datetime.datetime.now()
+    delay = 0.0
+
+    while True:
         if read(pin):
-            return True, waiting
+            return True, delay
+            
+        diff = (datetime.datetime.now() - start_time)
+        delay += diff.seconds + (diff.microseconds / 1000)
 
-        time.sleep(0.1)
-        waiting += 0.1
+        if delay >= timeout:
+            break
 
-    return False, waiting
+    return False, delay
 
 def await_low(pin, timeout = 10):
     "Waits timeout seconds for pin to go low. Returns True if pin did become low, or False if timeout reached"
 
-    waiting = 0
-    timed_out = False
-    while waiting <= timeout:
+    start_time = datetime.datetime.now()
+    delay = 0.0
 
+    while True:
         if not read(pin):
-            return True, waiting
+            return True, delay
 
-        time.sleep(0.1)
-        waiting += 0.1
+        diff = (datetime.datetime.now() - start_time)
+        delay += diff.seconds + (diff.microseconds / 1000)
+        
+        if delay >= timeout:
+            break
 
-    return False, waiting
+    return False, delay
 
 def read_all_inputs():
     "Reads all the defined input pins and returns a dictionary of pin: value"
