@@ -154,7 +154,7 @@ class TestPWR_1(TestProcedure):
         inputs = digio.read_all_inputs()
 
         expected_values = {
-            "DIP1": 1,
+            "DIP1": 0,
             "DIP2": 0,
             "DIP3": 0,
             "DIP4": 0,
@@ -293,16 +293,16 @@ class TestPWR_3(TestProcedure):
 
                         self.set_passed()
                     else:
-                        self.log_failure("failure stage 4")
+                        self.log_failure("Failure, expected AD5 = 4.08 ± 0.1, AD6 = 3.73 ± 0.2, AD7 = 4.90 ± 0.15, AD8 = 4.90 ± 0.15")
 
                 else:
-                    self.log_failure("failure stage 3")
+                    self.log_failure("Failure, expected AD5 = 4.09 ± 0.1, AD6 = 2.42 ± 0.2, AD7 = 5.0 ± 0.15, AD8 = 5.0 ± 0.15")
 
             else:
-                self.log_failure("failure stage 2")
+                self.log_failure("Failure, expected AD5 3.35 ± 0.2, AD6 = 2.0 ± 0.2, AD7 = 5.0 ± 0.15, AD8 < 1.5")
 
         else:
-            self.log_failure("failure stage 1")
+            self.log_failure("Failure, expected AD5 = 2.54 ± 0.2, AD6 = 1.57 ± 0.2, AD7 < 1.5, AD8 < 1.5")
                         
 
 class TestPWR_4(TestProcedure):
