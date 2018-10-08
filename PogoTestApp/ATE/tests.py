@@ -245,7 +245,7 @@ class TestPWR_3(TestProcedure):
 
     description = "Power Management PCB - Back up mode"
     enable_pass_fail = False
-    
+    auto_advance = True
 
     def run(self):
         
