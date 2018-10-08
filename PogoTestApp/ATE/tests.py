@@ -141,7 +141,7 @@ class TestPWR_1(TestProcedure):
 
     description = "Power Management PCB - Pin Test"
     enable_pass_fail = False
-    auto_advance = False
+    auto_advance = True
 
     def run(self):
         digio.set_low(digio.outputs)
@@ -262,8 +262,8 @@ class TestPWR_3(TestProcedure):
         self.wait()
 
         # Step 1
-        if (ad5.voltage_near(2.64, 0.2) and 
-            ad6.voltage_near(1.57, 0.2) and 
+        if (ad5.voltage_near(2.5, 0.2) and 
+            ad6.voltage_near(1.47, 0.2) and 
             ad7.voltage_between(0, 1.50) and 
             ad8.voltage_between(0, 1.50)):
             
@@ -272,8 +272,8 @@ class TestPWR_3(TestProcedure):
             self.wait()
             
             # Step 2
-            if (ad5.voltage_near(3.15, 0.1) and 
-                ad6.voltage_near(2.0, 0.2) and 
+            if (ad5.voltage_near(3.10, 0.1) and 
+                ad6.voltage_near(1.82, 0.2) and 
                 ad7.voltage_near(5.0, 0.15) and 
                 ad8.voltage_between(0, 1.50)):
                 
@@ -282,8 +282,8 @@ class TestPWR_3(TestProcedure):
                 self.wait()
 
                 # Step 3
-                if (ad5.voltage_near(3.90, 0.1) and
-                    ad6.voltage_near(2.42, 0.2) and
+                if (ad5.voltage_near(3.95, 0.1) and
+                    ad6.voltage_near(2.32, 0.2) and
                     ad7.voltage_near(5.0, 0.15) and
                     ad8.voltage_near(5.0, 0.15)):
 
@@ -294,8 +294,8 @@ class TestPWR_3(TestProcedure):
                     self.wait()
 
                     # Step 4
-                    if (ad5.voltage_near(4.10, 0.1) and
-                        ad6.voltage_near(2.40, 0.2) and
+                    if (ad5.voltage_near(4.20, 0.1) and
+                        ad6.voltage_between(3.50, 5.0, 0.1) and
                         ad7.voltage_near(5.0, 0.15) and
                         ad8.voltage_near(5.0, 0.15)):
 
