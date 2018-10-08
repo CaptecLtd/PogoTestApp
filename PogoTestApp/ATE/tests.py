@@ -318,7 +318,7 @@ class TestPWR_4(TestProcedure):
 
     description = "Power Management PCB - Normal mode test"
     enable_pass_fail = False
-    auto_advance = False
+    auto_advance = True
 
     def run(self):
 
@@ -330,6 +330,7 @@ class TestPWR_4(TestProcedure):
         ad6 = Channel(AD6_V_sense)
         ad8 = Channel(AD8_V_out)
 
+        # Stage 1
         if (ad5.voltage_near(2.56, 0.2) and
             ad6.voltage_near(1.18, 0.3) and
             ad8.voltage_near(5.00, 0.15)):
@@ -337,14 +338,16 @@ class TestPWR_4(TestProcedure):
             digio.set_high(DOP13_BAT0_GPIO)
             self.wait()
 
+            # Stage 2
             if (ad5.voltage_near(4.05, 0.1) and
                 ad6.voltage_between(0, 0.2) and
-                ad8.voltage_between(4.90, 0.2)):
+                ad8.voltage_near(4.90, 0.2)):
 
                 digio.set_low(DOP12_BAT1_GPIO)
                 digio.set_high(DOP13_BAT0_GPIO)
                 self.wait()
 
+                # Stage 3
                 if (ad5.voltage_near(4.10, 0.1) and
                     ad6.voltage_near(1.40, 0.3) and
                     ad8.voltage_near(4.90, 0.2)):
@@ -352,6 +355,7 @@ class TestPWR_4(TestProcedure):
                     digio.set_high(DOP12_BAT1_GPIO)
                     self.wait()
 
+                    # Stage 4
                     if (ad5.voltage_near(4.35, 0.1) and
                         ad6.voltage_near(2.62, 0.3) and 
                         ad8.voltage_near(5.0, 0.2)):
@@ -359,16 +363,16 @@ class TestPWR_4(TestProcedure):
                         self.set_passed()
 
                     else:
-                        self.log_failure("Voltages in stage 4 out of tolerance")
+                        self.log_failure("S4 Failure, expected AD5 = 4.35 ± 0.1, AD6 = 2.62 ± 0.3, AD8 = 5.0 ± 0.2")
 
                 else:
-                    self.log_failure("Voltages in stage 3 out of tolerance")
+                    self.log_failure("S3 Failure, expected AD5 = 4.10 ± 0.1, AD6 = 1.40 ± 0.3, AD8 = 4.9 ± 0.2")
 
             else:
-                self.log_failure("Voltages in stage 2 out of tolerance")
+                self.log_failure("S2 Failure, expected AD5 = 4.05 ± 0.1, AD6 = 0 ± 0.2, AD8 = 4.9 ± 0.2")
 
         else:
-            self.log_failure("Voltages in stage 1 out of tolerance")
+            self.log_failure("S1 Failure, expected AD5 = 2.56 ± 0.2, AD6 = 1.18 ± 0.3, AD8 = 5.0 ± 0.15")
 
 
 class TestPWR_5(TestProcedure):
