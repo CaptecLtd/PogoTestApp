@@ -225,12 +225,12 @@ class TestPWR_2(TestProcedure):
 
                     high_passed, high_delay = digio.await_high(DIP1_PWRUP_Delay)
 
-                    low2_passed, low2_delay = digio.await_low(DIP1_PWRUP_Delay)
+                    #low2_passed, low2_delay = digio.await_low(DIP1_PWRUP_Delay)
 
-                    delay = low_delay + low2_delay + high_delay + delay_after_DOP11_high
+                    delay = low_delay + high_delay + delay_after_DOP11_high
 
                     print("Total delay: {}".format(delay))
-                    print("Low: {}, High: {}, Low D: {}, High D: {}, Low2 D: {}".format(low_passed, high_passed, low_delay, high_delay, low2_delay))
+                    print("Low: {}, High: {}, Low D: {}, High D: {}".format(low_passed, high_passed, low_delay, high_delay))
 
                     if (low_passed and high_passed) and (delay > 0.5 and delay < 1.0):
                         if (ad1.voltage_between(4.90, 5.10) and ad8.voltage_between(4.85, 5.10)):
