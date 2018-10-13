@@ -466,13 +466,13 @@ class TestPWR_5(TestProcedure):
 
                         self.set_passed()
                     else:
-                        self.log_failure("Stage 4 tolerances out of range")
+                        self.log_failure("S4 Failure, expected AD3 = 4.8 ± 0.25, AD4 > (AD3 * 0.3) and < (AD3 * 0.75), AD6 < 0.2")
                 else:
-                    self.log_failure("Stage 3 tolerances out of range")
+                    self.log_failure("S3 Failure, expected AD3 = 4.8 ± 0.25, AD4 < (AD3 * 0.3), AD6 = 1.2 ± 0.2")
             else:
-                self.log_failure("Stage 2 tolerances out of range")
+                self.log_failure("S2 Failure, expected AD3 = 4.8 ± 0.25, AD4 > (AD3 * 0.75), AD6 = 1.2 ± 0.2")
         else:
-            self.log_failure("Stage 1 tolerances out of range")
+            self.log_failure("S1 Failure, expected AD3 = 4.8 ± 0.25, AD4 > (AD3 * 0.3) and < (AD3 * 0.75), AD6 < 0.2")
 
 
 class TestPWR_6(TestProcedure):
@@ -493,7 +493,7 @@ class TestCON_1a(TestProcedure):
 
     description = "Connection PCB - Digital Read (1 of 2)"
     enable_pass_fail = False
-    auto_advance = True
+    auto_advance = False
 
     def run(self):
 
@@ -546,6 +546,8 @@ class TestCON_2(TestProcedure):
 
     def run(self):
 
+        self.suite.form.append_text_line("Testing analogue read")
+
         ad6 = Channel(AD6_V_sense)
 
         if (ad6.voltage_between(0, 0.02) and
@@ -555,37 +557,39 @@ class TestCON_2(TestProcedure):
             digio.set_high(DOP1_Load_ON)
             self.wait()
 
-            print(self.suite.selected_suite)
-
             if self.suite.selected_suite == 0:
+                self.suite.form.append(", option -01")
                 if ad6.voltage_between(2.48, 2.79) and (digio.read(DIP9_LED_GN) == 1 and
                 digio.read(DIP8_LED_RD) == 0):
                     self.set_passed()
                 else:
-                    self.log_failure("Voltage out of bounds")
+                    self.log_failure("Failure, expected AD6 > 2.48 and < 2.79, DIP9 = 1, DIP8 = 0")
             
             if self.suite.selected_suite == 1:
+                self.suite.form.append(", option -03")
                 if ad6.voltage_between(1.44, 1.74) and (digio.read(DIP9_LED_GN) == 1 and
                 digio.read(DIP8_LED_RD) == 0):
                     self.set_passed()
                 else:
-                    self.log_failure("Voltage out of bounds")
+                    self.log_failure("Failure, expected AD6 > 1.44 and < 1.74, DIP9 = 1, DIP8 = 0")
 
             if self.suite.selected_suite == 2:
+                self.suite.form.append(", option -02")
                 if ad6.voltage_between(2.26, 2.54) and (digio.read(DIP9_LED_GN) == 1 and
                 digio.read(DIP8_LED_RD) == 0):
                     self.set_passed()
                 else:
-                    self.log_failure("Voltage out of bounds")
+                    self.log_failure("Failure, expected AD6 > 2.26 and < 2.54, DIP9 = 1, DIP8 = 0")
 
             if self.suite.selected_suite == 3:
+                self.suite.form.append(", option -04")
                 if ad6.voltage_between(0.74, 0.94) and (digio.read(DIP9_LED_GN) == 1 and
                 digio.read(DIP8_LED_RD) == 0):
                     self.set_passed()
                 else:
-                    self.log_failure("Voltage out of bounds")
+                    self.log_failure("Failure, expected AD6 > 0.74 and < 0.94, DIP9 = 1, DIP8 = 0")
         else:
-            self.log_failure("Voltage out of bounds")   
+            self.log_failure("Failure, expected AD6 = 0, DIP9 = 0, DIP8 = 1")   
                 
 
 class TestCON_3(TestProcedure):
@@ -596,11 +600,14 @@ class TestCON_3(TestProcedure):
 
     def run(self):
 
+        self.suite.form.append_text_line("Testing USB data lines")
+
         digio.set_high(DOP4_TP5_GPIO)
         digio.set_low(DOP5_TP6_GPIO)
         digio.set_high(DOP3_TP7_GPIO)
         self.wait()
 
+        # Stage 1
         if (digio.read(DIP4_Dminus_J5_2_OK) == 1 and
             digio.read(DIP3_Dplus_J5_3_OK) == 1 and
             digio.read(DIP2_OTG_OK)) == 1:
@@ -608,6 +615,7 @@ class TestCON_3(TestProcedure):
             digio.set_low(DOP3_TP7_GPIO)
             self.wait()
 
+            # Stage 2
             if (digio.read(DIP4_Dminus_J5_2_OK) == 1 and
                 digio.read(DIP3_Dplus_J5_3_OK) == 0 and
                 digio.read(DIP2_OTG_OK) == 0):
@@ -617,6 +625,7 @@ class TestCON_3(TestProcedure):
                 digio.set_high(DOP3_TP7_GPIO)
                 self.wait()
 
+                # Stage 3
                 if (digio.read(DIP4_Dminus_J5_2_OK) == 1 and
                     digio.read(DIP3_Dplus_J5_3_OK) == 1 and
                     digio.read(DIP2_OTG_OK)) == 1:
@@ -625,6 +634,7 @@ class TestCON_3(TestProcedure):
                     digio.set_low(DOP3_TP7_GPIO)
                     self.wait()
 
+                    # Stage 4
                     if (digio.read(DIP4_Dminus_J5_2_OK) == 0 and
                         digio.read(DIP3_Dplus_J5_3_OK) == 1 and
                         digio.read(DIP2_OTG_OK)) == 0:
@@ -632,13 +642,13 @@ class TestCON_3(TestProcedure):
                         self.set_passed()
 
                     else:
-                        self.log_failure("Digital I/O unexpected result")
+                        self.log_failure("Failure, expected DIP4 = 0, DIP3 = 1, DIP2 = 0")
                 else:
-                    self.log_failure("Digital I/O unexpected result")
+                    self.log_failure("Failure, expected DIP4 = 1, DIP3 = 1, DIP2 = 1")
             else:
-                self.log_failure("Digital I/O unexpected result")
+                self.log_failure("Failure, expected DIP4 = 1, DIP3 = 0, DIP2 = 0")
         else:
-            self.log_failure("Digital I/O unexpected result")
+            self.log_failure("Failure, expected DIP4 = 1, DIP3 = 1, DIP2 = 1")
 
 
 class TestCON_4(TestProcedure):
@@ -649,37 +659,50 @@ class TestCON_4(TestProcedure):
 
     def run(self):
 
+        self.suite.form.append_text_line("Testing ethernet filter")
+
         digio.set_high(DOP10_FLT_loop_back)
         digio.set_high(DOP9_TO_J7_1)
         self.wait()
 
+        # Stage 1
+        self.suite.form.append_text_line("Testing stage 1")
         if digio.read(DIP6_From_J7_4) == 1:
             digio.set_low(DOP9_TO_J7_1)
             self.wait()
+
+            # Stage 2
+            self.suite.form.append_text_line("Testing stage 2")
             if digio.read(DIP6_From_J7_4) == 0:
                 digio.set_low(DOP10_FLT_loop_back)
                 digio.set_high(DOP9_TO_J7_1)
                 self.wait()
+
+                # Stage 3
+                self.suite.form.append_text_line("Testing stage 3")
                 if digio.read(DIP6_From_J7_4) == 0:
                     digio.set_low(DOP9_TO_J7_1)
                     self.wait()
+
+                    # Stage 4
+                    self.suite.form.append_text_line("Testing stage 4")
                     if digio.read(DIP6_From_J7_4) == 0:
                         self.set_passed()
                     else:
-                        self.log_failure("DIP6 unexpected value")
+                        self.log_failure("S4 Failure, expected DIP6 = 0 when (DOP9 = 0, DOP10 = 0)")
                 else:
-                    self.log_failure("DIP6 unexpected value")
+                    self.log_failure("S3 Failure, expected DIP6 = 0 when (DOP9 = 1, DOP10 = 0)")
             else:
-                self.log_failure("DIP6 unexpected value")
+                self.log_failure("S2 Failure, expected DIP6 = 0 when (DOP9 = 0, DOP10 = 1)")
         else:
-            self.log_failure("DIP6 unexpected value")
+            self.log_failure("S1 Failure, expected DIP6 = 1 when (DOP9 = 1, DOP10 = 1)")
 
 
 class TestCON_5(TestProcedure):
 
     description = "Connection PCB - Complete"
     enable_pass_fail = False
-    auto_advance = False
+    auto_advance = True
 
     def run(self):
 
