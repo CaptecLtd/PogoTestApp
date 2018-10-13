@@ -449,8 +449,6 @@ class SuiteSelectionForm():
         self.config = configparser.ConfigParser()
         self.root = tk.Tk()
 
-        font = ("Arial", 20)
-
         self.config.read("tests.ini")
 
         # Create test suite selection window
@@ -459,11 +457,11 @@ class SuiteSelectionForm():
         self.frm.geometry("800x480")
         
         self.frm.lb = tk.Label(self.frm, text="Please select the test suite to run and tap BEGIN.")
-        self.frm.lb["font"] = font
+        self.frm.lb["font"] = ("Arial", 20)
         self.frm.lb.pack()
 
         self.frm.suite_list = tk.Listbox(self.frm)
-        self.frm.suite_list["font"] = font
+        self.frm.suite_list["font"] = ("Arial", "14")
         self.frm.suite_list["activestyle"] = "none"
         self.frm.suite_list.pack(fill=tk.BOTH, expand=1)
         self.frm.suite_list.selection_anchor(0)
@@ -472,7 +470,7 @@ class SuiteSelectionForm():
             self.frm.suite_list.insert(tk.END, v)
 
         self.frm.btn = tk.Button(self.frm, text="BEGIN", command=self.select_suite)
-        self.frm.btn["font"] = font
+        self.frm.btn["font"] = ("Arial", 20)
         self.frm.btn.pack()
 
         self.frm.wm_attributes("-topmost", 1)
