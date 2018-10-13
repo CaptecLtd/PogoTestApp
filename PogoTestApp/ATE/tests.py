@@ -493,7 +493,7 @@ class TestCON_1a(TestProcedure):
 
     description = "Connection PCB - Digital Read (1 of 2)"
     enable_pass_fail = False
-    auto_advance = False
+    auto_advance = True
 
     def run(self):
 
