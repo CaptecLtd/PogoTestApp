@@ -16,13 +16,23 @@ try:
     from getopt import getopt, GetoptError
     from time import sleep
 
+    # Process command args.
+    # -f = expand GUI to full screen
+    #     (This is used on the Raspberry Pi)
+    opts, args = getopt(sys.argv, "f")
+
     # Show the suite selection form and keep it up until it gets closed by the user.
     suite_selection = gui.SuiteSelectionForm()
+    if args.count("-f") != 0:
+        suite_selection.fullscreen()
     suite_selection.loop()
 
     # Create our Tk instance for the form
     root = tk.Tk()
     main_frm = gui.MainForm(root)
+
+    if args.count("-f") != 0:
+        main_frm.fullscreen(root, True)
 
 
     # Create our test suite instance and link to the form
@@ -41,6 +51,7 @@ try:
     config = configparser.ConfigParser()
     config.read("tests.ini")
     suite_idx = config["settings"]["selected_suite"]
+    test_suite.selected_suite = suite_idx
 
     # Add all the tests found in the suite.
     for idx, cls in config["suite%d" % int(suite_idx)].items():
@@ -51,14 +62,6 @@ try:
 
     # Disable input buttons to start with
     main_frm.disable_all_buttons()
-
-    # Process command args.
-    # -f = expand GUI to full screen
-    #     (This is used on the Raspberry Pi)
-    opts, args = getopt(sys.argv, "f")
-
-    if args.count("-f") != 0:
-        main_frm.fullscreen(root, True)
 
     # Set up our digital I/O before using it.
     digio.setup()

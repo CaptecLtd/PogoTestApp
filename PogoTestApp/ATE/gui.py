@@ -426,6 +426,8 @@ main ATE software framework.
 
 class SuiteSelectionForm():
 
+    frm = None
+
     def select_suite(self):
         elm = self.frm.suite_list.curselection()
         if len(elm) != 1:
@@ -436,6 +438,9 @@ class SuiteSelectionForm():
             self.config.write(configfile)
             self.root.destroy()
             self.root.quit()
+
+    def fullscreen(self):
+        self.frm.attributes("-fullscreen", True)
 
     def loop(self):
         self.root.mainloop()
@@ -452,7 +457,7 @@ class SuiteSelectionForm():
         self.frm = tk.Toplevel(self.root)
         self.frm.title("Select test suite")
         self.frm.geometry("800x480")
-
+        
         self.frm.lb = tk.Label(self.frm, text="Please select the test suite to run and tap BEGIN.")
         self.frm.lb["font"] = font
         self.frm.lb.pack()
