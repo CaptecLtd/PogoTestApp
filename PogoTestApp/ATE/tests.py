@@ -520,17 +520,17 @@ class TestCON_1b(TestProcedure):
         digio.set_high(DOP6_T_SW_ON)
 
         expected_inputs = {
-            DIP1_PWRUP_Delay: 1,
-            DIP2_OTG_OK: 0,
-            DIP3_Dplus_J5_3_OK: 0,
-            DIP4_Dminus_J5_2_OK: 0,
-            DIP5_5V_PWR: 1,
-            DIP6_From_J7_4: 0,
-            DIP7_J3_LINK_OK: 1,
-            DIP8_LED_RD: 1,
-            DIP9_LED_GN: 0,
-            DIP10_USB_PERpins_OK: 1,
-            DIP11_5V_ATE_in: 1
+            "DIP1": 1,
+            "DIP2": 0,
+            "DIP3": 0,
+            "DIP4": 0,
+            "DIP5": 1,
+            "DIP6": 0,
+            "DIP7": 1,
+            "DIP8": 1,
+            "DIP9": 0,
+            "DIP10": 1,
+            "DIP11": 1
         }
 
         if digio.read_all_inputs == expected_inputs:
