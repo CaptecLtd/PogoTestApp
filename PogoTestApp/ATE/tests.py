@@ -521,7 +521,7 @@ class TestCON_1b(TestProcedure):
         digio.set_low(digio.outputs)
         digio.set_high(DOP6_T_SW_ON)
 
-        self.wait(1)
+        self.wait(3)
 
         expected_inputs = {
             "DIP1": 1,
