@@ -50,11 +50,11 @@ try:
     # Read the configured selected suite by SuiteSelection.
     config = configparser.ConfigParser()
     config.read("tests.ini")
-    suite_idx = config["settings"]["selected_suite"]
+    suite_idx = int(config["settings"]["selected_suite"]) # returns a string so convert to int for our purposes
     test_suite.selected_suite = suite_idx
 
     # Add all the tests found in the suite.
-    for idx, cls in config["suite%d" % int(suite_idx)].items():
+    for idx, cls in config["suite%d" % suite_idx].items():
         test_suite.add_test(getattr(tests, cls)())
 
     # Add a final "test" to show a generic completion message.
