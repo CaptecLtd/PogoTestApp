@@ -51,6 +51,7 @@ class TestProcedure(object):
 
         if self.suite.form:
             self.suite.form.set_text(self.description + " PASSED")
+            self.suite.form.set_info_pass()
             self.suite.form.enable_pass_button()
             self.suite.form.disable_fail_button()
 
@@ -61,6 +62,7 @@ class TestProcedure(object):
 
         if self.suite.form:
             self.suite.form.set_text(self.description + " FAILED")
+            self.suite.form.set_info_fail()
             self.suite.form.disable_pass_button()
             self.suite.form.enable_fail_button()
 
