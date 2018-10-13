@@ -558,7 +558,7 @@ class TestCON_2(TestProcedure):
             self.wait()
 
             if self.suite.selected_suite == 0:
-                self.suite.form.append(", option -01")
+                self.suite.form.append_text_line("Option 01 selected by user")
                 if ad6.voltage_between(2.10, 2.48) and (digio.read(DIP9_LED_GN) == 1 and
                 digio.read(DIP8_LED_RD) == 0):
                     self.set_passed()
@@ -566,7 +566,7 @@ class TestCON_2(TestProcedure):
                     self.log_failure("Failure, expected AD6 > 2.10 and < 2.48, DIP9 = 1, DIP8 = 0")
             
             if self.suite.selected_suite == 1:
-                self.suite.form.append(", option -03")
+                self.suite.form.append_text_line("Option 03 selected by user")
                 if ad6.voltage_between(1.44, 1.74) and (digio.read(DIP9_LED_GN) == 1 and
                 digio.read(DIP8_LED_RD) == 0):
                     self.set_passed()
@@ -574,7 +574,7 @@ class TestCON_2(TestProcedure):
                     self.log_failure("Failure, expected AD6 > 1.44 and < 1.74, DIP9 = 1, DIP8 = 0")
 
             if self.suite.selected_suite == 2:
-                self.suite.form.append(", option -02")
+                self.suite.form.append_text_line("Option 02 selected by user")
                 if ad6.voltage_between(2.26, 2.54) and (digio.read(DIP9_LED_GN) == 1 and
                 digio.read(DIP8_LED_RD) == 0):
                     self.set_passed()
@@ -582,7 +582,7 @@ class TestCON_2(TestProcedure):
                     self.log_failure("Failure, expected AD6 > 2.26 and < 2.54, DIP9 = 1, DIP8 = 0")
 
             if self.suite.selected_suite == 3:
-                self.suite.form.append(", option -04")
+                self.suite.form.append_text_line("Option 04 selected by user")
                 if ad6.voltage_between(0.74, 0.94) and (digio.read(DIP9_LED_GN) == 1 and
                 digio.read(DIP8_LED_RD) == 0):
                     self.set_passed()
