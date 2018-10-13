@@ -345,6 +345,8 @@ class TestPWR_4(TestProcedure):
         digio.set_low(DOP11_POGO_ON_GPIO)
         digio.set_low(DOP12_BAT1_GPIO)
 
+        self.suite.form.append_text_line("Waiting for voltages to settle...")
+
         self.wait(5)
 
         ad5 = Channel(AD5_V_bat)
@@ -519,7 +521,7 @@ class TestCON_1b(TestProcedure):
         digio.set_low(digio.outputs)
         digio.set_high(DOP6_T_SW_ON)
 
-        self.wait(0.5)
+        self.wait(1)
 
         expected_inputs = {
             "DIP1": 1,
