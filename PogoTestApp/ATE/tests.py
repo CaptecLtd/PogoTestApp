@@ -596,7 +596,7 @@ class TestCON_3(TestProcedure):
 
     description = "Connection PCB - USB Data Lines"
     enable_pass_fail = False
-    auto_advance = False
+    auto_advance = True
 
     def run(self):
 
@@ -655,7 +655,7 @@ class TestCON_4(TestProcedure):
 
     description = "Connection PCB - Ethernet filter"
     enable_pass_fail = False
-    auto_advance = False
+    auto_advance = True
 
     def run(self):
 
