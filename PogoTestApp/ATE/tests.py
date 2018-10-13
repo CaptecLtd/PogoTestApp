@@ -110,19 +110,19 @@ class TestXX_FakeTest(TestProcedure):
 The classes below are "live" tests run as part of the ATE itself. They are not unit tested.
 """
 
-class Test_Setup1(TestProcedure):
+class Test_Setup(TestProcedure):
 
     description = "Setup 1 of 2"
     enable_pass_fail = False
+    auto_advance = False
 
     def run(self):
-        txt = """Before starting, please ensure:
+        txt = """Please complete actions:
 
-- Applicable PCBs are installed.
-- PSU_pogo, PSU_ATE and battery simulator PSU are connected and switched on.
-- Transport manual switch is OFF.
+- Install: applicable PCBs and connections.
+- Push DOWN the PCB jig until locked.
 
-Tap PASS to confirm.
+Tap PASS to confirm PCBs installed and connected.
 """
 
         self.suite.form.set_text(txt)
@@ -135,9 +135,13 @@ class Test_Setup2(TestProcedure):
     enable_pass_fail = False
 
     def run(self):
-        txt = """Action:
-SW_BAT_sim to be turned on
-POGO_SW to be turned on"""
+        txt = """Please complete actions:
+
+- Switch ON: BAT_ON, BAT_SIM_ON, ATE_ON, POGO_ON switches.
+- Switch OFF: transport manual switch.
+
+Tap PASS to confirm and begin test.
+"""
     
         self.suite.form.set_text(txt)
         self.set_passed()

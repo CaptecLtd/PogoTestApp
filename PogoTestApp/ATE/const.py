@@ -5,7 +5,7 @@ INTRO_TEXT = """Captec X231 PCBA Rev: {hwrevision} Test System
 Copyright 2016-2018 Captec Ltd.
 ATE Software Ver: {swrevision} - {swdate} 
 
-Ensure the PCBA jigs are UNPOPULATED before starting tests. All switches must be in OFF position.
+Ensure the PCBA jigs are UNPOPULATED. All switches must be in OFF position. Power supply must be ON.
 
 Press MENU, RESET to begin testing."""
 
