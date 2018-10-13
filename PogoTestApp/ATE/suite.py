@@ -128,8 +128,8 @@ class TestSuite(object):
 
         else:
             # If we do have more tests, clean up the current test, advance the current test variable and execute the test.
-            if self.tests[self.current_test].auto_advance: # Wait 3 seconds before auto advancing to allow voltages to settle
-                self.tests[self.current_test].wait(3)
+            if self.tests[self.current_test].auto_advance: # Wait before auto advancing to allow voltages to settle
+                self.tests[self.current_test].wait(1.5)
             self.tests[self.current_test].tearDown()
             self.current_test += 1
             self.form.clear_text()
