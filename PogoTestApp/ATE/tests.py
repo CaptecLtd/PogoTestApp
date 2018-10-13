@@ -428,7 +428,7 @@ class TestPWR_5(TestProcedure):
         # Stage 1
         self.suite.form.append_text_line("Testing stage 1")
 
-        if (ad3.voltage_near(4.9, 0.2) and
+        if (ad3.voltage_near(4.9, 0.25) and
             ad4.voltage_between((ad3.read_voltage() * 0.3), (ad3.read_voltage() * 0.75)) and
             ad6.voltage_between(0, 0.2)):
 
@@ -438,7 +438,7 @@ class TestPWR_5(TestProcedure):
             # Stage 2
             self.suite.form.append_text_line("Testing stage 2")
 
-            if (ad3.voltage_near(4.9, 0.2) and
+            if (ad3.voltage_near(4.9, 0.25) and
                 ad4.read_voltage() > (ad3.read_voltage() * 0.75) and
                 ad6.voltage_near(1.2, 0.2)):
 
@@ -449,7 +449,7 @@ class TestPWR_5(TestProcedure):
                 # Stage 3
                 self.suite.form.append_text_line("Testing stage 3")
 
-                if (ad3.voltage_near(4.9, 0.2) and
+                if (ad3.voltage_near(4.9, 0.25) and
                     ad4.read_voltage() < (ad3.read_voltage() * 0.3) and
                     ad6.voltage_near(2.0, 0.2)):
 
@@ -459,7 +459,7 @@ class TestPWR_5(TestProcedure):
                     # Stage 4
                     self.suite.form.append_text_line("Testing stage 4")
 
-                    if (ad3.voltage_near(4.9, 0.2) and
+                    if (ad3.voltage_near(4.9, 0.25) and
                         ad4.voltage_between((ad3.read_voltage() * 0.3), (ad3.read_voltage() * 0.75)) and
                         ad6.voltage_between(0, 0.2)):
 
@@ -484,7 +484,7 @@ class TestPWR_6(TestProcedure):
 
         digio.set_low(digio.outputs)
         digio.set_high(DOP11_POGO_ON_GPIO)
-        
+
 
 class TestCON_1a(TestProcedure):
 
