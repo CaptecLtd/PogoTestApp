@@ -50,6 +50,7 @@ class TestProcedure(object):
         self.state = "passed"
 
         if self.suite.form:
+            self.suite.form.set_text(self.description + " PASSED")
             self.suite.form.enable_pass_button()
             self.suite.form.disable_fail_button()
 
@@ -59,6 +60,7 @@ class TestProcedure(object):
         self.state = "failed"
 
         if self.suite.form:
+            self.suite.form.set_text(self.description + " FAILED")
             self.suite.form.disable_pass_button()
             self.suite.form.enable_fail_button()
 
@@ -345,8 +347,8 @@ class TestPWR_4(TestProcedure):
                 ad6.voltage_between(0, 0.2) and
                 ad8.voltage_near(4.90, 0.2)):
 
-                digio.set_low(DOP12_BAT1_GPIO)
-                digio.set_high(DOP13_BAT0_GPIO)
+                digio.set_high(DOP12_BAT1_GPIO)
+                digio.set_low(DOP13_BAT0_GPIO)
                 self.wait(0.5)
 
                 # Stage 3
@@ -355,6 +357,7 @@ class TestPWR_4(TestProcedure):
                     ad8.voltage_near(4.90, 0.2)):
 
                     digio.set_high(DOP12_BAT1_GPIO)
+                    digio.set_high(DOP13_BAT0_GPIO)
                     self.wait(0.5)
 
                     # Stage 4
