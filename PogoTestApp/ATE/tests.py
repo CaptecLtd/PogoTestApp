@@ -205,7 +205,7 @@ class TestPWR_2(TestProcedure):
             self.wait(0.01)
 
             if ad5.voltage_between(3.95, 4.25) and ad7.voltage_between(4.90, 5.15) and ad8.voltage_between(4.85, 5.10):
-                self.set_passed()
+                
                 #"""                
                 digio.set_high(DOP11_POGO_ON_GPIO)
 
