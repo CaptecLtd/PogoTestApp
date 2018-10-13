@@ -323,6 +323,8 @@ class TestPWR_4(TestProcedure):
     def run(self):
 
         digio.set_high(DOP6_T_SW_ON)
+        digio.set_low(DOP11_POGO_ON_GPIO)
+        digio.set_low(DOP12_BAT1_GPIO)
 
         self.wait(0.02)
 
