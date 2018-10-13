@@ -451,7 +451,7 @@ class TestPWR_5(TestProcedure):
 
                 if (ad3.voltage_near(4.8, 0.25) and
                     ad4.read_voltage() < (ad3.read_voltage() * 0.3) and
-                    ad6.voltage_near(2.0, 0.2)):
+                    ad6.voltage_near(1.2, 0.2)):
 
                     digio.set_low(DOP8_Hot_sim)
                     self.wait(0.5)
