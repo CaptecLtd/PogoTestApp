@@ -1,6 +1,6 @@
 """
 X231 PCBA Automatic Test Equipment Control Software
-Copyright (c) 2016 Captec Ltd
+Copyright (c) 2016-2018 Captec Ltd
 
 """
 
