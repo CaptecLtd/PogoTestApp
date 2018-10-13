@@ -616,6 +616,8 @@ class TestCON_3(TestProcedure):
         self.wait()
 
         # Stage 1
+        self.suite.form.append_text_line("Testing stage 1")
+
         if (digio.read(DIP4_Dminus_J5_2_OK) == 1 and
             digio.read(DIP3_Dplus_J5_3_OK) == 1 and
             digio.read(DIP2_OTG_OK)) == 1:
@@ -624,6 +626,7 @@ class TestCON_3(TestProcedure):
             self.wait()
 
             # Stage 2
+            self.suite.form.append_text_line("Testing stage 2")
             if (digio.read(DIP4_Dminus_J5_2_OK) == 1 and
                 digio.read(DIP3_Dplus_J5_3_OK) == 0 and
                 digio.read(DIP2_OTG_OK) == 0):
@@ -634,6 +637,8 @@ class TestCON_3(TestProcedure):
                 self.wait()
 
                 # Stage 3
+                self.suite.form.append_text_line("Testing stage 3")
+
                 if (digio.read(DIP4_Dminus_J5_2_OK) == 1 and
                     digio.read(DIP3_Dplus_J5_3_OK) == 1 and
                     digio.read(DIP2_OTG_OK)) == 1:
@@ -643,6 +648,8 @@ class TestCON_3(TestProcedure):
                     self.wait()
 
                     # Stage 4
+                    self.suite.form.append_text_line("Testing stage 4")
+
                     if (digio.read(DIP4_Dminus_J5_2_OK) == 0 and
                         digio.read(DIP3_Dplus_J5_3_OK) == 1 and
                         digio.read(DIP2_OTG_OK)) == 0:
