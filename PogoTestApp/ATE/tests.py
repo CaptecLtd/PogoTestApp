@@ -218,16 +218,14 @@ class TestPWR_2(TestProcedure):
                     
                     digio.set_low(DOP11_POGO_ON_GPIO)
                     
-                    #self.wait(0.05)
+                    self.wait(0.1)
                     low_passed, low_delay = digio.await_low(DIP1_PWRUP_Delay)
 
-                    self.wait(0.05)
-
-                    #print("ad2:" + ad2.await_voltage(5.03))
+                    self.wait(0.1)
 
                     high_passed, high_delay = digio.await_high(DIP1_PWRUP_Delay)
 
-                    low2_passed, low2_delay = digio.await_low(DIP10_USB_PERpins_OK)
+                    low2_passed, low2_delay = digio.await_low(DIP1_PWRUP_Delay)
 
                     delay = low_delay + low2_delay + high_delay + delay_after_DOP11_high
 
