@@ -269,7 +269,10 @@ class MainForm(tk.Frame):
     def append_text_line(self, text):
         "Appends the specified text to the existing information string"
         self.info_label["state"] = tkc.NORMAL
-        self.info_label.insert(tkc.END, "\n" + text)
+        if (self.info_label["text"] == ""):
+            self.info_label.insert(tkc.END, text)
+        else:
+            self.info_label.insert(tkc.END, "\n" + text)
         self.info_label["state"] = tkc.DISABLED
         self.update()
 
