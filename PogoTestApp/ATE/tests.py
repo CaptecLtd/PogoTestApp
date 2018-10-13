@@ -364,7 +364,7 @@ class TestPWR_4(TestProcedure):
 
                     # Stage 4
                     if (ad5.voltage_near(4.35, 0.1) and
-                        ad6.voltage_near(2.62, 0.3) and 
+                        ad6.voltage_near(1.2, 0.3) and 
                         ad8.voltage_near(5.0, 0.2)):
 
                         self.set_passed()
