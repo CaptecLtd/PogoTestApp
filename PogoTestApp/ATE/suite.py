@@ -128,10 +128,10 @@ class TestSuite(object):
 
         else:
             # If we do have more tests, clean up the current test, advance the current test variable and execute the test.
-            self.tests[self.current_test].wait(3)
             self.tests[self.current_test].tearDown()
             self.current_test += 1
             self.form.clear_text()
+            self.tests[self.current_test].wait(2)
             self.execute()
 
     def summary(self):
