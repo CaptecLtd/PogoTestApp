@@ -709,6 +709,8 @@ class TestCON_5(TestProcedure):
         digio.set_low(digio.outputs)
         digio.set_high(DOP11_POGO_ON_GPIO)
 
+        self.set_passed()
+
 
 class TestEnd_TestsCompleted(TestProcedure):
     
