@@ -199,16 +199,23 @@ class TestPWR_2(TestProcedure):
 
         self.suite.form.append_text_line("Testing power up delay")
 
+        # Stage 1
+        self.suite.form.append_text_line("Testing stage 1")
+
         if ad5.voltage_between(0, 1.50) and ad7.voltage_between(0, 2.00) and ad8.voltage_between(0, 2.00):
             
             digio.set_high(DOP12_BAT1_GPIO)
             self.wait(0.01)
 
+            # Stage 2
+            self.suite.form.append_text_line("Testing stage 2")
+
             if ad5.voltage_between(3.95, 4.25) and ad7.voltage_between(4.90, 5.15) and ad8.voltage_between(4.85, 5.10):
                 
-                #"""                
                 digio.set_high(DOP11_POGO_ON_GPIO)
 
+                # Stage 3
+                self.suite.form.append_text_line("Testing stage 3")
                 if ad1.voltage_between(0, 2.00) and ad8.voltage_between(4.85, 5.10):
 
                     ad2 = Channel(AD2_V_5V_pwr)
@@ -227,25 +234,25 @@ class TestPWR_2(TestProcedure):
 
                     delay = low_delay + high_delay
 
-                    print("Total delay: {}".format(delay))
-                    print("Low: {}, High: {}, Low D: {}, High D: {}".format(low_passed, high_passed, low_delay, high_delay))
+                    # Stage 4
+                    self.suite.form.append_text_line("Testing stage 4")
 
-                    if (low_passed and high_passed) and (delay > 0.5 and delay < 1.0):
+                    if (low_passed and high_passed) and (delay > 0.5 and delay < 1.5):
+                        # Stage 5
+                        self.suite.form.append_text_line("Testing stage 5")
                         if (ad1.voltage_between(4.90, 5.10) and ad8.voltage_between(4.85, 5.10)):
                             self.set_passed()
                         else:
-                            self.log_failure("AD1 or AD8 voltage not within limits")
+                            self.log_failure("S5 Failure, expected AD1 >= 4.9 and <= 5.10, AD8 >= 4.85 and <= 5.10")
                     else:
-                        self.log_failure("DIP1 low or high out of tolerance, or delay < 500ms or > 1000ms")
+                        self.log_failure("S4 Failure, expected power up delay > 500ms and < 1500ms, or DIP1 high/low timeout")
                 else:
-                    self.log_failure("AD1 voltage > 2.00v or AD8 out of bounds")
-                #"""
-
+                    self.log_failure("S3 Failure, expected AD1 voltage < 2.00v and AD8 >= 4.85 and <= 5.10")
             else:
-                self.log_failure("Voltages for AD5, AD7 or AD8 were not within tolerable values (DOP12 high)")
+                self.log_failure("S2 Failure, expected AD5 >= 3.95 and <= 4.25, AD7 >= 4.9 and <= 5.15, AD8 >= 4.85 and <= 5.10")
 
         else:
-            self.log_failure("Voltages for AD5, AD7 or AD8 were not within tolerable values (DOP12 low)")
+            self.log_failure("S1 Failure, expected AD5 < 1.5, AD7 < 2.0, AD8 < 2.0")
 
 
 class TestPWR_3(TestProcedure):
