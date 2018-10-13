@@ -57,9 +57,6 @@ try:
     for idx, cls in config["suite%d" % suite_idx].items():
         test_suite.add_test(getattr(tests, cls)())
 
-    # Add a final "test" to show a generic completion message.
-    test_suite.add_test(tests.TestEnd_TestsCompleted())
-
     # Disable input buttons to start with
     main_frm.disable_all_buttons()
 

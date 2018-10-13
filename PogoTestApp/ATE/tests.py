@@ -518,8 +518,12 @@ class TestCON_1b(TestProcedure):
     
     def run(self):
 
+        self.suite.form.append_text_line("Testing digital reads")
+
         digio.set_low(digio.outputs)
         digio.set_high(DOP6_T_SW_ON)
+
+        self.suite.form.append_text_line("Waiting for voltages to settle...")
 
         self.wait(3)
 
