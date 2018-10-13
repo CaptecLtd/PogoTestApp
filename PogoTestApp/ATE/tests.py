@@ -395,18 +395,18 @@ class TestPWR_5(TestProcedure):
         ad6 = Channel(AD6_V_sense)
 
         digio.set_high(DOP6_T_SW_ON)
-        digio.set_high(DOP12_BAT1_GPIO) # not sure if this should be high or low, to be checked.
+        digio.set_low(DOP12_BAT1_GPIO) # not sure if this should be high or low, to be checked.
 
         digio.set_high(DOP13_BAT0_GPIO)
 
-        self.wait()
+        self.wait(0.5)
 
         if (ad3.voltage_near(4.9, 0.2) and
             ad4.voltage_between((ad3.read_voltage() * 0.3), (ad3.read_voltage() * 0.75)) and
             ad6.voltage_between(0, 0.2)):
 
             digio.set_high(DOP7_Cold_sim)
-            self.wait()
+            self.wait(0.5)
 
             if (ad3.voltage_near(4.9, 0.2) and
                 ad4.read_voltage() > (ad3.read_voltage() * 0.75) and
@@ -414,7 +414,7 @@ class TestPWR_5(TestProcedure):
 
                 digio.set_low(DOP7_Cold_sim)
                 digio.set_high(DOP8_Hot_sim)
-                self.wait()
+                self.wait(0.5)
 
                 if (ad3.voltage_near(4.9, 0.2) and
                     ad4.read_voltage() < (ad3.read_voltage() * 0.3) and
