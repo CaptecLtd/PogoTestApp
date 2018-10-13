@@ -493,7 +493,7 @@ class TestCON_1a(TestProcedure):
 
     description = "Connection PCB - Digital Read (1 of 2)"
     enable_pass_fail = False
-    auto_advance = False
+    auto_advance = True
 
     def run(self):
 
@@ -512,7 +512,7 @@ class TestCON_1b(TestProcedure):
 
     description = "Connection PCB - Digital Read (2 of 2)"
     enable_pass_fail = False
-    auto_advance = False
+    auto_advance = True
     
     def run(self):
 
@@ -542,7 +542,7 @@ class TestCON_2(TestProcedure):
 
     description = "Connection PCB - Analogue Read"
     enable_pass_fail = False
-    auto_advance = False
+    auto_advance = True
 
     def run(self):
 
@@ -554,6 +554,8 @@ class TestCON_2(TestProcedure):
 
             digio.set_high(DOP1_Load_ON)
             self.wait()
+
+            print(self.suite.selected_suite)
 
             if self.suite.selected_suite == 0:
                 if ad6.voltage_between(2.48, 2.79) and (digio.read(DIP9_LED_GN) == 1 and
