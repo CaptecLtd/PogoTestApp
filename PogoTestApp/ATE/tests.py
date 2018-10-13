@@ -171,6 +171,8 @@ class TestPWR_1(TestProcedure):
             "DIP11": 1
         }
 
+        self.suite.form.append_text_line("Testing digital inputs...")
+
         if (inputs != expected_values):
             self.log_failure("Input DIP values don't match expected.")
         else:
@@ -193,6 +195,8 @@ class TestPWR_2(TestProcedure):
         digio.set_low(DOP13_BAT0_GPIO)
 
         self.wait(0.01)
+
+        self.suite.form.append_text_line("Testing power up delay")
 
         if ad5.voltage_between(0, 1.50) and ad7.voltage_between(0, 2.00) and ad8.voltage_between(0, 2.00):
             
@@ -266,6 +270,8 @@ class TestPWR_3(TestProcedure):
         self.wait()
 
         # Step 1
+        self.suite.form.append_text_line("Testing stage 1")
+
         if (ad5.voltage_near(2.5, 0.2) and 
             ad6.voltage_near(1.47, 0.2) and 
             ad7.voltage_between(0, 1.50) and 
@@ -276,6 +282,8 @@ class TestPWR_3(TestProcedure):
             self.wait(0.5)
             
             # Step 2
+            self.suite.form.append_text_line("Testing stage 2")
+
             if (ad5.voltage_near(3.10, 0.1) and 
                 ad6.voltage_near(1.82, 0.2) and 
                 ad7.voltage_near(5.0, 0.15) and 
@@ -286,6 +294,8 @@ class TestPWR_3(TestProcedure):
                 self.wait(0.5)
 
                 # Step 3
+                self.suite.form.append_text_line("Testing stage 3")
+
                 if (ad5.voltage_near(3.95, 0.1) and
                     ad6.voltage_near(2.32, 0.2) and
                     ad7.voltage_near(5.0, 0.15) and
@@ -298,6 +308,8 @@ class TestPWR_3(TestProcedure):
                     self.wait(0.5)
 
                     # Step 4
+                    self.suite.form.append_text_line("Testing stage 4")
+
                     if (ad5.voltage_near(4.20, 0.1) and
                         ad6.voltage_between(3.50, 5.0, 0.1) and
                         ad7.voltage_near(5.0, 0.15) and
@@ -326,6 +338,8 @@ class TestPWR_4(TestProcedure):
 
     def run(self):
 
+        self.suite.form.append_text_line("Testing normal mode")
+
         digio.set_high(DOP6_T_SW_ON)
         digio.set_low(DOP11_POGO_ON_GPIO)
         digio.set_low(DOP12_BAT1_GPIO)
@@ -337,6 +351,8 @@ class TestPWR_4(TestProcedure):
         ad8 = Channel(AD8_V_out)
 
         # Stage 1
+        self.suite.form.append_text_line("Testing stage 1")
+
         if (ad5.voltage_near(3.10, 0.2) and
             ad6.voltage_near(1.18, 0.3) and
             ad8.voltage_near(4.70, 0.15)):
@@ -345,6 +361,8 @@ class TestPWR_4(TestProcedure):
             self.wait(0.5)
 
             # Stage 2
+            self.suite.form.append_text_line("Testing stage 2")
+
             if (ad5.voltage_near(4.05, 0.1) and
                 ad6.voltage_between(0, 0.2) and
                 ad8.voltage_near(4.90, 0.2)):
@@ -354,6 +372,8 @@ class TestPWR_4(TestProcedure):
                 self.wait(0.5)
 
                 # Stage 3
+                self.suite.form.append_text_line("Testing stage 3")
+
                 if (ad5.voltage_near(4.10, 0.1) and
                     ad6.voltage_near(1.40, 0.3) and
                     ad8.voltage_near(4.90, 0.2)):
@@ -363,6 +383,8 @@ class TestPWR_4(TestProcedure):
                     self.wait(0.5)
 
                     # Stage 4
+                    self.suite.form.append_text_line("Testing stage 4")
+
                     if (ad5.voltage_near(4.35, 0.1) and
                         ad6.voltage_near(1.2, 0.3) and 
                         ad8.voltage_near(5.0, 0.2)):
@@ -390,16 +412,21 @@ class TestPWR_5(TestProcedure):
 
     def run(self):
 
+        self.suite.form.append_text_line("Testing thermal protection")
+
         ad3 = Channel(AD3_V_in)
         ad4 = Channel(AD4_V_TP13_NTC)
         ad6 = Channel(AD6_V_sense)
 
         digio.set_high(DOP6_T_SW_ON)
-        digio.set_low(DOP12_BAT1_GPIO) # not sure if this should be high or low, to be checked.
+        digio.set_low(DOP12_BAT1_GPIO)
 
         digio.set_high(DOP13_BAT0_GPIO)
 
         self.wait(0.5)
+
+        # Stage 1
+        self.suite.form.append_text_line("Testing stage 1")
 
         if (ad3.voltage_near(4.9, 0.2) and
             ad4.voltage_between((ad3.read_voltage() * 0.3), (ad3.read_voltage() * 0.75)) and
@@ -408,20 +435,29 @@ class TestPWR_5(TestProcedure):
             digio.set_high(DOP7_Cold_sim)
             self.wait(0.5)
 
+            # Stage 2
+            self.suite.form.append_text_line("Testing stage 2")
+
             if (ad3.voltage_near(4.9, 0.2) and
                 ad4.read_voltage() > (ad3.read_voltage() * 0.75) and
-                ad6.voltage_near(2.0, 0.2)):
+                ad6.voltage_near(1.2, 0.2)):
 
                 digio.set_low(DOP7_Cold_sim)
                 digio.set_high(DOP8_Hot_sim)
                 self.wait(0.5)
+
+                # Stage 3
+                self.suite.form.append_text_line("Testing stage 3")
 
                 if (ad3.voltage_near(4.9, 0.2) and
                     ad4.read_voltage() < (ad3.read_voltage() * 0.3) and
                     ad6.voltage_near(2.0, 0.2)):
 
                     digio.set_low(DOP8_Hot_sim)
-                    self.wait()
+                    self.wait(0.5)
+
+                    # Stage 4
+                    self.suite.form.append_text_line("Testing stage 4")
 
                     if (ad3.voltage_near(4.9, 0.2) and
                         ad4.voltage_between((ad3.read_voltage() * 0.3), (ad3.read_voltage() * 0.75)) and
@@ -448,7 +484,7 @@ class TestPWR_6(TestProcedure):
 
         digio.set_low(digio.outputs)
         digio.set_high(DOP11_POGO_ON_GPIO)
-
+        
 
 class TestCON_1a(TestProcedure):
 
