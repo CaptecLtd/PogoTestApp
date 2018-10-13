@@ -533,7 +533,7 @@ class TestCON_1b(TestProcedure):
             "DIP11": 1
         }
 
-        if digio.read_all_inputs == expected_inputs:
+        if digio.read_all_inputs() == expected_inputs:
             self.set_passed()
         else:
             self.log_failure("Digital inputs not as expected")
