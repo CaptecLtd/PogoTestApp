@@ -227,7 +227,7 @@ class TestPWR_2(TestProcedure):
 
                     delay = low_delay + high_delay
 
-                    print("Total delay: {}, del_after_DOP11: {}".format(delay))
+                    print("Total delay: {}".format(delay))
                     print("Low: {}, High: {}, Low D: {}, High D: {}".format(low_passed, high_passed, low_delay, high_delay))
 
                     if (low_passed and high_passed) and (delay > 0.5 and delay < 1.0):
