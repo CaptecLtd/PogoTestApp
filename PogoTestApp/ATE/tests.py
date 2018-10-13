@@ -52,7 +52,8 @@ class TestProcedure(object):
         if self.suite.form:
             self.suite.form.set_text(self.description + " PASSED")
             self.suite.form.set_info_pass()
-            self.suite.form.enable_pass_button()
+            if not self.auto_advance:
+                self.suite.form.enable_pass_button()
             self.suite.form.disable_fail_button()
 
     def set_failed(self):
@@ -408,7 +409,7 @@ class TestPWR_5(TestProcedure):
 
     description = "Power Management PCB - Thermal protection test"
     enable_pass_fail = False
-    auto_advance = False
+    auto_advance = True
 
     def run(self):
 
@@ -478,12 +479,14 @@ class TestPWR_6(TestProcedure):
 
     description = "Power Management PCB - Reset"
     enable_pass_fail = False
-    auto_advance = False
+    auto_advance = True
 
     def run(self):
 
+        self.suite.form.append_text_line("Resetting outputs")
         digio.set_low(digio.outputs)
         digio.set_high(DOP11_POGO_ON_GPIO)
+        self.set_passed()
 
 
 class TestCON_1a(TestProcedure):
