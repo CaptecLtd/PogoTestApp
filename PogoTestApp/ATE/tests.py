@@ -559,11 +559,11 @@ class TestCON_2(TestProcedure):
 
             if self.suite.selected_suite == 0:
                 self.suite.form.append(", option -01")
-                if ad6.voltage_between(2.48, 2.79) and (digio.read(DIP9_LED_GN) == 1 and
+                if ad6.voltage_between(2.10, 2.48) and (digio.read(DIP9_LED_GN) == 1 and
                 digio.read(DIP8_LED_RD) == 0):
                     self.set_passed()
                 else:
-                    self.log_failure("Failure, expected AD6 > 2.48 and < 2.79, DIP9 = 1, DIP8 = 0")
+                    self.log_failure("Failure, expected AD6 > 2.10 and < 2.48, DIP9 = 1, DIP8 = 0")
             
             if self.suite.selected_suite == 1:
                 self.suite.form.append(", option -03")
