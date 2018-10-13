@@ -47,7 +47,7 @@ inputs = [
 def setup():
     "Set the GPIO pins to how we want them for the application"
     GPIO.setmode(GPIO.BCM)
-    print("Pin Setup")
+    
     # Configure input and output pins accordingly
     GPIO.setup(outputs, GPIO.OUT)
     GPIO.setup(inputs, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
