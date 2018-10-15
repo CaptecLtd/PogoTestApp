@@ -183,6 +183,43 @@ class TestPWR_1(TestProcedure):
         else:
             self.set_passed()
 
+class TestPWR_1_x232(TestProcedure):
+
+    description = "Power Management PCB - Pin Test"
+    enable_pass_fail = False
+    auto_advance = True
+
+    def run(self):
+        digio.set_low(digio.outputs)
+        digio.set_high(DOP6_T_SW_ON)
+
+        digio.await_high(DIP1_PWRUP_Delay)
+        
+        self.wait()
+        
+        inputs = digio.read_all_inputs()
+
+        expected_values = {
+            "DIP1": 1,
+            "DIP2": 0,
+            "DIP3": 0,
+            "DIP4": 0,
+            "DIP5": 1,
+            "DIP6": 0,
+            "DIP7": 1,
+            "DIP8": 0,
+            "DIP9": 0,
+            "DIP10": 1,
+            "DIP11": 1
+        }
+
+        self.suite.form.append_text_line("Testing digital inputs...")
+
+        if (inputs != expected_values):
+            self.log_failure("Input DIP values don't match expected.")
+        else:
+            self.set_passed()
+
 class TestPWR_2(TestProcedure):
 
     description = "Power Management PCB - Power Up Delay"
