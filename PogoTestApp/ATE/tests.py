@@ -709,12 +709,11 @@ class TestCON_2_x232(TestProcedure):
             digio.set_high(DOP1_Load_ON)
             self.wait()
 
-            if self.suite.selected_suite == 0:
-                self.suite.form.append_text_line("Option 01 selected by user")
-                if ad6.voltage_between(2.48, 2.79):
-                    self.set_passed()
-                else:
-                    self.log_failure("Failure, expected AD6 > 2.48 and < 2.79, DIP9 = 1, DIP8 = 0")
+            self.suite.form.append_text_line("Option 01 selected by user")
+            if ad6.voltage_between(2.48, 2.79):
+                self.set_passed()
+            else:
+                self.log_failure("Failure, expected AD6 > 2.48 and < 2.79, DIP9 = 1, DIP8 = 0")
         else:
             self.log_failure("Failure, expected AD6 = 0, DIP9 = 0, DIP8 = 1") 
 
