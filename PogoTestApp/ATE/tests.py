@@ -583,7 +583,7 @@ class TestCON_2(TestProcedure):
                     self.set_passed()
                 else:
                     self.log_failure("Failure, expected AD6 > 2.48 and < 2.79, DIP9 = 1, DIP8 = 0")
-            
+            """
             if self.suite.selected_suite == 1:
                 self.suite.form.append_text_line("Option 03 selected by user")
                 if ad6.voltage_between(1.44, 1.74) and (digio.read(DIP9_LED_GN) == 1 and
@@ -607,9 +607,37 @@ class TestCON_2(TestProcedure):
                     self.set_passed()
                 else:
                     self.log_failure("Failure, expected AD6 > 0.74 and < 0.94, DIP9 = 1, DIP8 = 0")
+            """
         else:
             self.log_failure("Failure, expected AD6 = 0, DIP9 = 0, DIP8 = 1")   
                 
+class TestCON_2_x232(TestProcedure):
+
+    description = "Connection PCB - Analogue Read"
+    enable_pass_fail = False
+    auto_advance = True
+
+    def run(self):
+
+        self.suite.form.append_text_line("Testing analogue read")
+
+        ad6 = Channel(AD6_V_sense)
+
+        if (ad6.voltage_between(0, 0.02) and
+            digio.read(DIP9_LED_GN) == 0 and
+            digio.read(DIP8_LED_RD) == 1):
+
+            digio.set_high(DOP1_Load_ON)
+            self.wait()
+
+            if self.suite.selected_suite == 0:
+                self.suite.form.append_text_line("Option 01 selected by user")
+                if ad6.voltage_between(2.48, 2.79):
+                    self.set_passed()
+                else:
+                    self.log_failure("Failure, expected AD6 > 2.48 and < 2.79, DIP9 = 1, DIP8 = 0")
+        else:
+            self.log_failure("Failure, expected AD6 = 0, DIP9 = 0, DIP8 = 1") 
 
 class TestCON_3(TestProcedure):
 
