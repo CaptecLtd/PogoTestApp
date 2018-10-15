@@ -704,9 +704,7 @@ class TestCON_2_x232(TestProcedure):
 
         ad6 = Channel(AD6_V_sense)
 
-        if (ad6.voltage_between(0, 0.02) and
-            digio.read(DIP9_LED_GN) == 0 and
-            digio.read(DIP8_LED_RD) == 1):
+        if (ad6.voltage_between(0, 0.02):
 
             digio.set_high(DOP1_Load_ON)
             self.wait()
