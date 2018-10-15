@@ -594,6 +594,50 @@ class TestCON_1b(TestProcedure):
         else:
             self.log_failure("Digital inputs not as expected")
 
+class TestCON_1b_x232(TestProcedure):
+
+    description = "Connection PCB - Digital Read (2 of 2)"
+    enable_pass_fail = False
+    auto_advance = True
+    
+    def run(self):
+
+        self.suite.form.append_text_line("Testing digital reads")
+
+        digio.set_low(digio.outputs)
+        digio.set_high(DOP6_T_SW_ON)
+
+        self.suite.form.append_text_line("Waiting for voltages to settle...")
+
+        self.wait(3)
+
+        expected_inputs = {
+            "DIP1": 1,
+            "DIP2": 0,
+            "DIP3": 0,
+            "DIP4": 0,
+            "DIP5": 1,
+            "DIP6": 0,
+            "DIP7": 1,
+            "DIP8": 0,
+            "DIP9": 0,
+            "DIP10": 1,
+            "DIP11": 1
+        }
+
+        if digio.read_all_inputs() == expected_inputs:
+            self.set_passed()
+        else:
+            self.log_failure("Digital inputs not as expected")
+
+class TestCON_1c_x232(TestProcedure):
+
+    description = "Connection PCB - LED Test"
+    enable_pass_fail = True
+    
+    def run(self):
+        self.suite.form.set_text("Please check LED_RD is lit")
+
 class TestCON_2(TestProcedure):
 
     description = "Connection PCB - Analogue Read"
