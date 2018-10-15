@@ -1,7 +1,7 @@
 # Constants required by the specification are declared here.
 
 # Header for initial startup.
-INTRO_TEXT = """Captec X231 PCBA Rev: {hwrevision} Test System
+INTRO_TEXT = """Captec X230/X232 PCBA Rev: {hwrevision} Test System
 Copyright 2016-2018 Captec Ltd.
 ATE Software Ver: {swrevision} - {swdate} 
 
