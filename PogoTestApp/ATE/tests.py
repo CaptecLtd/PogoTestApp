@@ -565,6 +565,9 @@ class TestCON_1c(TestProcedure):
     enable_pass_fail = True
     
     def run(self):
+
+        digio.set_high(DOP1_Load_ON)
+        
         self.suite.form.set_text("Please check LED_RD is lit")
 
 class TestCON_2(TestProcedure):
