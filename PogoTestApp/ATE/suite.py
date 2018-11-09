@@ -95,6 +95,7 @@ class TestSuite(object):
             digio.setup()
 
             if self.form:
+                self.form.set_text("")
                 self.form.reset_duration()
                 self.form.start_duration_count()
 
