@@ -170,43 +170,6 @@ class TestPWR_1(TestProcedure):
             "DIP5": 1,
             "DIP6": 0,
             "DIP7": 1,
-            "DIP8": 1,
-            "DIP9": 0,
-            "DIP10": 1,
-            "DIP11": 1
-        }
-
-        self.suite.form.append_text_line("Testing digital inputs...")
-
-        if (inputs != expected_values):
-            self.log_failure("Input DIP values don't match expected.")
-        else:
-            self.set_passed()
-
-class TestPWR_1_x232(TestProcedure):
-
-    description = "Power Management PCB - Pin Test"
-    enable_pass_fail = False
-    auto_advance = True
-
-    def run(self):
-        digio.set_low(digio.outputs)
-        digio.set_high(DOP6_T_SW_ON)
-
-        digio.await_high(DIP1_PWRUP_Delay)
-        
-        self.wait()
-        
-        inputs = digio.read_all_inputs()
-
-        expected_values = {
-            "DIP1": 1,
-            "DIP2": 0,
-            "DIP3": 0,
-            "DIP4": 0,
-            "DIP5": 1,
-            "DIP6": 0,
-            "DIP7": 1,
             "DIP8": 0,
             "DIP9": 0,
             "DIP10": 1,
@@ -219,6 +182,7 @@ class TestPWR_1_x232(TestProcedure):
             self.log_failure("Input DIP values don't match expected.")
         else:
             self.set_passed()
+
 
 class TestPWR_2(TestProcedure):
 
@@ -583,42 +547,6 @@ class TestCON_1b(TestProcedure):
             "DIP5": 1,
             "DIP6": 0,
             "DIP7": 1,
-            "DIP8": 1,
-            "DIP9": 0,
-            "DIP10": 1,
-            "DIP11": 1
-        }
-
-        if digio.read_all_inputs() == expected_inputs:
-            self.set_passed()
-        else:
-            self.log_failure("Digital inputs not as expected")
-
-class TestCON_1b_x232(TestProcedure):
-
-    description = "Connection PCB - Digital Read (2 of 2)"
-    enable_pass_fail = False
-    auto_advance = True
-    
-    def run(self):
-
-        self.suite.form.append_text_line("Testing digital reads")
-
-        digio.set_low(digio.outputs)
-        digio.set_high(DOP6_T_SW_ON)
-
-        self.suite.form.append_text_line("Waiting for voltages to settle...")
-
-        self.wait(3)
-
-        expected_inputs = {
-            "DIP1": 1,
-            "DIP2": 0,
-            "DIP3": 0,
-            "DIP4": 0,
-            "DIP5": 1,
-            "DIP6": 0,
-            "DIP7": 1,
             "DIP8": 0,
             "DIP9": 0,
             "DIP10": 1,
@@ -630,7 +558,8 @@ class TestCON_1b_x232(TestProcedure):
         else:
             self.log_failure("Digital inputs not as expected")
 
-class TestCON_1c_x232(TestProcedure):
+
+class TestCON_1c(TestProcedure):
 
     description = "Connection PCB - LED Test"
     enable_pass_fail = True
