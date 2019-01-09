@@ -606,6 +606,7 @@ class TestCON_3(TestProcedure):
 
         self.suite.form.append_text_line("Testing USB data lines")
 
+        digio.set_low(DOP6_T_SW_ON)
         digio.set_high(DOP4_TP5_GPIO)
         digio.set_low(DOP5_TP6_GPIO)
         digio.set_high(DOP3_TP7_GPIO)
