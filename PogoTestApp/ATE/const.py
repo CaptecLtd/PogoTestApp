@@ -2,7 +2,7 @@
 
 # Header for initial startup.
 INTRO_TEXT = """Captec X230/X232 PCBA Rev: {hwrevision} Test System
-Copyright 2016-2018 Captec Ltd.
+Copyright 2016-2019 Captec Ltd.
 ATE Software Ver: {swrevision} - {swdate} 
 
 Ensure the PCBA jigs are UNPOPULATED. All switches must be in OFF position. Power supply must be ON.
