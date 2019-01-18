@@ -543,6 +543,8 @@ class TestCON_1b(TestProcedure):
 
         self.wait(3)
 
+        inputs = digio.read_all_inputs()
+
         expected_inputs = {
             "DIP1": 1,
             "DIP2": 0,
@@ -557,9 +559,13 @@ class TestCON_1b(TestProcedure):
             "DIP11": 1
         }
 
-        if digio.read_all_inputs() == expected_inputs:
+        if inputs == expected_inputs:
             self.set_passed()
         else:
+            for k, v in expected_inputs.items():
+                if expected_inputs[k] != inputs[k]:
+                    self.suite.form.append_text_line("Error: expected {} = {}, but got {}".format(k, v, inputs[k]))
+                    
             self.log_failure("Digital inputs not as expected")
 
 
