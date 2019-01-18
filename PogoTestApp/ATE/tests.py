@@ -178,7 +178,11 @@ class TestPWR_1(TestProcedure):
 
         self.suite.form.append_text_line("Testing digital inputs...")
 
-        if (inputs != expected_values):
+        if (inputs != expected_values):            
+            for k, v in expected_values.items():
+                if expected_values[k] != inputs[k]:
+                    self.suite.form.append_text_line("Error: expected {} = {}, but got {}".format(k, v, inputs[k]))
+
             self.log_failure("Input DIP values don't match expected.")
         else:
             self.set_passed()
