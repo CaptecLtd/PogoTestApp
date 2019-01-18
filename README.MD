@@ -9,7 +9,7 @@ Execute PogoTestApp.py with `python PogoTestApp.py`. Use the `-f` argument to ma
 Run some basic unit tests with `python UnitTests.py`.
 
 ## Platform
-The application is part of a greater project for my employer, an ATE for testing power and battery PCBs. The project uses a Raspberry Pi 3 as the ATE controller with a touch screen for the user interface.
+The software is designed to interface with a Raspberry Pi 3 and the official RPi touch screen. An ABElectronics A/D converter (https://www.abelectronics.co.uk/p/69/adc-pi-raspberry-pi-analogue-to-digital-converter) is used for analogue inputs.
 
 ## ATE Modules
 ### adc.py
