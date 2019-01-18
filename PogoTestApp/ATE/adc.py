@@ -1,5 +1,6 @@
 # Import our required modules and methods
 from time import sleep
+import datetime as datetime
 from ATE import const
 
 # Try loading the ADC modules. If not, enable simulation mode.
@@ -142,15 +143,21 @@ class Channel(object):
 
     def await_voltage(self, target, tolerance = 0.1, timeout = 10):
         "Waits for the specified voltage within tolerance, returning true if matched or false if timeout seconds pass"
-        time = 0
-        while time <= timeout:
-            if self.voltage_near(target, tolerance):
-                return True
-            else:
-                sleep(0.5)
-                time += 0.5
 
-        return False
+        start_time = datetime.datetime.now()
+        delay = 0.0
+
+        while True:
+            if self.voltage_near(target, tolerance):
+                return True, delay
+
+            diff = (datetime.datetime.now() - start_time)
+            delay = (diff.seconds + (diff.microseconds / 1000000))
+            
+            if delay >= timeout:
+                break
+
+        return False, delay
  
     # https://docs.python.org/3/library/math.html#math.isclose (in case we're not running Python 3.5)
     def isclose(self, expected, actual, relative_tolerance = 1e-09, absolute_tolerance = 0.0):
