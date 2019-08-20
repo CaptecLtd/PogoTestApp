@@ -246,7 +246,7 @@ class TestPWR_2(TestProcedure):
                     # Stage 4
                     self.suite.form.append_text_line("Testing stage 4")
 
-                    if (low_passed and high_passed) and (delay > 0.5 and delay < 3):
+                    if (low_passed and high_passed) and (delay > 0.5 and delay < 5):
                         # Stage 5
                         self.suite.form.append_text_line("Testing stage 5")
                         if (ad1.voltage_between(4.90, 5.10) and ad8.voltage_between(4.85, 5.10)):
