@@ -245,6 +245,7 @@ class TestPWR_2(TestProcedure):
 
                     # Stage 4
                     self.suite.form.append_text_line("Testing stage 4")
+                    self.suite.form.append_text_line(delay)
 
                     if (low_passed and high_passed) and (delay > 0.5 and delay < 5):
                         # Stage 5
