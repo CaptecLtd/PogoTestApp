@@ -254,7 +254,7 @@ class TestPWR_2(TestProcedure):
                         else:
                             self.log_failure("S5 Failure, expected AD1 >= 4.9 and <= 5.10, AD8 >= 4.85 and <= 5.10")
                     else:
-                        self.log_failure("S4 Failure, expected power up delay > 500ms and < 3000ms, or DIP1 high/low timeout")
+                        self.log_failure("S4 Failure, expected power up delay > 500ms and < 5000ms, or DIP1 high/low timeout")
                 else:
                     self.log_failure("S3 Failure, expected AD1 voltage < 2.00v and AD8 >= 4.85 and <= 5.10")
             else:
