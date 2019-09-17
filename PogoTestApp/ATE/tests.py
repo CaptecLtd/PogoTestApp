@@ -284,7 +284,7 @@ class TestPWR_3(TestProcedure):
 
         digio.set_low([DOP12_BAT1_GPIO, DOP13_BAT0_GPIO, DOP2_Discharge_Load])
 
-        self.wait(0.01)
+        self.wait(1)
 
         # Step 1
         self.suite.form.append_text_line("Testing stage 1")
