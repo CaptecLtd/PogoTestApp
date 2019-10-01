@@ -279,7 +279,7 @@ class TestPWR_3(TestProcedure):
 
         self.suite.form.append_text_line("Testing back up mode")
 
-        digio.set_high(DOP11_POGO_ON_GPIO)
+        #digio.set_high(DOP11_POGO_ON_GPIO)
         digio.set_low(DOP6_T_SW_ON)
 
         digio.set_low([DOP12_BAT1_GPIO, DOP13_BAT0_GPIO, DOP2_Discharge_Load])
