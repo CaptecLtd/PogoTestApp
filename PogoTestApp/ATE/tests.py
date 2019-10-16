@@ -289,9 +289,9 @@ class TestPWR_3(TestProcedure):
         # Step 1
         self.suite.form.append_text_line("Testing stage 1")
 
-        if (ad5.voltage_near(2.5, 0.2) and 
-            ad6.voltage_near(1.47, 0.2) and 
-            ad7.voltage_between(0, 1.50) and 
+        if (ad5.voltage_near(2.6, 0.2) and 
+            ad6.voltage_near(2.6, 0.2) and 
+            ad7.voltage_between(0, 2.60) and 
             ad8.voltage_between(0, 1.50)):
             
             digio.set_high(DOP6_T_SW_ON)
