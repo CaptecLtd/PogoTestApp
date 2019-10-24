@@ -187,7 +187,7 @@ class TestPWR_1(TestProcedure):
         else:
             self.set_passed()
 
-"""
+
 class TestPWR_2(TestProcedure):
 
     description = "Power Management PCB - Power Up Delay"
@@ -263,7 +263,7 @@ class TestPWR_2(TestProcedure):
         else:
             self.log_failure("S1 Failure, expected AD5 < 1.5, AD7 < 2.0, AD8 < 2.0")
 
-"""
+
 class TestPWR_3(TestProcedure):
 
     description = "Power Management PCB - Back up mode"
