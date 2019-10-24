@@ -281,6 +281,9 @@ class TestPWR_3(TestProcedure):
 
         digio.set_high(DOP11_POGO_ON_GPIO)
         digio.set_low(DOP6_T_SW_ON)
+        digio.set.high(DOP2_Discharge_Load)
+        
+       self.wait(0.2)
 
         digio.set_low([DOP12_BAT1_GPIO, DOP13_BAT0_GPIO, DOP2_Discharge_Load])
 
