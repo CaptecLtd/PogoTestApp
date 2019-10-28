@@ -187,7 +187,7 @@ class TestPWR_1(TestProcedure):
         else:
             self.set_passed()
 
-
+"""
 class TestPWR_2(TestProcedure):
 
     description = "Power Management PCB - Power Up Delay"
@@ -221,7 +221,7 @@ class TestPWR_2(TestProcedure):
 
             if ad5.voltage_between(3.95, 4.25) and ad7.voltage_between(4.90, 5.15) and ad8.voltage_between(4.85, 5.10):
                 
-                #digio.set_high(DOP11_POGO_ON_GPIO)
+                digio.set_high(DOP11_POGO_ON_GPIO)
 
                 # Stage 3
                 self.suite.form.append_text_line("Testing stage 3")
@@ -261,7 +261,7 @@ class TestPWR_2(TestProcedure):
                 self.log_failure("S2 Failure, expected AD5 >= 3.95 and <= 4.25, AD7 >= 4.9 and <= 5.15, AD8 >= 4.85 and <= 5.10")
 
         else:
-            self.log_failure("S1 Failure, expected AD5 < 1.5, AD7 < 2.0, AD8 < 2.0")
+            self.log_failure("S1 Failure, expected AD5 < 1.5, AD7 < 2.0, AD8 < 2.0")"""
 
 
 class TestPWR_3(TestProcedure):
