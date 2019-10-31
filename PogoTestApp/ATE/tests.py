@@ -295,7 +295,7 @@ class TestPWR_3(TestProcedure):
             
             digio.set_high(DOP6_T_SW_ON)
 
-            self.wait(0.01)
+            self.wait(0.5)
             
             # Step 2
             self.suite.form.append_text_line("Testing stage 2")
