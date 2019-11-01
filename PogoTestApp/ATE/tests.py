@@ -372,7 +372,7 @@ class TestPWR_4(TestProcedure):
         self.suite.form.append_text_line("Testing stage 1")
 
         if (ad5.voltage_near(3.1, 0.3) and
-            ad6.voltage_near(0.2, 0.2) and
+            ad6.voltage_near(0.3, 0.2) and
             ad8.voltage_near(4.7, 0.15)):
 
             digio.set_high(DOP13_BAT0_GPIO)
@@ -381,9 +381,9 @@ class TestPWR_4(TestProcedure):
             # Stage 2
             self.suite.form.append_text_line("Testing stage 2")
 
-            if (ad5.voltage_near(3.3, 0.1) and
-                ad6.voltage_between(0.5, 0.2) and
-                ad8.voltage_near(4.80, 0.2)):
+            if (ad5.voltage_near(3.5, 0.1) and
+                ad6.voltage_between(0.8, 0.2) and
+                ad8.voltage_near(4.9, 0.2)):
 
                 digio.set_high(DOP12_BAT1_GPIO)
                 digio.set_low(DOP13_BAT0_GPIO)
