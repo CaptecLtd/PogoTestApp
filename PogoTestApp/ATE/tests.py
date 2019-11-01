@@ -371,7 +371,7 @@ class TestPWR_4(TestProcedure):
         # Stage 1
         self.suite.form.append_text_line("Testing stage 1")
 
-        if (ad5.voltage_near(3.1, 0.2) and
+        if (ad5.voltage_near(3.1, 0.3) and
             ad6.voltage_near(0.2, 0.2) and
             ad8.voltage_near(4.7, 0.15)):
 
