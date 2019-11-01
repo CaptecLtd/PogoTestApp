@@ -305,45 +305,45 @@ class TestPWR_3(TestProcedure):
           #      ad7.voltage_near(5.0, 0.15) and 
          #       ad8.voltage_near(5.0, 0.15)):
             
-                digio.set_high(DOP13_BAT0_GPIO)
+            digio.set_high(DOP13_BAT0_GPIO)
+
+            self.wait(0.5)
+
+            # Step 3
+            self.suite.form.append_text_line("Testing stage 3")
+
+            if (ad5.voltage_near(3.5, 0.2) and
+                ad6.voltage_near(3.4, 0.2) and
+                ad7.voltage_near(5.0, 0.15) and
+                ad8.voltage_near(5.0, 0.15)):
+
+                digio.set_high(DOP2_Discharge_Load)
+                digio.set_high(DOP12_BAT1_GPIO)
+                digio.set_low(DOP13_BAT0_GPIO)
 
                 self.wait(0.5)
 
-                # Step 3
-                self.suite.form.append_text_line("Testing stage 3")
+                # Step 4
+                self.suite.form.append_text_line("Testing stage 4")
 
-                if (ad5.voltage_near(3.5, 0.2) and
-                    ad6.voltage_near(3.4, 0.2) and
+                if (ad5.voltage_near(3.70, 0.2) and
+                    ad6.voltage_between(4.0, 5.0, 0.1) and
                     ad7.voltage_near(5.0, 0.15) and
                     ad8.voltage_near(5.0, 0.15)):
 
-                    digio.set_high(DOP2_Discharge_Load)
-                    digio.set_high(DOP12_BAT1_GPIO)
-                    digio.set_low(DOP13_BAT0_GPIO)
-                    
-                    self.wait(0.5)
-
-                    # Step 4
-                    self.suite.form.append_text_line("Testing stage 4")
-
-                    if (ad5.voltage_near(3.70, 0.2) and
-                        ad6.voltage_between(4.0, 5.0, 0.1) and
-                        ad7.voltage_near(5.0, 0.15) and
-                        ad8.voltage_near(5.0, 0.15)):
-
-                        self.set_passed()
-
-                    else:
-                        self.log_failure("S4 Failure, expected AD5 = 4.10 ± 0.1, AD6 = 2.40 ± 0.2, AD7 = 5.0 ± 0.15, AD8 = 5.0 ± 0.15")
+                    self.set_passed()
 
                 else:
-                    self.log_failure("S3 Failure, expected AD5 = 3.90 ± 0.1, AD6 = 2.42 ± 0.2, AD7 = 5.0 ± 0.15, AD8 = 5.0 ± 0.15")
+                    self.log_failure("S4 Failure, expected AD5 = 4.10 ± 0.1, AD6 = 2.40 ± 0.2, AD7 = 5.0 ± 0.15, AD8 = 5.0 ± 0.15")
 
-           # else:
-           #     self.log_failure("S2 Failure, expected AD5 3.10 ± 0.1, AD6 = 1.82 ± 0.2, AD7 = 5.0 ± 0.15, AD8 < 1.5")
+            else:
+                self.log_failure("S3 Failure, expected AD5 = 3.90 ± 0.1, AD6 = 2.42 ± 0.2, AD7 = 5.0 ± 0.15, AD8 = 5.0 ± 0.15")
 
-        else:
-            self.log_failure("S1 Failure, expected AD5 = 2.64 ± 0.2, AD6 = 1.57 ± 0.2, AD7 < 1.5, AD8 < 1.5")
+       # else:
+       #     self.log_failure("S2 Failure, expected AD5 3.10 ± 0.1, AD6 = 1.82 ± 0.2, AD7 = 5.0 ± 0.15, AD8 < 1.5")
+
+    else:
+        self.log_failure("S1 Failure, expected AD5 = 2.64 ± 0.2, AD6 = 1.57 ± 0.2, AD7 < 1.5, AD8 < 1.5")
                         
 
 class TestPWR_4(TestProcedure):
