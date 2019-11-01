@@ -540,7 +540,7 @@ class TestCON_1b(TestProcedure):
 
         self.suite.form.append_text_line("Waiting for voltages to settle...")
 
-        self.wait(3)
+        self.wait(5)
 
         inputs = digio.read_all_inputs()
 
