@@ -204,7 +204,7 @@ class TestPWR_2(TestProcedure):
         digio.set_low(DOP13_BAT0_GPIO)
         digio.set_low(DOP12_BAT1_GPIO)
         self.wait(0.01)
-        time.sleep(500)
+        
         self.suite.form.append_text_line("Testing power up delay")
 
         # Stage 1
