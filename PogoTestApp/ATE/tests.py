@@ -204,7 +204,7 @@ class TestPWR_2(TestProcedure):
         digio.set_low(DOP13_BAT0_GPIO)
         digio.set_low(DOP12_BAT1_GPIO)
         self.wait(0.01)
-
+        time.sleep(500)
         self.suite.form.append_text_line("Testing power up delay")
 
         # Stage 1
@@ -289,7 +289,7 @@ class TestPWR_3(TestProcedure):
         self.suite.form.append_text_line("Testing stage 1")
 
         if (ad5.voltage_near(2.6, 0.2) and 
-            ad6.voltage_near(2.6, 0.2) and 
+            ad6.voltage_near(1.5, 0.2) and 
             ad7.voltage_between(0, 2.60) and 
             ad8.voltage_between(0, 1.50)):
             
