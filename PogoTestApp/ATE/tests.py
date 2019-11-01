@@ -298,12 +298,12 @@ class TestPWR_3(TestProcedure):
             self.wait(0.1)
             
           # Step 2
-         #   self.suite.form.append_text_line("Testing stage 2")
+            self.suite.form.append_text_line("Testing stage 2")
 
-         #   if (ad5.voltage_near(2.73, 0.2) and 
-         #       ad6.voltage_near(2.73, 0.2) and 
-          #      ad7.voltage_near(5.0, 0.15) and 
-         #       ad8.voltage_near(5.0, 0.15)):
+            if (ad5.voltage_near(2.73, 0.2) and 
+                ad6.voltage_near(2.73, 0.2) and 
+                ad7.voltage_near(5.0, 0.15) and 
+                ad8.voltage_near(5.0, 0.15)):
             
             digio.set_high(DOP13_BAT0_GPIO)
 
@@ -339,8 +339,8 @@ class TestPWR_3(TestProcedure):
             else:
                 self.log_failure("S3 Failure, expected AD5 = 3.90 ± 0.1, AD6 = 2.42 ± 0.2, AD7 = 5.0 ± 0.15, AD8 = 5.0 ± 0.15")
 
-       # else:
-       #     self.log_failure("S2 Failure, expected AD5 3.10 ± 0.1, AD6 = 1.82 ± 0.2, AD7 = 5.0 ± 0.15, AD8 < 1.5")
+        else:
+            self.log_failure("S2 Failure, expected AD5 3.10 ± 0.1, AD6 = 1.82 ± 0.2, AD7 = 5.0 ± 0.15, AD8 < 1.5")
 
     else:
         self.log_failure("S1 Failure, expected AD5 = 2.64 ± 0.2, AD6 = 1.57 ± 0.2, AD7 < 1.5, AD8 < 1.5")
