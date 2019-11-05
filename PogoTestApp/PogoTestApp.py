@@ -93,8 +93,7 @@ try:
 
     # Different conversion factor for AD4.
     adc.conversion_factors = {
-        #const.AD4_V_TP13_NTC: 4.55
-        const.AD4_V_TP13_NTC: 2
+        const.AD4_V_TP13_NTC: 4.55
         }
 
     # Kick off the readings display test
