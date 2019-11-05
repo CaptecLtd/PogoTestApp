@@ -88,12 +88,12 @@ try:
     # Channel conversion factor times the impedence conversion
     # Circuit impedence compensation = 1.1505
     # Voltage divider compensation = 1.575
-    #adc.global_conversion_factor = (1.1505 * 1.575)
-    adc.global_conversion_factor = (1)
+    adc.global_conversion_factor = (1.1505 * 1.575)
 
     # Different conversion factor for AD4.
     adc.conversion_factors = {
-        const.AD4_V_TP13_NTC: 4.55
+        #const.AD4_V_TP13_NTC: 4.55
+        const.AD4_V_TP13_NTC: 1
         }
 
     # Kick off the readings display test
