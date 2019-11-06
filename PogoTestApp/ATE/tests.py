@@ -403,8 +403,8 @@ class TestPWR_4(TestProcedure):
                     # Stage 4
                     self.suite.form.append_text_line("Testing stage 4")
 
-                    if (ad5.voltage_near(4.1, 0.1) and
-                        ad6.voltage_near(0.2, 0.2) and 
+                    if (ad5.voltage_near(4.5, 0.2) and
+                        ad6.voltage_between(0.0, 0.2) and 
                         ad8.voltage_near(5.0, 0.15)):
 
                         self.set_passed()
