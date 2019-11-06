@@ -277,7 +277,10 @@ class TestPWR_3(TestProcedure):
         ad8 = Channel(AD8_V_out)
 
         self.suite.form.append_text_line("Testing back up mode")
-
+        
+        digio.set_high(DOP2_Discharge_Load)
+        self.wait(0.2)
+        
         digio.set_high(DOP11_POGO_ON_GPIO)
         digio.set_low(DOP6_T_SW_ON)
 
