@@ -394,7 +394,7 @@ class TestPWR_4(TestProcedure):
 
                 if (ad5.voltage_near(4.2, 0.1) and
                     ad6.voltage_near(0.0, 0.3) and
-                    ad8.voltage_near(4.90, 0.2)):
+                    ad8.voltage_near(4.90, 0.3)):
 
                     digio.set_high(DOP12_BAT1_GPIO)
                     digio.set_high(DOP13_BAT0_GPIO)
