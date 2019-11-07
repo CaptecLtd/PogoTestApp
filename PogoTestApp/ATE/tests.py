@@ -297,9 +297,6 @@ class TestPWR_3(TestProcedure):
             digio.set_high(DOP6_T_SW_ON)
 
             self.wait(0.1)
-            digio.set_low(DOP11_POGO_ON_GPIO)
-            self.wait(3)
-            digio.set_high(DOP11_POGO_ON_GPIO)
             
           # Step 2
             self.suite.form.append_text_line("Testing stage 2")
