@@ -297,14 +297,17 @@ class TestPWR_3(TestProcedure):
             digio.set_high(DOP6_T_SW_ON)
 
             self.wait(0.1)
+            digio.set_low(DOP11_POGO_ON_GPIO)
+            self.wait(3)
+            digio.set_high(DOP11_POGO_ON_GPIO)
             
           # Step 2
             self.suite.form.append_text_line("Testing stage 2")
 
             if (ad5.voltage_near(3.10, 0.2) and 
                 ad6.voltage_near(1.82, 0.2) and 
-                ad7.voltage_near(5.0, 2.15) and 
-                ad8.voltage_near(5.0, 4.95)):
+                ad7.voltage_near(5.0, 0.15) and 
+                ad8.voltage_near(5.0, 0.15)):
             
                 digio.set_high(DOP13_BAT0_GPIO)
 
