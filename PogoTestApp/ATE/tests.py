@@ -461,7 +461,7 @@ class TestPWR_5(TestProcedure):
             self.suite.form.append_text_line("Testing stage 2")
 
             if (ad3.voltage_near(4.9, 0.2) and
-                ad4.voltage_between(3, 5) and
+                ad4.voltage_between(8, 12) and
                 ad6.voltage_near(0.2, 0.18)):
 
                 digio.set_low(DOP7_Cold_sim)
@@ -472,7 +472,7 @@ class TestPWR_5(TestProcedure):
                 self.suite.form.append_text_line("Testing stage 3")
 
                 if (ad3.voltage_near(4.9, 0.2) and
-                    ad4.voltage_between(0, 0.135) and
+                    ad4.voltage_between(0, 0.3) and
                     ad6.voltage_near(0.75, 0.15)):
 
                     digio.set_low(DOP8_Hot_sim)
@@ -482,7 +482,7 @@ class TestPWR_5(TestProcedure):
                     self.suite.form.append_text_line("Testing stage 4")
 
                     if (ad3.voltage_near(4.8, 0.25) and
-                        ad4.voltage_between((ad3.read_voltage() * 0.3), (ad3.read_voltage() * 0.75)) and
+                        ad4.voltage_between(0.22, 1.5) and
                         ad6.voltage_between(0, 0.2)):
 
                         self.set_passed()
