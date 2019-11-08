@@ -320,7 +320,7 @@ class TestPWR_3(TestProcedure):
                     ad7.voltage_near(5.0, 0.15) and
                     ad8.voltage_near(5.0, 0.15)):
 
-                    digio.set_high(DOP2_Discharge_Load)
+                    #digio.set_high(DOP2_Discharge_Load)
                     digio.set_high(DOP12_BAT1_GPIO)
                     digio.set_low(DOP13_BAT0_GPIO)
 
