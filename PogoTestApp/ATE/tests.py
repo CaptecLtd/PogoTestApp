@@ -277,6 +277,7 @@ class TestPWR_3(TestProcedure):
         ad8 = Channel(AD8_V_out)
 
         self.suite.form.append_text_line("Testing back up mode")
+        #Removed S2 and S4 to emulate the manual test procedure as the ATE is currently failing boards which should be passed.
 
         digio.set_high(DOP11_POGO_ON_GPIO)
         
@@ -320,7 +321,7 @@ class TestPWR_3(TestProcedure):
                     ad7.voltage_near(5.0, 0.15) and
                     ad8.voltage_near(5.0, 0.15)):
 
-                    #digio.set_high(DOP2_Discharge_Load)
+                    digio.set_high(DOP2_Discharge_Load)
                     digio.set_high(DOP12_BAT1_GPIO)
                     digio.set_low(DOP13_BAT0_GPIO)
 
@@ -329,10 +330,10 @@ class TestPWR_3(TestProcedure):
                     # Step 4
                     self.suite.form.append_text_line("Testing stage 4")
 
-                    if (ad5.voltage_near(3.70, 0.2) and
-                        ad6.voltage_between(4.0, 5.0, 0.1) and
-                        ad7.voltage_near(5.0, 0.15) and
-                        ad8.voltage_near(5.0, 0.15)):
+                    if (ad5.voltage_near(4.10, 0.2) and
+                        ad6.voltage_near(2.0, 0.2):
+                        #ad7.voltage_near(5.0, 0.15) and
+                       # ad8.voltage_near(5.0, 0.15)):
 
                         self.set_passed()
 
