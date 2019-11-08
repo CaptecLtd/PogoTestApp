@@ -316,7 +316,7 @@ class TestPWR_3(TestProcedure):
                 self.suite.form.append_text_line("Testing stage 3")
 
                 if (ad5.voltage_near(3.5, 0.2) and
-                    ad6.voltage_near(3.4, 0.2) and
+                    ad6.voltage_near(3.4, 0.35) and
                     ad7.voltage_near(5.0, 0.15) and
                     ad8.voltage_near(5.0, 0.15)):
 
