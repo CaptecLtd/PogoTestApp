@@ -310,7 +310,7 @@ class TestPWR_3(TestProcedure):
                 digio.set_low(DOP11_POGO_ON_GPIO)
                 self.wait(4)
                 digio.set_high(DOP11_POGO_ON_GPIO)
-                self.wait(3)
+                self.wait(4)
 
                 # Step 3
                 self.suite.form.append_text_line("Testing stage 3")
