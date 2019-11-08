@@ -454,7 +454,8 @@ class TestPWR_5(TestProcedure):
             ad4.voltage_between(0.22, 1.5) and
             ad6.voltage_between(0.75, 0.15)):
 
-            digio.set_high(DOP7_Cold_sim)
+            #digio.set_high(DOP7_Cold_sim)
+            digio.set_high(DOP8_Hot_sim)
             self.wait(0.5)
 
             # Stage 2
