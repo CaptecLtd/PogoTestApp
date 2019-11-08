@@ -294,8 +294,11 @@ class TestPWR_3(TestProcedure):
             ad7.voltage_between(0, 2.60) and 
             ad8.voltage_between(0, 1.50)):
             
+            digio.set_high(DOP11_POGO_ON_GPIO)
+            self.wait(4)
+            digio.set_high(DOP11_POGO_ON_GPIO)
             digio.set_high(DOP6_T_SW_ON)
-            self.wait(0.1)
+            self.wait(2)
             
           # Step 2
             self.suite.form.append_text_line("Testing stage 2")
