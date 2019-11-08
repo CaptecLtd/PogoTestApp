@@ -359,14 +359,14 @@ class TestPWR_4(TestProcedure):
     def run(self):
 
         self.suite.form.append_text_line("Testing normal mode")
-        digio.set_low(DOP2_Discharge_Load)
+        #digio.set_low(DOP2_Discharge_Load)
         digio.set_high(DOP6_T_SW_ON)
         digio.set_low(DOP11_POGO_ON_GPIO)
         digio.set_low(DOP12_BAT1_GPIO)
 
         self.suite.form.append_text_line("Waiting for voltages to settle...")
 
-        self.wait(0.02)
+        self.wait(0.2)
 
         ad5 = Channel(AD5_V_bat)
         ad6 = Channel(AD6_V_sense)
@@ -377,7 +377,7 @@ class TestPWR_4(TestProcedure):
 
         if (ad5.voltage_near(3.1, 0.4) and
             ad6.voltage_near(0.2, 0.19) and
-            ad8.voltage_near(4.7, 0.15)):
+            ad8.voltage_near(4.7, 0.3)):
 
             digio.set_high(DOP13_BAT0_GPIO)
             self.wait(0.02)
