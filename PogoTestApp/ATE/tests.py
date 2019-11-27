@@ -366,7 +366,7 @@ class TestPWR_4(TestProcedure):
 
         self.suite.form.append_text_line("Waiting for voltages to settle...")
 
-        self.wait(4)
+        self.wait(5)
 
         ad5 = Channel(AD5_V_bat)
         ad6 = Channel(AD6_V_sense)
